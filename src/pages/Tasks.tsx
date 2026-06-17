@@ -1,14 +1,8 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Image, FileText, Layers, Sparkles } from "lucide-react";
+import { ArrowRight, Image, Layers } from "lucide-react";
 import { tasks } from "../data";
 import { Reveal, SectionHeading } from "../components/ui";
-import { assetUrl, cx } from "../lib/assets";
-
-const difficultyStyle: Record<string, string> = {
-  Medium: "bg-emerald-100 text-emerald-700",
-  Hard: "bg-amber-100 text-amber-700",
-  "Very Hard": "bg-rose-100 text-rose-700",
-};
+import { assetUrl } from "../lib/assets";
 
 export default function Tasks() {
   return (
@@ -46,13 +40,8 @@ export default function Tasks() {
                 </div>
                 <div className="p-6">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="chip bg-gold-100 text-gold-800">
-                      <Sparkles size={12} /> {t.meta.status}
-                    </span>
-                    <span className={cx("chip", difficultyStyle[t.meta.difficulty])}>
-                      {t.meta.difficulty}
-                    </span>
                     <span className="chip bg-ink-100 text-ink-600">{t.meta.category}</span>
+                    <span className="chip bg-ink-100 text-ink-600">{t.meta.subcategory}</span>
                   </div>
                   <h3 className="mt-3 text-xl font-extrabold text-ink-900">
                     {t.meta.title}
@@ -70,14 +59,10 @@ export default function Tasks() {
                       <Layers size={14} className="text-brand-500" />
                       {t.rubrics.length} rubrics
                     </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <FileText size={14} className="text-brand-500" />
-                      {t.meta.subcategory}
-                    </span>
                   </div>
 
                   <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
-                    Reconstruct this task
+                    View task walkthrough
                     <ArrowRight
                       size={16}
                       className="transition group-hover:translate-x-1"

@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Tasks from "./pages/Tasks";
 import TaskDetail from "./pages/TaskDetail";
+import Tracker from "./pages/Tracker";
 import NotFound from "./pages/NotFound";
 
 function ScrollToTop() {
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/tasks/:id" element={<TaskDetail />} />
+        <Route path="/tracker" element={<Tracker />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>

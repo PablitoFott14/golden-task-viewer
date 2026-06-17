@@ -11,9 +11,9 @@ const task1: Task = {
     personaName: "Brandon Lewis",
     oneLiner:
       "Audit and rebuild a fintech startup's lost June content plan from messy, multi-source recovered material.",
-    difficulty: "Very Hard",
+    difficulty: "Hard",
     outputType: "Structured folder tree + MEMORY.md + email",
-    modalities: ["Handwritten notes", "Mixed caption file", "23 images", "Screenshots"],
+    modalities: ["Handwritten notes", "Mixed caption file", "23 images"],
     status: "Golden",
   },
   assetRoot: "tasks/task1",
@@ -23,9 +23,7 @@ const task1: Task = {
     { label: "Role", value: "Product Manager @ Vaulta.io (Boston fintech)" },
     { label: "Team", value: "Brandon, Trevor (lead), Maya (design)" },
     { label: "Phone", value: "(617) 555-0394" },
-    { label: "Voice", value: "Candid, action-oriented, compliance-minded" },
     { label: "Current project", value: "Merchant analytics dashboard" },
-    { label: "Life", value: "Parent, urban cyclist, MBTA commuter" },
   ],
 
   brainstorm: [

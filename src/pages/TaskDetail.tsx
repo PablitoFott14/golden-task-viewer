@@ -116,9 +116,7 @@ export default function TaskDetail() {
               <Stat label="Category" value={m.category} />
               <Stat label="Subcategory" value={m.subcategory} />
               <Stat label="Universe" value={m.universe} />
-              <Stat label="Difficulty" value={m.difficulty} />
               <Stat label="Output" value={m.outputType} />
-              <Stat label="Service ID" value={<span className="font-mono text-xs">{m.serviceId}</span>} />
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               {m.modalities.map((mod) => (
@@ -127,12 +125,6 @@ export default function TaskDetail() {
                 </Pill>
               ))}
             </div>
-            <div className="mt-6 rounded-xl border border-brand-200 bg-brand-50/50 p-4 text-sm leading-relaxed text-ink-700">
-              <strong className="text-ink-900">How to read this page.</strong> It follows the
-              same 12-step method shown on the home page, applied end-to-end. Scroll top to
-              bottom to reconstruct the contributor's reasoning, or jump to any stage with the
-              menu. Click images, folders, and rubrics — almost everything expands.
-            </div>
           </Section>
 
           {/* ===== Persona ===== */}
@@ -140,8 +132,8 @@ export default function TaskDetail() {
             id="persona"
             n={2}
             title="Persona Understanding"
-            kicker="Step 1 — get fluent in who you're designing for"
-            sub="The category must fit the persona's life naturally. Everything downstream is built on this foundation."
+            kicker="Step 1 — Persona"
+            sub="The category must fit the persona's life naturally."
           >
             <div className="grid gap-3 sm:grid-cols-2">
               {task.personaHighlights.map((h) => (
@@ -167,8 +159,8 @@ export default function TaskDetail() {
             id="brainstorm"
             n={3}
             title="Brainstorming & Choosing"
-            kicker="Steps 2–3 — generate ideas, pick the richest one"
-            sub="Three realistic angles fit Brandon's life. The chosen one leaves the most room for genuine, natural complexity."
+            kicker="Steps 2–3 — Brainstorm & choose"
+            sub="Three realistic angles were considered. The chosen one leaves the most room for natural complexity."
           >
             <div className="grid gap-4 md:grid-cols-3">
               {task.brainstorm.map((idea) => (
@@ -206,8 +198,8 @@ export default function TaskDetail() {
             id="reality"
             n={4}
             title="Build the Reality First"
-            kicker="Steps 4–5 — design the world before the prompt"
-            sub="Don't write the prompt yet. Decide what messy, multi-source context could realistically exist — and where to plant friction."
+            kicker="Steps 4–5 — Build the reality"
+            sub="Decide what multimodal context could exist and where friction points are planted — before writing the prompt."
           >
             <div className="grid gap-6 md:grid-cols-2">
               <div>
@@ -244,8 +236,8 @@ export default function TaskDetail() {
             id="inputs"
             n={5}
             title="The Multimodal Inputs"
-            kicker="Step 5 — the actual capability test lives here"
-            sub="Two handwritten notes are the SSOT; a mixed caption file and 23 images must be audited against them. Filter by role, then click any asset for the full reasoning."
+            kicker="Step 5 — MM inputs"
+            sub="Two handwritten notes are the SSOT. A mixed caption file and 23 images must be audited against them. Filter by role and click any asset for details."
           >
             {/* SSOT spotlight */}
             <div className="mb-8">
@@ -321,8 +313,8 @@ export default function TaskDetail() {
             id="prompt"
             n={6}
             title="Materialize the Prompt"
-            kicker="Step 6 — high-level request, nested complexity"
-            sub="The prompt sounds like something Brandon would actually say. Hover the highlighted phrases to see the structural intent hidden inside each natural sentence."
+            kicker="Step 6 — The prompt"
+            sub="The prompt stays high-level and natural. The annotations on the right explain the structural intent behind each key phrase."
           >
             <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
               <div className="rounded-2xl border border-ink-200/70 bg-white p-6 shadow-soft">
@@ -361,8 +353,8 @@ export default function TaskDetail() {
             id="gtfa"
             n={7}
             title="The Ground Truth Final Answer"
-            kicker="Step 7 — the one correct deliverable, built by hand"
-            sub="Reverse-engineered before the prompt. This is exactly what a correct silver trajectory produces — and what every rubric is graded against."
+            kicker="Step 7 — GTFA"
+            sub="The Ground Truth Final Answer — the one correct deliverable, built by hand before the prompt was written."
           >
             <div className="grid gap-6 lg:grid-cols-2">
               <div>
@@ -461,8 +453,8 @@ export default function TaskDetail() {
             id="friction"
             n={8}
             title="The Friction Map"
-            kicker="Where the model is meant to fail"
-            sub="Difficulty is spread across many natural friction points, so no single perception miss decides the task. Each is reasoning-shaped."
+            kicker="Friction points"
+            sub="Where the model is expected to fail. Difficulty is spread across multiple natural friction points."
           >
             <div className="grid gap-3 sm:grid-cols-2">
               {task.friction.map((f) => (
@@ -476,8 +468,8 @@ export default function TaskDetail() {
             id="silver"
             n={9}
             title="The Silver Trajectory"
-            kicker="Step 10 — guide the model to correct, restoring to seed"
-            sub="After confirming the model failed past the 50% bar, targeted follow-ups walk it to the correct answer — never starting fresh."
+            kicker="Step 10 — Silver trajectory"
+            sub="Targeted follow-ups guide the model to the correct answer, always restoring to seed."
           >
             <div className="relative space-y-4 pl-8">
               <div className="absolute bottom-4 left-[11px] top-4 w-px bg-ink-200" />
@@ -518,8 +510,8 @@ export default function TaskDetail() {
             id="tests"
             n={10}
             title="Unit Test References"
-            kicker="Step 11 — reviewer-only structural checks"
-            sub="Not the tests themselves — names and logic reviewers use to build them. They cover the structurally important guarantees."
+            kicker="Step 11 — Unit tests (reviewers only)"
+            sub="Names and descriptions for the structural checks reviewers will implement."
           >
             <div className="grid gap-6 sm:grid-cols-2">
               {["Platform folders", "Date folders"].map((group) => (
@@ -554,8 +546,8 @@ export default function TaskDetail() {
             id="rubrics"
             n={11}
             title="The Rubric Set"
-            kicker="Step 12 — one rubric per requirement, each explained"
-            sub="The contributor left the rationale to us. Every criterion below includes an authored explanation of why it exists, what it enforces, and how it's weighted. Click to expand."
+            kicker="Step 12 — Rubrics"
+            sub="One rubric per prompt requirement. Each includes rationale, the requirement it enforces, and its weight. Click to expand."
           >
             <RubricExplorer rubrics={task.rubrics} />
           </Section>
@@ -565,8 +557,8 @@ export default function TaskDetail() {
             id="artifacts"
             n={12}
             title="Raw Artifacts"
-            kicker="The source documents, verbatim"
-            sub="Every file the contributor produced, rendered in full for reference."
+            kicker="Source documents"
+            sub="The original files produced for this task, rendered for reference."
           >
             <div className="space-y-2.5">
               {task.artifactDocs.map((d) => (

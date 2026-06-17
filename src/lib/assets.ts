@@ -1,13 +1,19 @@
 import type { AssetRole } from "../data/types";
 
-/** Build a public-folder URL that survives spaces and odd characters. */
+/** Build a public-folder URL that survives spaces and odd characters.
+ *  Uses an absolute URL so fetch() works regardless of hash-route depth. */
 export function assetUrl(assetRoot: string, src: string): string {
   const base = import.meta.env.BASE_URL || "/";
   const path = `${assetRoot}/${src}`
     .split("/")
     .map((seg) => encodeURIComponent(seg))
     .join("/");
-  return `${base}${path}`;
+  const raw = `${base}${path}`;
+  try {
+    return new URL(raw, window.location.href).href;
+  } catch {
+    return raw;
+  }
 }
 
 export function docUrl(assetRoot: string, file: string): string {

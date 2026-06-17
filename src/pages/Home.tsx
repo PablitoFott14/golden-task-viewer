@@ -8,13 +8,11 @@ import {
   Target,
   GitBranch,
   CheckCircle2,
-  Sparkles,
   BookOpen,
-  Layers,
 } from "lucide-react";
-import { methodSteps, playbookPrinciples } from "../data/method";
+import { methodSteps } from "../data/method";
 import { tasks } from "../data";
-import { Reveal, SectionHeading, Eyebrow } from "../components/ui";
+import { Reveal, SectionHeading } from "../components/ui";
 import { cx } from "../lib/assets";
 
 const phaseColors = [
@@ -40,50 +38,29 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-ink-200/70 bg-radial-fade">
-        <div className="absolute inset-0 bg-grid opacity-40" />
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      <section className="border-b border-ink-200/70 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
             className="max-w-3xl"
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-700">
-              <Sparkles size={13} /> Golden Task Viewer
-            </span>
-            <h1 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight text-ink-900 sm:text-5xl lg:text-6xl">
-              Learn the{" "}
-              <span className="bg-gradient-to-r from-brand-600 to-violet-600 bg-clip-text text-transparent">
-                reasoning
-              </span>{" "}
-              behind a great task — not just the result.
+            <h1 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
+              Golden Task Viewer
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-500">
-              A guided, interactive walkthrough of how successful Blue Shell tasks are
-              designed: from persona research to the Ground Truth answer to every rubric and
-              the reasoning behind it. Start high-level, then drill into a real example.
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-500">
+              Understand how successful Blue Shell tasks are designed — from persona
+              research through every rubric. Browse the method, then see it applied
+              step by step in a real example.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/tasks" className="btn-primary text-base">
-                Explore Golden Tasks <ArrowRight size={18} />
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link to="/tasks" className="btn-primary">
+                Explore Golden Tasks <ArrowRight size={16} />
               </Link>
-              <a href="#method" className="btn-ghost text-base">
-                <Compass size={18} /> See the method
+              <a href="#method" className="btn-ghost">
+                <Compass size={16} /> See the method
               </a>
-            </div>
-
-            <div className="mt-12 flex flex-wrap gap-x-8 gap-y-3 text-sm">
-              {[
-                { icon: <Layers size={16} />, label: "12-step method" },
-                { icon: <Target size={16} />, label: "Reverse-engineered from the GTFA" },
-                { icon: <BookOpen size={16} />, label: "Every rubric explained" },
-              ].map((f) => (
-                <span key={f.label} className="inline-flex items-center gap-2 text-ink-600">
-                  <span className="text-brand-500">{f.icon}</span>
-                  <span className="font-medium">{f.label}</span>
-                </span>
-              ))}
             </div>
           </motion.div>
         </div>
@@ -265,53 +242,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Playbook principles grid */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <Reveal>
-          <SectionHeading
-            eyebrow="Complexity Playbook"
-            title="What makes a task actually hard"
-            sub="The rubric set is what the customer audits, but the task setup is what makes the model fail meaningfully. These are the levers that create genuine signal."
-          />
-        </Reveal>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {playbookPrinciples.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.05}>
-              <div className="card h-full p-5">
-                <div className="flex items-center gap-2">
-                  <span className="grid h-7 w-7 place-items-center rounded-lg bg-gold-100 text-xs font-bold text-gold-700">
-                    {i + 1}
-                  </span>
-                  <h3 className="text-sm font-bold text-ink-900">{p.title}</h3>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-ink-500">{p.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA into tasks */}
+      {/* Link to first task */}
       <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl bg-ink-950 p-8 text-white sm:p-12">
-            <div className="absolute inset-0 bg-grid opacity-10" />
-            <div className="relative flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
-              <div className="max-w-xl">
-                <Eyebrow>See it in practice</Eyebrow>
-                <h2 className="text-2xl font-extrabold sm:text-3xl">
-                  Now watch the method applied to a real Golden Task
-                </h2>
-                <p className="mt-3 text-ink-300">
-                  Every artifact, every friction point, every rubric — reconstructed so you
-                  can follow the reasoning from blank page to graded deliverable.
+          <div className="rounded-2xl border border-ink-200/70 bg-white p-6 shadow-soft sm:p-8">
+            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+              <div>
+                <h3 className="text-lg font-bold text-ink-900">
+                  See the method applied to a real task
+                </h3>
+                <p className="mt-1 text-sm text-ink-500">
+                  Walk through every artifact, friction point, and rubric of{" "}
+                  <strong>{tasks[0].meta.title}</strong>.
                 </p>
               </div>
               <Link
                 to={`/tasks/${tasks[0].meta.id}`}
-                className="btn bg-gold-400 text-ink-950 hover:bg-gold-300 text-base"
+                className="btn-primary shrink-0"
               >
-                Open {tasks[0].meta.title} <ArrowRight size={18} />
+                Open task <ArrowRight size={16} />
               </Link>
             </div>
           </div>
