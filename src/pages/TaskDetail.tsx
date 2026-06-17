@@ -80,11 +80,13 @@ export default function TaskDetail() {
             </div>
             <nav className="space-y-0.5">
               {SECTIONS.map((s, i) => (
-                <a
+                <button
                   key={s.id}
-                  href={`#${s.id}`}
+                  onClick={() => {
+                    document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth" });
+                  }}
                   className={cx(
-                    "flex items-center gap-2.5 rounded-lg px-3 py-1.5 text-sm transition",
+                    "flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-left text-sm transition",
                     active === s.id
                       ? "bg-brand-50 font-semibold text-brand-700"
                       : "text-ink-500 hover:bg-ink-50 hover:text-ink-800"
@@ -101,7 +103,7 @@ export default function TaskDetail() {
                     {i + 1}
                   </span>
                   {s.label}
-                </a>
+                </button>
               ))}
             </nav>
           </div>

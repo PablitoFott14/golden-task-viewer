@@ -58,9 +58,12 @@ export default function Home() {
               <Link to="/tasks" className="btn-primary">
                 Explore Golden Tasks <ArrowRight size={16} />
               </Link>
-              <a href="#method" className="btn-ghost">
+              <button
+                onClick={() => document.getElementById("method")?.scrollIntoView({ behavior: "smooth" })}
+                className="btn-ghost"
+              >
                 <Compass size={16} /> See the method
-              </a>
+              </button>
             </div>
           </motion.div>
         </div>
