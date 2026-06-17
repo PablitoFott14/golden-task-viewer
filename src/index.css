@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-ink-50 text-ink-900 antialiased;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Thin, refined scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #aeb7c9 transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #cdd4e0;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #aeb7c9;
+  background-clip: content-box;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-ink-200/70 bg-white shadow-soft;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition active:scale-[0.98];
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white hover:bg-brand-700 shadow-glow;
+  }
+  .btn-ghost {
+    @apply btn bg-white text-ink-700 border border-ink-200 hover:border-ink-300 hover:bg-ink-50;
+  }
+  .prose-task {
+    @apply text-[15px] leading-relaxed text-ink-700;
+  }
+  .prose-task h1 { @apply text-2xl font-extrabold text-ink-900 mt-6 mb-3; }
+  .prose-task h2 { @apply text-xl font-bold text-ink-900 mt-6 mb-3; }
+  .prose-task h3 { @apply text-base font-bold text-ink-900 mt-5 mb-2; }
+  .prose-task p { @apply my-3; }
+  .prose-task ul { @apply my-3 list-disc pl-5 space-y-1.5; }
+  .prose-task ol { @apply my-3 list-decimal pl-5 space-y-1.5; }
+  .prose-task strong { @apply font-semibold text-ink-900; }
+  .prose-task code { @apply rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[0.85em] text-brand-700; }
+  .prose-task blockquote { @apply border-l-4 border-brand-300 bg-brand-50/50 px-4 py-2 my-3 rounded-r-lg italic text-ink-600; }
+  .prose-task table { @apply my-4 w-full text-sm border-collapse; }
+  .prose-task th { @apply border border-ink-200 bg-ink-50 px-3 py-2 text-left font-semibold; }
+  .prose-task td { @apply border border-ink-200 px-3 py-2 align-top; }
+  .prose-task a { @apply text-brand-600 underline underline-offset-2 hover:text-brand-700; }
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(28, 34, 48, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(28, 34, 48, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.bg-radial-fade {
+  background: radial-gradient(1200px 600px at 50% -10%, rgba(51, 102, 255, 0.10), transparent 70%);
+}

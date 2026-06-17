@@ -1,0 +1,28 @@
+1. The model extracts the planning information contained in `1780566865852.jpeg` and `1780566865892.jpg` when rebuilding the social media plan. (+5) -> Task Completion - Final answer/artifact
+2. The model produces a `Linkedin` folder as part of the output. (+5) -> Task Completion - Final answer/artifact
+3. The model produces a `Instagram` folder as part of the output. (+5) -> Task Completion - Final answer/artifact
+4. The model produces a `X` folder as part of the output. (+5) -> Task Completion - Final answer/artifact
+5. The model includes only `IMG_20260314_173522.png` in the `LinkedIn/06-14` folder. (+3) -> Task Completion - Final answer/artifact
+6. The model includes only `phone.jpg` in the `Linkedin/06-17` folder. (+3) -> Task Completion - Final answer/artifact
+7. The model includes only `carrousel_1.png`, `carrousel_2.png`, `carrousel_3.png`, and `carrsel_4.png` in the `Instagram/06-05` folder as content related to the 5-slide carousel post. (+3) -> Task Completion - Final answer/artifact
+8. The model includes any of `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` financial quote images in the `Instagram/06-05` folder. (+3) -> Task Completion - Final answer/artifact
+9. The model includes a `06-05.txt` file containing only the `Strong passwords`, `Two-factor authentication`, and `Software updates` sections of the 5-slide carousel caption in the `Instagram/06-05` folder. (+3) -> Task Completion - Final answer/artifact
+10. The model includes only `visual_5960419.png` and `visual_20260419.png` within the `Instagram/06-11` folder. (+3) -> Task Completion - Final answer/artifact
+11. The model includes one of the remaining unused images from `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` alone in the `Instagram/06-12` folder. (+3) -> Task Completion - Final answer/artifact
+12. The model includes one of the remaining unused images from `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` alone in the `Instagram/06-19` folder. (+3) -> Task Completion - Final answer/artifact
+13. The model includes the remaining unused image from `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` alone in the `Instagram/06-26` folder. (+3) -> Task Completion - Final answer/artifact
+14. The model includes either `final_visual.png` or `Dash.jpg`, or both, in the `X/06-22` folder. (+3) -> Task Completion - Final answer/artifact
+15. The model includes a 06-22.txt caption in `X/06-22` referencing the dashboard presentation scheduled for 24th June. (+3) -> Task Completion - Final answer/artifact
+16. The model includes only `IMG_398573.png` in the `X/06-07` folder. (+3) -> Task Completion - Final answer/artifact
+17. The model includes as Instagram missing information for the weekly finance quote posts `06-05`, `06-12`, `06-19`, and `06-26` (`Instagram > 06-05`, `Instagram > 06-12`, `Instagram > 06-19`, `Instagram > 06-26`), that captions are missing for all of them. (+3) -> Task Completion - Final answer/artifact
+18. The model includes as LinkedIn mismatch information that `06-14` (`LinkedIn > 06-14`) exceeds the 300-word limit. (+3) -> Task Completion - Final answer/artifact
+19. The model includes as LinkedIn mismatch information that the `06-17` caption (`LinkedIn > 06-17`) is not including the membership tier details about Standard members receiving `500` monthly AI insights, while Plus members receive `unlimited` AI powered financial guidance and recommendations. (+3) -> Task Completion - Final answer/artifact
+20. The model includes as LinkedIn mismatch information that 06-29 (LinkedIn > 06-29) contains the wrong phone number `(617) 555-0537` instead of Brandon's expected one (617) 555-0394. (+3) -> Task Completion - Final answer/artifact
+21. The model includes as Instagram mismatch information for the 06-05 post (`Instagram > 06-05`), the `phishing awareness` and `regular safe browsing habits` captions, and the `carrousel_5.png` image. (+3) -> Task Completion - Final answer/artifact
+22. The model includes as Instagram mismatch information that 06-11 (`Instagram > 06-11`) contains a dinner post caption referencing Q1 instead of Q2. (+3) -> Task Completion - Final answer/artifact
+23. The model includes as X mismatch information that `06-07` (`X > 06-07`) lists `4am PST` as the ending support maintenance time instead of `3am PST`. (+3) -> Task Completion - Final answer/artifact
+24. The model reports in the final assistant message that `IMG_39852.png`, `Screenshot_2026-06-03 234708.png`, `visual_8456934.png`, and `update.png` were removed. (+3) -> Task Completion - User-facing message
+25. The model reports in the final assistant message that `final_viasual.jpg` or `Dash.jpg` are duplicated images. (+1) AgentBehaviour - User-facing message
+26. The model sends an email to `trevor@vaulta.io` and `maya@vaulta.io` describing the identified mismatches, including the June 14 LinkedIn post exceeding the 300-word limit, the June 17 LinkedIn post missing membership tier details, the June 29 LinkedIn post containing an incorrect phone number, the June 11 Instagram post referencing Q1 instead of Q2, the June 7 X post listing 4am instead of 3am as the maintenance end time, and the June 22 X post announcing the dashboard launch on June 24th instead of July 1st. (+5) -> Task Completion - State change
+27. The model includes an `Unassigned` section in MEMORY.md, despite it not being part of the requested , mismatching, or missing-content `MEMORY.md` workflow. (-1) -> Agent Behavior - Final Answer/Artifact
+

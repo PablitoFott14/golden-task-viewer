@@ -1,0 +1,322 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowRight,
+  Compass,
+  Lightbulb,
+  Target,
+  GitBranch,
+  CheckCircle2,
+  Sparkles,
+  BookOpen,
+  Layers,
+} from "lucide-react";
+import { methodSteps, playbookPrinciples } from "../data/method";
+import { tasks } from "../data";
+import { Reveal, SectionHeading, Eyebrow } from "../components/ui";
+import { cx } from "../lib/assets";
+
+const phaseColors = [
+  "from-sky-500 to-brand-500",
+  "from-brand-500 to-violet-500",
+  "from-violet-500 to-fuchsia-500",
+  "from-amber-500 to-gold-500",
+  "from-emerald-500 to-teal-500",
+];
+
+function phaseOf(n: number) {
+  if (n <= 3) return 0;
+  if (n <= 5) return 1;
+  if (n <= 7) return 2;
+  if (n <= 9) return 3;
+  return 4;
+}
+
+export default function Home() {
+  const [activeStep, setActiveStep] = useState(1);
+  const step = methodSteps.find((s) => s.n === activeStep)!;
+
+  return (
+    <div>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-ink-200/70 bg-radial-fade">
+        <div className="absolute inset-0 bg-grid opacity-40" />
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-700">
+              <Sparkles size={13} /> Golden Task Viewer
+            </span>
+            <h1 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight text-ink-900 sm:text-5xl lg:text-6xl">
+              Learn the{" "}
+              <span className="bg-gradient-to-r from-brand-600 to-violet-600 bg-clip-text text-transparent">
+                reasoning
+              </span>{" "}
+              behind a great task — not just the result.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-500">
+              A guided, interactive walkthrough of how successful Blue Shell tasks are
+              designed: from persona research to the Ground Truth answer to every rubric and
+              the reasoning behind it. Start high-level, then drill into a real example.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/tasks" className="btn-primary text-base">
+                Explore Golden Tasks <ArrowRight size={18} />
+              </Link>
+              <a href="#method" className="btn-ghost text-base">
+                <Compass size={18} /> See the method
+              </a>
+            </div>
+
+            <div className="mt-12 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+              {[
+                { icon: <Layers size={16} />, label: "12-step method" },
+                { icon: <Target size={16} />, label: "Reverse-engineered from the GTFA" },
+                { icon: <BookOpen size={16} />, label: "Every rubric explained" },
+              ].map((f) => (
+                <span key={f.label} className="inline-flex items-center gap-2 text-ink-600">
+                  <span className="text-brand-500">{f.icon}</span>
+                  <span className="font-medium">{f.label}</span>
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Three principles strip */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <Reveal>
+          <SectionHeading
+            eyebrow="The mindset"
+            title="Three principles drive every decision"
+            sub="Before the steps, internalize the philosophy from the Complexity Playbook. Everything downstream is an expression of these."
+          />
+        </Reveal>
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {[
+            {
+              icon: <Target />,
+              title: "Reverse-engineer from the GTFA",
+              body: "Decide the correct final answer first, then design the prompt that should lead an agent to it. The GTFA grounds the prompt, the inputs, and the rubrics.",
+            },
+            {
+              icon: <GitBranch />,
+              title: "High-level prompt, nested complexity",
+              body: "Real users say \"take a look at this doc.\" Push the structural detail into referenced files and multimodal context 1–2 hops away.",
+            },
+            {
+              icon: <Lightbulb />,
+              title: "Make failure natural, not forced",
+              body: "Test capability, not perception. The model should lose by failing to cross-reference sources — not by misreading a single character.",
+            },
+          ].map((p, i) => (
+            <Reveal key={p.title} delay={i * 0.08}>
+              <div className="card h-full p-6">
+                <div className="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                  {p.icon}
+                </div>
+                <h3 className="mt-4 text-base font-bold text-ink-900">{p.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-500">{p.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* Interactive method */}
+      <section id="method" className="border-y border-ink-200/70 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <Reveal>
+            <SectionHeading
+              eyebrow="The workflow"
+              title="The 12-step Golden Task method"
+              sub="Click any step to see what happens, what it produces, and how it maps to the Complexity Playbook. The colored phases group steps into the major stages of task creation."
+            />
+          </Reveal>
+
+          <div className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_1.4fr]">
+            {/* Step rail */}
+            <div className="relative">
+              <div className="absolute bottom-2 left-[19px] top-2 w-px bg-ink-200" />
+              <div className="space-y-1.5">
+                {methodSteps.map((s) => {
+                  const isActive = s.n === activeStep;
+                  const grad = phaseColors[phaseOf(s.n)];
+                  return (
+                    <button
+                      key={s.n}
+                      onClick={() => setActiveStep(s.n)}
+                      className={cx(
+                        "group relative flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition",
+                        isActive ? "bg-ink-50" : "hover:bg-ink-50/60"
+                      )}
+                    >
+                      <span
+                        className={cx(
+                          "relative z-10 grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-bold text-white shadow-soft transition",
+                          `bg-gradient-to-br ${grad}`,
+                          isActive ? "scale-110 ring-4 ring-white" : "opacity-85"
+                        )}
+                      >
+                        {s.n}
+                      </span>
+                      <span className="min-w-0">
+                        <span
+                          className={cx(
+                            "block truncate text-sm font-semibold",
+                            isActive ? "text-ink-900" : "text-ink-600"
+                          )}
+                        >
+                          {s.title}
+                        </span>
+                        <span className="block truncate text-xs text-ink-400">
+                          {s.short}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Detail panel */}
+            <div className="lg:sticky lg:top-24 lg:self-start">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={step.n}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25 }}
+                  className="card overflow-hidden"
+                >
+                  <div
+                    className={cx(
+                      "bg-gradient-to-br p-6 text-white",
+                      phaseColors[phaseOf(step.n)]
+                    )}
+                  >
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-white/80">
+                      Step {step.n} of 12
+                    </div>
+                    <h3 className="mt-1 text-2xl font-extrabold">{step.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-white/90">
+                      {step.detail}
+                    </p>
+                  </div>
+                  <div className="space-y-4 p-6">
+                    {step.output && (
+                      <div className="flex items-center gap-2 rounded-lg bg-ink-50 px-3 py-2 text-sm">
+                        <span className="text-ink-400">Produces</span>
+                        <code className="rounded bg-white px-2 py-0.5 font-mono text-xs font-semibold text-brand-700 shadow-sm">
+                          {step.output}
+                        </code>
+                      </div>
+                    )}
+                    <div>
+                      <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">
+                        Key moves
+                      </div>
+                      <ul className="space-y-2">
+                        {step.tips.map((t) => (
+                          <li key={t} className="flex gap-2.5 text-sm text-ink-700">
+                            <CheckCircle2
+                              size={16}
+                              className="mt-0.5 shrink-0 text-emerald-500"
+                            />
+                            <span className="leading-snug">{t}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {step.playbookLink && (
+                      <div className="flex items-center gap-2 border-t border-ink-100 pt-3 text-xs text-ink-400">
+                        <BookOpen size={13} />
+                        Playbook: <span className="font-medium text-ink-600">{step.playbookLink}</span>
+                      </div>
+                    )}
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        disabled={step.n === 1}
+                        onClick={() => setActiveStep((n) => Math.max(1, n - 1))}
+                        className="btn-ghost flex-1 disabled:opacity-40"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        disabled={step.n === 12}
+                        onClick={() => setActiveStep((n) => Math.min(12, n + 1))}
+                        className="btn-primary flex-1 disabled:opacity-40"
+                      >
+                        Next step <ArrowRight size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Playbook principles grid */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <Reveal>
+          <SectionHeading
+            eyebrow="Complexity Playbook"
+            title="What makes a task actually hard"
+            sub="The rubric set is what the customer audits, but the task setup is what makes the model fail meaningfully. These are the levers that create genuine signal."
+          />
+        </Reveal>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {playbookPrinciples.map((p, i) => (
+            <Reveal key={p.title} delay={i * 0.05}>
+              <div className="card h-full p-5">
+                <div className="flex items-center gap-2">
+                  <span className="grid h-7 w-7 place-items-center rounded-lg bg-gold-100 text-xs font-bold text-gold-700">
+                    {i + 1}
+                  </span>
+                  <h3 className="text-sm font-bold text-ink-900">{p.title}</h3>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-ink-500">{p.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA into tasks */}
+      <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl bg-ink-950 p-8 text-white sm:p-12">
+            <div className="absolute inset-0 bg-grid opacity-10" />
+            <div className="relative flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+              <div className="max-w-xl">
+                <Eyebrow>See it in practice</Eyebrow>
+                <h2 className="text-2xl font-extrabold sm:text-3xl">
+                  Now watch the method applied to a real Golden Task
+                </h2>
+                <p className="mt-3 text-ink-300">
+                  Every artifact, every friction point, every rubric — reconstructed so you
+                  can follow the reasoning from blank page to graded deliverable.
+                </p>
+              </div>
+              <Link
+                to={`/tasks/${tasks[0].meta.id}`}
+                className="btn bg-gold-400 text-ink-950 hover:bg-gold-300 text-base"
+              >
+                Open {tasks[0].meta.title} <ArrowRight size={18} />
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+    </div>
+  );
+}
