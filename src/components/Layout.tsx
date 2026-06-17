@@ -21,7 +21,7 @@ function Brand() {
 const links = [
   { to: "/", label: "The Method", end: true },
   { to: "/tasks", label: "Golden Tasks" },
-  { to: "/tracker", label: "CB Tracker" },
+  { to: "/tracker", label: "Pipeline Leaderboards" },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {

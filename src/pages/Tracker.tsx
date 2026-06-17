@@ -24,7 +24,7 @@ export default function Tracker() {
     <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
       <Reveal>
         <SectionHeading
-          eyebrow="CB Tracker"
+          eyebrow="Pipeline Leaderboards"
           title="Weekly Highlights"
           sub="Track patterns and progress over time. Each week captures the best-performing task, the worst, and the most common errors CBs should watch out for."
         />

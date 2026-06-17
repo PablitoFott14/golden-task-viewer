@@ -24,7 +24,7 @@ export interface WeekEntry {
 
 /**
  * Add new weeks at the TOP of this array (most recent first).
- * Each entry shows up as a card in the CB Tracker timeline.
+ * Each entry shows up as a card in the Pipeline Leaderboards timeline.
  */
 export const weeklyEntries: WeekEntry[] = [
   {

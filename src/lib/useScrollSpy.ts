@@ -5,6 +5,13 @@ export function useScrollSpy(ids: string[], offset = 140) {
 
   useEffect(() => {
     const handler = () => {
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+      if (atBottom && ids.length > 0) {
+        setActive(ids[ids.length - 1]);
+        return;
+      }
+
       let current = ids[0];
       for (const id of ids) {
         const el = document.getElementById(id);
