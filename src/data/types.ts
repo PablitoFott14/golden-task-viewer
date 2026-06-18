@@ -83,20 +83,15 @@ export interface Rubric {
 export interface RunObservation {
   id: string;
   title: string;
-  /** What actually happened, taken from the workspace + trajectory. */
+  /** A concise, factual recreation of what the model did — no interpretation. */
   what: string;
-  /** Why it matters / what it teaches. */
-  lesson: string;
-  impact: "fail" | "partial" | "hallucination" | "ok";
-  /** Rubric numbers this observation affected. */
+  /** Rubric numbers this observation maps to. */
   rubrics?: number[];
 }
 
 export interface ActualRun {
-  /** One-paragraph summary of the initial (failed) trajectory. */
+  /** Short factual framing of the initial run. */
   summary: string;
-  /** Tool-usage stats pulled from the trajectory. */
-  toolStats: { label: string; value: number }[];
   /** The folder tree the model actually produced. */
   producedTree: FolderNode;
   /** Grounded observations of what happened. */
@@ -169,6 +164,8 @@ export interface Task {
   actualRun: ActualRun;
   /** The raw mixed caption file, exposed for reading inside the viewer. */
   captionsFile: { path: string; note: string };
+  /** Reviewer-only pytest code validating the structural folders. Shown on demand. */
+  unitTestCode: string;
   artifactDocs: { label: string; file: string; description: string }[];
 }
 

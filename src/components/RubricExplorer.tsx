@@ -28,6 +28,22 @@ function isSatisfied(r: Rubric): boolean {
   return r.points > 0 ? r.status === "present" : r.status === "not-present";
 }
 
+/** Render text faithfully, turning `backtick` spans from the source into inline code. */
+function renderRubricText(text: string) {
+  return text.split("`").map((part, i) =>
+    i % 2 === 1 ? (
+      <code
+        key={i}
+        className="rounded bg-ink-100 px-1 py-0.5 font-mono text-[12px] text-brand-700 dark:bg-ink-200/60 dark:text-brand-300"
+      >
+        {part}
+      </code>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
+}
+
 type View = "all" | "missed" | "passed" | "negative";
 
 export default function RubricExplorer({
@@ -90,17 +106,17 @@ export default function RubricExplorer({
           positive points{penaltyIncurred < 0 ? <>, minus a <strong className="text-rose-600">{penaltyIncurred}</strong> negative penalty,</> : <> </>}{" "}
           for a net of <strong className="text-ink-900">{netScore}</strong>.{" "}
           {belowBar ? (
-            <>That is below the <strong>{failThreshold}-point</strong> bar — the task fails as designed,
-            clearing the way for the Silver Trajectory.</>
+            <>That is below the <strong>{failThreshold}-point</strong> bar, which clears the threshold to
+            move on to the Silver Trajectory.</>
           ) : (
-            <>That clears the <strong>{failThreshold}-point</strong> bar.</>
+            <>That is at or above the <strong>{failThreshold}-point</strong> bar.</>
           )}
         </p>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           <ScoreCard label="Net score" value={`${netScore} / ${totalPositive}`} tone={belowBar ? "rose" : "emerald"} />
           <ScoreCard label="≥50% bar" value={`${failThreshold} pts`} tone="brand" hint="Half of positive weight" />
-          <ScoreCard label="Criteria missed" value={missedCount} tone="rose" hint="Positive + Not Present" />
-          <ScoreCard label="Negatives triggered" value={negativesTriggered} tone="amber" hint="Negative + Present" />
+          <ScoreCard label="Positive · Not Present" value={missedCount} tone="rose" />
+          <ScoreCard label="Negative · Present" value={negativesTriggered} tone="amber" />
         </div>
       </div>
 
@@ -127,7 +143,7 @@ export default function RubricExplorer({
       <div className="mb-4 flex flex-wrap gap-2">
         {([
           ["all", `All ${rubrics.length}`],
-          ["missed", `Missed ${missedCount}`],
+          ["missed", `Not satisfied ${missedCount}`],
           ["passed", "Satisfied"],
           ["negative", "Negative"],
         ] as [View, string][]).map(([v, label]) => (
@@ -187,7 +203,7 @@ export default function RubricExplorer({
                     <StatusBadge rubric={r} />
                   </span>
                   <span className="mt-1.5 block text-sm font-medium leading-snug text-ink-800">
-                    {r.text}
+                    {renderRubricText(r.text)}
                   </span>
                 </span>
                 <ChevronDown

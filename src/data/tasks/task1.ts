@@ -39,9 +39,9 @@ const task1: Task = {
     },
     {
       title: "Emergency Social Media Recovery",
-      body: "The monthly social media plan was lost. After an emergency meeting the team recovered scattered context and now needs to audit it before posting.",
+      body: "Vaulta's whole June social-media plan was lost. After an emergency meeting the team recovered scattered context for the month and now needs to audit it before posting.",
       chosen: true,
-      why: "It leaves the most room to create realistic complexity while staying naturally aligned with Creative & Media / Social Media Content Audit. It grounds easily in Brandon's day-to-day at a fintech startup, producing stronger persona adherence and a more believable request.",
+      why: "It leaves the most room to create realistic complexity while staying naturally aligned with Creative & Media / Social Media Content Audit. The scenario is built around recovering a single month — June 2026 — so every post, date and caption lives inside that window, which grounds it cleanly in Brandon's day-to-day at a fintech startup and makes the request believable.",
     },
   ],
 
@@ -69,8 +69,8 @@ const task1: Task = {
       kind: "handwritten",
       role: "ssot",
       whatItShows:
-        "Page 1 of the handwritten draft. Header INSTAGRAM with the 11th (Q2 dinner recap), 5th (5-slide cybersecurity carousel with its five slide topics), and a weekly Friday finance-quote rule. A boxed [X] section below lists the 20th-ish dashboard post, a weekly Wednesday slot (no action), and the 7th support-maintenance post.",
-      verdict: "Single source of truth for Instagram + X plans.",
+        "Page 1 of the handwritten June draft, headed INSTAGRAM: the 11th (Q2 dinner recap), the 5th (5-slide cybersecurity carousel, with its five slide topics listed), and a weekly Friday finance-quote rule. A boxed [X] section underneath holds the 22nd dashboard-preview post and the 7th support-maintenance post that ends at 3am PST.",
+      verdict: "Single source of truth for the Instagram + X plans.",
       rationale:
         "Putting Instagram and X on the same page (with X scattered below Instagram) is the planted trap: models tend to lump the X posts under Instagram and miss the X channel entirely. Reading the SSOT correctly is the spine of the whole task.",
       tags: ["SSOT", "Instagram", "X", "rush note"],
@@ -81,7 +81,7 @@ const task1: Task = {
       kind: "handwritten",
       role: "ssot",
       whatItShows:
-        "Page 2 of the handwritten draft. Header LINKEDIN. The 14th post (with 16th crossed out → 14th) explaining financial ecosystems in <300 words, the 17th mobile-app post that must mention Standard (500/month) and Plus (unlimited) AI tiers, and the 29th Boston-office post that must include Brandon's email and personal phone number.",
+        "Page 2 of the handwritten June draft, headed LINKEDIN: the 14th post (written as 16th, struck through, rewritten as 14th) explaining financial ecosystems in under 300 words; the 17th mobile-app post that must mention the Standard (500/month) and Plus (unlimited) AI tiers and use a phone image; and the 29th Boston-office post that must include Brandon's email and personal phone number.",
       verdict: "Single source of truth for the LinkedIn plan.",
       rationale:
         "The crossed-out 16th→14th date is a deliberate strike-through test (see the playbook). The explicit constraints here — the 300-word limit, the membership tiers, the phone number — are exactly what the recovered captions later violate, creating the mismatches.",
@@ -661,7 +661,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
   rubrics: [
     {
       n: 1,
-      text: "The model extracts the planning information contained in 1780566865852.jpeg and 1780566865892.jpg when rebuilding the social media plan.",
+      text: "The model extracts the planning information contained in `1780566865852.jpeg` and `1780566865892.jpg` when rebuilding the social media plan.",
       points: 5,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'use it as the SSOT to help me audit all the social media content.'",
@@ -674,7 +674,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 2,
-      text: "The model produces a LinkedIn folder as part of the output.",
+      text: "The model produces a `Linkedin` folder as part of the output.",
       points: 5,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 2 (LinkedIn).",
@@ -686,7 +686,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 3,
-      text: "The model produces an Instagram folder as part of the output.",
+      text: "The model produces a `Instagram` folder as part of the output.",
       points: 5,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 1 (Instagram).",
@@ -698,7 +698,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 4,
-      text: "The model produces an X folder as part of the output.",
+      text: "The model produces a `X` folder as part of the output.",
       points: 5,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 1 (boxed [X] section).",
@@ -710,7 +710,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 5,
-      text: "The model includes only IMG_20260314_173522.png in the LinkedIn/06-14 folder.",
+      text: "The model includes only `IMG_20260314_173522.png` in the `LinkedIn/06-14` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 14th LinkedIn post + corresponding image.",
@@ -723,7 +723,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 6,
-      text: "The model includes only phone.jpg in the LinkedIn/06-17 folder.",
+      text: "The model includes only `phone.jpg` in the `Linkedin/06-17` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 17th post 'with phone image'.",
@@ -736,7 +736,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 7,
-      text: "The model includes only carrousel_1.png, carrousel_2.png, carrousel_3.png, and carrsel_4.png in the Instagram/06-05 folder as content related to the 5-slide carousel post.",
+      text: "The model includes only `carrousel_1.png`, `carrousel_2.png`, `carrousel_3.png`, and `carrsel_4.png` in the `Instagram/06-05` folder as content related to the 5-slide carousel post.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 5th Instagram 5-slide cybersecurity carousel.",
@@ -749,7 +749,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 8,
-      text: "The model includes any of Screenshot_2026-05-29 091745.png, quote_3.png, IMG_33489034.png, or visual_3248329.png financial-quote images in the Instagram/06-05 folder.",
+      text: "The model includes any of `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` financial quote images in the `Instagram/06-05` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance-quote rule (06-05 is a Friday).",
@@ -762,7 +762,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 9,
-      text: "The model includes a 06-05.txt file containing only the Strong passwords, Two-factor authentication, and Software updates sections of the 5-slide carousel caption in the Instagram/06-05 folder.",
+      text: "The model includes a `06-05.txt` file containing only the `Strong passwords`, `Two-factor authentication`, and `Software updates` sections of the 5-slide carousel caption in the `Instagram/06-05` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'save each one individually as an MM-DD.txt file.'",
@@ -774,7 +774,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 10,
-      text: "The model includes only visual_5960419.png and visual_20260419.png within the Instagram/06-11 folder.",
+      text: "The model includes only `visual_5960419.png` and `visual_20260419.png` within the `Instagram/06-11` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 11th Instagram Q2 dinner recap.",
@@ -787,7 +787,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 11,
-      text: "The model includes one of the remaining unused finance-quote images alone in the Instagram/06-12 folder.",
+      text: "The model includes one of the remaining unused images from `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` alone in the `Instagram/06-12` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance quote (06-12).",
@@ -799,7 +799,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 12,
-      text: "The model includes one of the remaining unused finance-quote images alone in the Instagram/06-19 folder.",
+      text: "The model includes one of the remaining unused images from `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` alone in the `Instagram/06-19` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance quote (06-19).",
@@ -811,7 +811,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 13,
-      text: "The model includes the remaining unused finance-quote image alone in the Instagram/06-26 folder.",
+      text: "The model includes the remaining unused image from `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` alone in the `Instagram/06-26` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance quote (06-26).",
@@ -823,7 +823,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 14,
-      text: "The model includes either final_visual.png or Dash.jpg, or both, in the X/06-22 folder.",
+      text: "The model includes either `final_visual.png` or `Dash.jpg`, or both, in the `X/06-22` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 22nd X dashboard preview post.",
@@ -836,7 +836,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 15,
-      text: "The model includes a 06-22.txt caption in X/06-22 referencing the dashboard presentation scheduled for 24th June.",
+      text: "The model includes a 06-22.txt caption in `X/06-22` referencing the dashboard presentation scheduled for 24th June.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: split captions to MM-DD.txt / SSOT dashboard post.",
@@ -848,7 +848,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 16,
-      text: "The model includes only IMG_398573.png in the X/06-07 folder.",
+      text: "The model includes only `IMG_398573.png` in the `X/06-07` folder.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 7th X support-maintenance post.",
@@ -861,7 +861,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 17,
-      text: "The model logs Instagram missing-information for the weekly finance-quote posts 06-05, 06-12, 06-19, and 06-26 — that captions are missing for all of them.",
+      text: "The model includes as Instagram missing information for the weekly finance quote posts `06-05`, `06-12`, `06-19`, and `06-26` (`Instagram > 06-05`, `Instagram > 06-12`, `Instagram > 06-19`, `Instagram > 06-26`), that captions are missing for all of them.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'Consider missing everything that is not appearing… but is part of our planning.'",
@@ -873,7 +873,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 18,
-      text: "The model logs the LinkedIn 06-14 mismatch — that the caption exceeds the 300-word limit.",
+      text: "The model includes as LinkedIn mismatch information that `06-14` (`LinkedIn > 06-14`) exceeds the 300-word limit.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 14th post 'in <300 words'.",
@@ -885,7 +885,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 19,
-      text: "The model logs the LinkedIn 06-17 mismatch — that the caption omits the membership-tier details (Standard 500/month; Plus unlimited).",
+      text: "The model includes as LinkedIn mismatch information that the `06-17` caption (`LinkedIn > 06-17`) is not including the membership tier details about Standard members receiving `500` monthly AI insights, while Plus members receive `unlimited` AI powered financial guidance and recommendations.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 17th post must mention Standard 500 + Plus unlimited.",
@@ -897,7 +897,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 20,
-      text: "The model logs the LinkedIn 06-29 mismatch — wrong phone number (617) 555-0537 instead of Brandon's (617) 555-0394.",
+      text: "The model includes as LinkedIn mismatch information that 06-29 (LinkedIn > 06-29) contains the wrong phone number `(617) 555-0537` instead of Brandon's expected one (617) 555-0394.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 29th post must include Brandon's personal phone number.",
@@ -910,7 +910,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 21,
-      text: "The model logs the Instagram 06-05 mismatches — the 'phishing awareness' and 'regular safe browsing habits' captions, and the carrousel_5.png image.",
+      text: "The model includes as Instagram mismatch information for the 06-05 post (`Instagram > 06-05`), the `phishing awareness` and `regular safe browsing habits` captions, and the `carrousel_5.png` image.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'Consider mismatching everything appearing but not fully matching the planning.'",
@@ -923,7 +923,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 22,
-      text: "The model logs the Instagram 06-11 mismatch — a dinner-post caption referencing Q1 instead of Q2.",
+      text: "The model includes as Instagram mismatch information that 06-11 (`Instagram > 06-11`) contains a dinner post caption referencing Q1 instead of Q2.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 11th post recaps the Q2 dinner held June 1st.",
@@ -935,7 +935,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 23,
-      text: "The model logs the X 06-07 mismatch — 4am PST listed as the maintenance end time instead of 3am PST.",
+      text: "The model includes as X mismatch information that `06-07` (`X > 06-07`) lists `4am PST` as the ending support maintenance time instead of `3am PST`.",
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: support maintenance ends 3am PST.",
@@ -947,7 +947,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 24,
-      text: "The model reports in the final assistant message that IMG_39852.png, Screenshot_2026-06-03 234708.png, visual_8456934.png, and update.png were removed.",
+      text: "The model reports in the final assistant message that `IMG_39852.png`, `Screenshot_2026-06-03 234708.png`, `visual_8456934.png`, and `update.png` were removed.",
       points: 3,
       category: "Task Completion — User-facing message",
       enforces: "Prompt: 'Any content removed should be included in your final message.'",
@@ -960,7 +960,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 25,
-      text: "The model reports in the final assistant message that final_viasual.jpg or Dash.jpg are duplicated images.",
+      text: "The model reports in the final assistant message that `final_viasual.jpg` or `Dash.jpg` are duplicated images.",
       points: 1,
       category: "Agent Behaviour — User-facing message",
       enforces: "Implicit good behavior: surface duplicates.",
@@ -973,7 +973,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 26,
-      text: "The model emails trevor@vaulta.io and maya@vaulta.io describing the identified mismatches (the six mismatch points across LinkedIn, Instagram, and X).",
+      text: "The model sends an email to `trevor@vaulta.io` and `maya@vaulta.io` describing the identified mismatches, including the June 14 LinkedIn post exceeding the 300-word limit, the June 17 LinkedIn post missing membership tier details, the June 29 LinkedIn post containing an incorrect phone number, the June 11 Instagram post referencing Q1 instead of Q2, the June 7 X post listing 4am instead of 3am as the maintenance end time, and the June 22 X post announcing the dashboard launch on June 24th instead of July 1st.",
       points: 5,
       category: "Task Completion — State change",
       enforces: "Prompt: 'send Trevor and Maya an email with the mismatches to fix.'",
@@ -986,7 +986,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     },
     {
       n: 27,
-      text: "The model includes an 'Unassigned' section in MEMORY.md, despite it not being part of the requested missing/mismatching workflow.",
+      text: "The model includes an `Unassigned` section in MEMORY.md, despite it not being part of the requested , mismatching, or missing-content `MEMORY.md` workflow.",
       points: -1,
       category: "Agent Behaviour — Final answer/artifact",
       enforces: "Prompt defines only missing / mismatching / removable buckets.",
@@ -1101,14 +1101,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
 
   actualRun: {
     summary:
-      "A single-turn run from seed. The model audited the content energetically but lost the X channel entirely, mis-dated the dashboard post, left mismatched content sitting inside post folders, invented an 'Unassigned' bucket, and signed off by claiming it had emailed the team — an action it never actually performed. The result lands well below the 50% positive-weight bar, which is exactly the genuine failure the task was engineered to produce and what justifies the Silver Trajectory.",
-    toolStats: [
-      { label: "exec", value: 23 },
-      { label: "image", value: 10 },
-      { label: "write", value: 8 },
-      { label: "read", value: 6 },
-      { label: "memory_search", value: 1 },
-    ],
+      "Single-turn run from seed. The model created Instagram and LinkedIn folders but no X folder, placed the X posts under Instagram, left several mismatched items inside post folders, added an extra 'Unassigned' section to MEMORY.md, and reported the team email as sent. Measured against the GTFA, it clears well under half of the positive rubric weight.",
     producedTree: {
       name: "social-media",
       type: "folder",
@@ -1214,57 +1207,95 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     observations: [
       {
         id: "no-x",
-        title: "The entire X channel vanished",
-        impact: "fail",
+        title: "No X folder; X posts placed under Instagram",
         rubrics: [4, 14, 15, 16],
-        what: "No X/ folder was created. The support-maintenance post landed in Instagram/06-07 and the dashboard post in Instagram/06-10 — both absorbed under Instagram because the X plan is boxed below Instagram on the same handwritten page.",
-        lesson: "This is the headline failure the SSOT layout was designed to provoke. Models lean on page/layout structure, so the boxed [X] section gets lumped under Instagram. Four +5/+3 rubrics hinge on it.",
-      },
-      {
-        id: "dashboard-misdate",
-        title: "Dashboard post mis-dated to 06-10",
-        impact: "fail",
-        rubrics: [14, 15],
-        what: "Even setting the platform aside, the dashboard preview was filed under date 06-10. The plan places it on the 22nd. The model invented a date instead of reading the planned one.",
-        lesson: "Structural placement (platform + date) is graded independently from content. A wrong date fails the date-folder rubrics even when the right files are present.",
+        what: "No X/ folder was created. The 7th support-maintenance post was placed in Instagram/06-07, and the 22nd dashboard post was placed in Instagram/06-10 instead of X/06-22.",
       },
       {
         id: "log-but-keep",
-        title: "Mismatches logged, but left inside the folders",
-        impact: "partial",
+        title: "Mismatched content left inside the post folders",
         rubrics: [6, 7, 9, 10],
-        what: "The model correctly noted several mismatches in MEMORY.md, yet still kept the offending content in the post folders: all five carousel slides, the 5-block 06-05 caption, the Q1 dinner caption, and update.png next to phone.jpg.",
-        lesson: "The prompt's 'mismatching' bucket means log AND remove from the post — detection alone is half the job. The 'only …' wording in the rubrics is what catches the leftovers.",
+        what: "Instagram/06-05 kept all five carousel images (including carrousel_5.png), and 06-05.txt kept all five caption blocks. The Q1 caption stayed in Instagram/06-11, and update.png stayed in LinkedIn/06-17 next to phone.jpg.",
+      },
+      {
+        id: "missing-quote",
+        title: "06-05 finance quote and its missing-caption log skipped",
+        rubrics: [8, 17],
+        what: "No finance-quote image was placed in Instagram/06-05, and the missing-caption entry in MEMORY.md covered 06-12, 06-19 and 06-26 but not 06-05.",
       },
       {
         id: "unassigned",
-        title: "Invented an 'Unassigned' bucket",
-        impact: "fail",
+        title: "Added an 'Unassigned' section to MEMORY.md",
         rubrics: [27],
-        what: "MEMORY.md gained an 'UNASSIGNED / EXTRA CONTENT' section listing quote_3.png, IMG_39852.png and visual_8456934.png — a category the prompt never defined.",
-        lesson: "The prompt defines exactly three buckets: missing, mismatching, removable. Inventing a fourth is scope creep — and the run trips the single negative rubric (a negative criterion that is Present is a failure).",
+        what: "MEMORY.md included an 'UNASSIGNED / EXTRA CONTENT' section listing quote_3.png, IMG_39852.png and visual_8456934.png.",
       },
       {
-        id: "phantom-email",
-        title: "Claimed an email it never sent",
-        impact: "hallucination",
+        id: "removed-report",
+        title: "Removed-content report incomplete",
+        rubrics: [24],
+        what: "The final message listed IMG_39852.png, Screenshot_2026-06-03 234708.png, visual_8456934.png and quote_3.png as removed; update.png was not reported.",
+      },
+      {
+        id: "email-claim",
+        title: "Reported the email as sent",
         rubrics: [26],
-        what: "The final message states 'Email sent to Trevor and Maya.' The trajectory contains no email or send action — only exec, write, read, image and memory_search calls. The one state-change in the task was fabricated.",
-        lesson: "Never grade a state-change from the model's self-report. Verify the action in the trajectory. Here the only +5 state-change rubric fails despite a confident claim of success.",
-      },
-      {
-        id: "hallucinated-plan",
-        title: "Hallucinated plan details that aren't in the SSOT",
-        impact: "hallucination",
-        what: "The audit asserted ground truth the handwritten plan never states: maintenance '12 AM–8 AM BST', a 'June 9th' dashboard date, that '(617) 555-0537 is Maya's number', and a 'MARKETING watermark'. Some mismatch reports are anchored to invented facts.",
-        lesson: "A few criteria passed for the wrong reason. When cross-referencing GTFA vs. response, separate genuine findings from confident fabrication — it changes which rubrics legitimately count.",
+        what: "The final message states the email to Trevor and Maya was sent, but no email or send action appears in the trajectory.",
       },
     ],
   },
 
+  unitTestCode: `import os
+from pathlib import Path
+
+# Point this at the agent's output root (the folder that holds the platform folders).
+OUTPUT_DIR = Path("social-media")
+
+
+def _subdirs(path: Path):
+    return {p.name for p in path.iterdir() if p.is_dir()} if path.is_dir() else set()
+
+
+# --- Platform folder tests ---
+
+def test_output_contains_instagram_platform_folder():
+    assert "Instagram" in _subdirs(OUTPUT_DIR), "Missing Instagram/ platform folder"
+
+
+def test_output_contains_x_platform_folder():
+    assert "X" in _subdirs(OUTPUT_DIR), "Missing X/ platform folder"
+
+
+def test_output_contains_linkedin_platform_folder():
+    assert "LinkedIn" in _subdirs(OUTPUT_DIR), "Missing LinkedIn/ platform folder"
+
+
+# --- Date folder tests ---
+
+def test_instagram_contains_required_date_folders():
+    expected = {"06-05", "06-11", "06-12", "06-19", "06-26"}
+    found = _subdirs(OUTPUT_DIR / "Instagram")
+    assert expected <= found, f"Instagram missing date folders: {expected - found}"
+
+
+def test_linkedin_contains_required_date_folders():
+    expected = {"06-14", "06-17"}
+    found = _subdirs(OUTPUT_DIR / "LinkedIn")
+    assert expected <= found, f"LinkedIn missing date folders: {expected - found}"
+
+
+def test_x_contains_required_date_folders():
+    expected = {"06-22", "06-07"}
+    found = _subdirs(OUTPUT_DIR / "X")
+    assert expected <= found, f"X missing date folders: {expected - found}"
+
+
+if __name__ == "__main__":
+    import pytest
+    pytest.main([__file__, "-rA", "--tb=short"])
+`,
+
   artifactDocs: [
     { label: "Persona context", file: "persona_context.md", description: "Full persona profile the contributor built from the universe." },
-    { label: "Rationale", file: "rationale.md", description: "The contributor's step-by-step reasoning for the whole task." },
     { label: "Prompt", file: "prompt.md", description: "The final user-facing prompt + category/subcategory." },
     { label: "GTFA", file: "GTFA.md", description: "The Ground Truth Final Answer / Desired Outcome." },
     { label: "Rubrics", file: "rubrics.md", description: "The raw 27-criterion rubric set." },
