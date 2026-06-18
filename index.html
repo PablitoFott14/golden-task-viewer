@@ -15,6 +15,17 @@
       rel="stylesheet"
     />
     <title>Golden Task Viewer</title>
+    <script>
+      // Apply the saved/system theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var t = localStorage.getItem("gtv-theme");
+          if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

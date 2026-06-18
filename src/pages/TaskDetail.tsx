@@ -23,10 +23,11 @@ import { getTask } from "../data";
 import type { CaptionItem, FrictionPoint } from "../data/types";
 import { assetUrl, docUrl, cx, roleStyles } from "../lib/assets";
 import { useScrollSpy } from "../lib/useScrollSpy";
-import { Pill, Stat } from "../components/ui";
+import { Pill, Stat, Teach, RawText } from "../components/ui";
 import ImageGallery from "../components/ImageGallery";
 import FolderTree from "../components/FolderTree";
 import RubricExplorer from "../components/RubricExplorer";
+import TrajectoryReport from "../components/TrajectoryReport";
 import MarkdownDoc from "../components/MarkdownDoc";
 
 const SECTIONS = [
@@ -38,6 +39,7 @@ const SECTIONS = [
   { id: "prompt", label: "The prompt" },
   { id: "gtfa", label: "Ground Truth" },
   { id: "friction", label: "Friction map" },
+  { id: "actual", label: "Initial run" },
   { id: "silver", label: "Silver trajectory" },
   { id: "tests", label: "Unit tests" },
   { id: "rubrics", label: "Rubrics" },
@@ -141,7 +143,7 @@ export default function TaskDetail() {
               {task.personaHighlights.map((h) => (
                 <div
                   key={h.label}
-                  className="rounded-xl border border-ink-200/70 bg-white p-4"
+                  className="rounded-xl border border-ink-200/70 bg-surface p-4"
                 >
                   <div className="text-[11px] font-bold uppercase tracking-wide text-brand-600">
                     {h.label}
@@ -171,8 +173,8 @@ export default function TaskDetail() {
                   className={cx(
                     "relative rounded-2xl border p-5 transition",
                     idea.chosen
-                      ? "border-emerald-300 bg-emerald-50/40 shadow-glow"
-                      : "border-ink-200/70 bg-white opacity-80"
+                      ? "border-emerald-300 bg-emerald-50/40 shadow-glow dark:border-emerald-500/40 dark:bg-emerald-500/10"
+                      : "border-ink-200/70 bg-surface opacity-80"
                   )}
                 >
                   {idea.chosen && (
@@ -185,7 +187,7 @@ export default function TaskDetail() {
                     {idea.body}
                   </p>
                   {idea.why && (
-                    <p className="mt-3 rounded-lg bg-white/70 p-3 text-[13px] leading-relaxed text-ink-700">
+                    <p className="mt-3 rounded-lg bg-surface/70 p-3 text-[13px] leading-relaxed text-ink-700">
                       <span className="font-semibold text-emerald-700">Why this one: </span>
                       {idea.why}
                     </p>
@@ -231,6 +233,12 @@ export default function TaskDetail() {
                 </ul>
               </div>
             </div>
+            <Teach>
+              Build the world <em>before</em> the prompt. Decide which multimodal context could plausibly
+              exist, then ask which of it would genuinely raise complexity. Difficulty should live in the
+              joins between sources — information that exists in only one place forces real auditing
+              instead of a surface lookup.
+            </Teach>
           </Section>
 
           {/* ===== MM inputs ===== */}
@@ -255,9 +263,9 @@ export default function TaskDetail() {
                   .map((a) => (
                     <div
                       key={a.filename}
-                      className="overflow-hidden rounded-2xl border border-gold-200 bg-white shadow-soft"
+                      className="overflow-hidden rounded-2xl border border-gold-200 bg-surface shadow-soft"
                     >
-                      <div className="bg-ink-950 p-3">
+                      <div className="bg-[#0b0e16] p-3">
                         <img
                           src={assetUrl(task.assetRoot, a.src)}
                           alt={a.whatItShows}
@@ -271,8 +279,8 @@ export default function TaskDetail() {
                         <p className="mt-1.5 text-[13px] leading-relaxed text-ink-600">
                           {a.whatItShows}
                         </p>
-                        <p className="mt-2 rounded-lg bg-gold-50 px-3 py-2 text-[13px] leading-relaxed text-ink-700">
-                          <span className="font-semibold text-gold-800">Why it works: </span>
+                        <p className="mt-2 rounded-lg bg-gold-50 px-3 py-2 text-[13px] leading-relaxed text-ink-700 dark:bg-gold-400/10">
+                          <span className="font-semibold text-gold-800 dark:text-gold-300">Why it works: </span>
                           {a.rationale}
                         </p>
                       </div>
@@ -307,7 +315,22 @@ export default function TaskDetail() {
                   <CaptionRow key={c.n} c={c} />
                 ))}
               </div>
+
+              {/* Raw caption file, exposed inline */}
+              <RawFile
+                label="Read the raw text_post.txt"
+                file="text_post.txt"
+                note={task.captionsFile.note}
+                url={assetUrl(task.assetRoot, task.captionsFile.path)}
+              />
             </div>
+
+            <Teach>
+              The mixed caption file is the heart of the cross-reference challenge. Build inputs where a
+              single source must be <em>split and re-attributed</em> rather than copied wholesale — and
+              plant the mismatches <em>inside</em> the content (a wrong quarter, an over-limit length, a
+              swapped phone number) so the model has to read meaning, not just route files.
+            </Teach>
           </Section>
 
           {/* ===== Prompt ===== */}
@@ -319,7 +342,7 @@ export default function TaskDetail() {
             sub="The prompt stays high-level and natural. The annotations on the right explain the structural intent behind each key phrase."
           >
             <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-              <div className="rounded-2xl border border-ink-200/70 bg-white p-6 shadow-soft">
+              <div className="rounded-2xl border border-ink-200/70 bg-surface p-6 shadow-soft">
                 <div className="mb-3 flex items-center gap-2 text-xs font-semibold text-ink-400">
                   <Quote size={14} /> prompt.md
                 </div>
@@ -335,9 +358,9 @@ export default function TaskDetail() {
                   {task.promptAnnotations.map((a, i) => (
                     <div
                       key={i}
-                      className="rounded-xl border border-ink-200/70 bg-white p-3.5"
+                      className="rounded-xl border border-ink-200/70 bg-surface p-3.5"
                     >
-                      <div className="text-[13px] font-semibold italic text-brand-700">
+                      <div className="text-[13px] font-semibold italic text-brand-700 dark:text-brand-300">
                         "{a.quote}"
                       </div>
                       <div className="mt-1.5 text-[13px] leading-snug text-ink-600">
@@ -348,6 +371,12 @@ export default function TaskDetail() {
                 </div>
               </div>
             </div>
+            <Teach>
+              Keep the opening line something the persona would actually say, and let the nested context
+              carry the structural detail. Every constraint the model is graded on is implied here, not
+              spelled out as a dev-spec — honest interpretation of the SSOT is what should produce the
+              right behavior.
+            </Teach>
           </Section>
 
           {/* ===== GTFA ===== */}
@@ -378,8 +407,8 @@ export default function TaskDetail() {
                         className={cx(
                           "rounded-lg border p-2.5 text-[13px]",
                           e.category === "missing"
-                            ? "border-sky-200 bg-sky-50/50"
-                            : "border-amber-200 bg-amber-50/50"
+                            ? "border-sky-200 bg-sky-50/50 dark:border-sky-500/40 dark:bg-sky-500/10"
+                            : "border-amber-200 bg-amber-50/50 dark:border-amber-500/40 dark:bg-amber-500/10"
                         )}
                       >
                         <span
@@ -405,8 +434,8 @@ export default function TaskDetail() {
 
             {/* removed + email */}
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
-              <div className="rounded-2xl border border-rose-200 bg-rose-50/40 p-5">
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-rose-700">
+              <div className="rounded-2xl border border-rose-200 bg-rose-50/40 p-5 dark:border-rose-500/40 dark:bg-rose-500/10">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-rose-700 dark:text-rose-300">
                   <Trash2 size={16} /> Reported as removed (final message)
                 </h3>
                 <ul className="space-y-2">
@@ -420,15 +449,15 @@ export default function TaskDetail() {
                   ))}
                 </ul>
               </div>
-              <div className="rounded-2xl border border-fuchsia-200 bg-fuchsia-50/40 p-5">
-                <h3 className="mb-2 flex items-center gap-2 text-sm font-bold text-fuchsia-700">
+              <div className="rounded-2xl border border-fuchsia-200 bg-fuchsia-50/40 p-5 dark:border-fuchsia-500/40 dark:bg-fuchsia-500/10">
+                <h3 className="mb-2 flex items-center gap-2 text-sm font-bold text-fuchsia-700 dark:text-fuchsia-300">
                   <Mail size={16} /> Email to the team
                 </h3>
                 <div className="mb-3 flex flex-wrap gap-1.5">
                   {task.email.to.map((t) => (
                     <span
                       key={t}
-                      className="rounded-md bg-white px-2 py-0.5 font-mono text-[11px] text-fuchsia-700 shadow-sm"
+                      className="rounded-md bg-surface px-2 py-0.5 font-mono text-[11px] text-fuchsia-700 shadow-sm"
                     >
                       {t}
                     </span>
@@ -463,15 +492,39 @@ export default function TaskDetail() {
                 <FrictionCard key={f.id} f={f} />
               ))}
             </div>
+            <Teach>
+              Spread difficulty across many natural friction points instead of one make-or-break gotcha.
+              When failure is distributed, a single perception slip never decides the whole task — and the
+              run below confirms it: the model tripped on most of these, but for reasoning reasons, not
+              because it misread one character.
+            </Teach>
+          </Section>
+
+          {/* ===== Initial run (what actually happened) ===== */}
+          <Section
+            id="actual"
+            n={9}
+            title="What the Model Actually Did"
+            kicker="Steps 8–9 — Run & cross-reference"
+            sub="Not an assumption from the final artifact — this is reconstructed directly from the seed trajectory and its workspace. This is the genuine failure the task was built to produce."
+          >
+            <TrajectoryReport run={task.actualRun} />
+            <Teach>
+              When you cross-reference the GTFA against the model's response, judge the{" "}
+              <em>actual trajectory</em>, never the model's self-report. Here the model confidently
+              announced it had emailed the team and audited everything — yet it never sent the email,
+              skipped the entire X channel, and invented findings. Read the files it wrote and the tools
+              it called; that is your ground truth for whether the task fails hard enough to proceed.
+            </Teach>
           </Section>
 
           {/* ===== Silver ===== */}
           <Section
             id="silver"
-            n={9}
+            n={10}
             title="The Silver Trajectory"
             kicker="Step 10 — Silver trajectory"
-            sub="Targeted follow-ups guide the model to the correct answer, always restoring to seed."
+            sub="Targeted follow-ups guide the model to the correct answer, always restoring to seed. Each one targets a specific failure observed in the run above."
           >
             <div className="relative space-y-4 pl-8">
               <div className="absolute bottom-4 left-[11px] top-4 w-px bg-ink-200" />
@@ -489,7 +542,7 @@ export default function TaskDetail() {
                       s.n
                     )}
                   </span>
-                  <div className="rounded-xl border border-ink-200/70 bg-white p-4 shadow-soft">
+                  <div className="rounded-xl border border-ink-200/70 bg-surface p-4 shadow-soft">
                     <div className="flex items-center gap-2">
                       <MessageSquare size={14} className="text-brand-500" />
                       <span className="text-sm font-bold text-ink-900">{s.label}</span>
@@ -510,7 +563,7 @@ export default function TaskDetail() {
           {/* ===== Unit tests ===== */}
           <Section
             id="tests"
-            n={10}
+            n={11}
             title="Unit Test References"
             kicker="Step 11 — Unit tests (reviewers only)"
             sub="Names and descriptions for the structural checks reviewers will implement."
@@ -527,7 +580,7 @@ export default function TaskDetail() {
                       .map((t) => (
                         <div
                           key={t.ref}
-                          className="rounded-xl border border-ink-200/70 bg-white p-3"
+                          className="rounded-xl border border-ink-200/70 bg-surface p-3"
                         >
                           <code className="font-mono text-[12px] font-semibold text-brand-700">
                             {t.ref}
@@ -546,21 +599,29 @@ export default function TaskDetail() {
           {/* ===== Rubrics ===== */}
           <Section
             id="rubrics"
-            n={11}
+            n={12}
             title="The Rubric Set"
             kicker="Step 12 — Rubrics"
-            sub="One rubric per prompt requirement. Each includes rationale, the requirement it enforces, and its weight. Click to expand."
+            sub="The most important learning component. See how the run scored, then open any criterion to learn why it exists, what it checks, and what the model actually did against it."
           >
-            <RubricExplorer rubrics={task.rubrics} />
+            <RubricExplorer rubrics={task.rubrics} designNotes={task.rubricDesign} />
+            <Teach>
+              Write one rubric per explicit or implicit prompt requirement, phrase it as a single
+              checkable outcome, and weight it by verification difficulty ({"{"}+5 cross-source, +3 one
+              reconciliation step, +1 mechanical{"}"}). Mark each <strong>Present</strong> /{" "}
+              <strong>Not&nbsp;Present</strong> against the initial run: a positive criterion that is{" "}
+              <em>Not Present</em> is a genuine miss, and a negative criterion that <em>is</em> Present
+              (like the invented “Unassigned” section here) is a failure you <em>want</em> to catch.
+            </Teach>
           </Section>
 
           {/* ===== Artifacts ===== */}
           <Section
             id="artifacts"
-            n={12}
+            n={13}
             title="Raw Artifacts"
             kicker="Source documents"
-            sub="The original files produced for this task, rendered for reference."
+            sub="The original files produced for this task, rendered for reference. The rationale.md holds the contributor's full step-by-step reasoning — much of it is surfaced throughout the sections above."
           >
             <div className="space-y-2.5">
               {task.artifactDocs.map((d) => (
@@ -600,7 +661,7 @@ function Section({
     <section id={id} className="scroll-mt-24">
       <div className="mb-6 border-b border-ink-200/70 pb-5">
         <div className="flex items-center gap-2">
-          <span className="grid h-6 w-6 place-items-center rounded-md bg-ink-900 text-[11px] font-bold text-white">
+          <span className="grid h-6 w-6 place-items-center rounded-md bg-ink-900 text-[11px] font-bold text-ink-50">
             {n}
           </span>
           {kicker && (
@@ -633,7 +694,7 @@ function CaptionRow({ c }: { c: CaptionItem }) {
   const [open, setOpen] = useState(false);
   const st = captionStatus[c.status];
   return (
-    <div className="overflow-hidden rounded-xl border border-ink-200/70 bg-white">
+    <div className="overflow-hidden rounded-xl border border-ink-200/70 bg-surface">
       <button
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center gap-3 p-3 text-left"
@@ -668,7 +729,7 @@ function CaptionRow({ c }: { c: CaptionItem }) {
               </p>
               <div className="flex flex-wrap items-center gap-2 text-[13px]">
                 <span className="font-semibold text-ink-700">Belongs to:</span>
-                <span className="rounded-md bg-brand-50 px-2 py-0.5 font-mono text-[11px] text-brand-700">
+                <span className="rounded-md bg-brand-50 px-2 py-0.5 font-mono text-[11px] text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
                   {c.belongsTo}
                 </span>
               </div>
@@ -690,7 +751,7 @@ const frictionTone: Record<FrictionPoint["type"], string> = {
 
 function FrictionCard({ f }: { f: FrictionPoint }) {
   return (
-    <div className="rounded-xl border border-ink-200/70 bg-white p-4 shadow-soft">
+    <div className="rounded-xl border border-ink-200/70 bg-surface p-4 shadow-soft">
       <div className="flex items-start justify-between gap-2">
         <h3 className="flex items-center gap-2 text-sm font-bold text-ink-900">
           <AlertTriangle size={15} className="text-gold-500" />
@@ -710,6 +771,69 @@ function FrictionCard({ f }: { f: FrictionPoint }) {
   );
 }
 
+function RawFile({
+  label,
+  url,
+  file,
+  note,
+}: {
+  label: string;
+  url: string;
+  file: string;
+  note?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-5 overflow-hidden rounded-xl border border-violet-200 bg-surface dark:border-violet-500/40">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center gap-3 p-3.5 text-left transition hover:bg-ink-50"
+      >
+        <FileText size={16} className="shrink-0 text-violet-500" />
+        <span className="min-w-0 flex-1">
+          <span className="mr-2 rounded bg-violet-100 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-violet-700 dark:bg-violet-500/20 dark:text-violet-200">
+            {file}
+          </span>
+          <span className="text-sm font-medium text-ink-700">{label}</span>
+        </span>
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="shrink-0 rounded-md p-1 text-ink-400 transition hover:bg-ink-100 hover:text-ink-700"
+          title="Open raw file"
+        >
+          <ExternalLink size={14} />
+        </a>
+        {open ? (
+          <EyeOff size={16} className="shrink-0 text-ink-400" />
+        ) : (
+          <Eye size={16} className="shrink-0 text-ink-400" />
+        )}
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <div className="border-t border-ink-100 p-4">
+              {note && (
+                <p className="mb-3 text-[13px] leading-relaxed text-ink-500">{note}</p>
+              )}
+              <RawText url={url} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function ExpandableDoc({
   label,
   url,
@@ -721,7 +845,7 @@ function ExpandableDoc({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="mt-4 overflow-hidden rounded-xl border border-ink-200/70 bg-white">
+    <div className="mt-4 overflow-hidden rounded-xl border border-ink-200/70 bg-surface">
       <button
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center gap-3 p-3.5 text-left transition hover:bg-ink-50"

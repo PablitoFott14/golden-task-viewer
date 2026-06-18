@@ -5,3 +5,10 @@ dist-ssr
 .DS_Store
 .vscode/*
 !.vscode/extensions.json
+
+# Claude / agent tooling
+CLAUDE.md
+.claude/
+
+# Heavy raw source-of-truth artifacts (not loaded at runtime)
+public/model's behave/

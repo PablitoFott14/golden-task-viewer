@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="border-b border-ink-200/70 bg-white">
+      <section className="border-b border-ink-200/70 bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -51,7 +51,7 @@ export default function Home() {
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-500">
               Understand how successful Blue Shell tasks are designed — from persona
-              research through every rubric. Browse the method, then see it applied
+              research through rubric creation. Browse the method, then see it applied
               step by step in a real example.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -74,31 +74,31 @@ export default function Home() {
         <Reveal>
           <SectionHeading
             eyebrow="The mindset"
-            title="Three principles drive every decision"
-            sub="Before the steps, internalize the philosophy from the Complexity Playbook. Everything downstream is an expression of these."
+            title="Three principles drive every task"
+            sub="Before the steps, internalize the philosophy that shapes the whole methodology. Everything downstream is an expression of these."
           />
         </Reveal>
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {[
             {
               icon: <Target />,
-              title: "Reverse-engineer from the GTFA",
-              body: "Decide the correct final answer first, then design the prompt that should lead an agent to it. The GTFA grounds the prompt, the inputs, and the rubrics.",
-            },
-            {
-              icon: <GitBranch />,
-              title: "High-level prompt, nested complexity",
-              body: "Real users say \"take a look at this doc.\" Push the structural detail into referenced files and multimodal context 1–2 hops away.",
+              title: "Stepping into the user's shoes",
+              body: "Create realistic, believable scenarios that resemble real-world situations rather than artificial benchmark-style tasks.",
             },
             {
               icon: <Lightbulb />,
-              title: "Make failure natural, not forced",
-              body: "Test capability, not perception. The model should lose by failing to cross-reference sources — not by misreading a single character.",
+              title: "Originality",
+              body: "Go beyond common, overused scenarios and develop unique situations that naturally require complex reasoning.",
+            },
+            {
+              icon: <GitBranch />,
+              title: "Planning before execution",
+              body: "Design the task before building it. Stay in control of the requirements instead of improvising midway and discovering critical issues later — don't jump into the pool before checking whether there's water in it.",
             },
           ].map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
               <div className="card h-full p-6">
-                <div className="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                <div className="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
                   {p.icon}
                 </div>
                 <h3 className="mt-4 text-base font-bold text-ink-900">{p.title}</h3>
@@ -110,7 +110,7 @@ export default function Home() {
       </section>
 
       {/* Interactive method */}
-      <section id="method" className="border-y border-ink-200/70 bg-white">
+      <section id="method" className="border-y border-ink-200/70 bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <Reveal>
             <SectionHeading
@@ -141,7 +141,7 @@ export default function Home() {
                         className={cx(
                           "relative z-10 grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-bold text-white shadow-soft transition",
                           `bg-gradient-to-br ${grad}`,
-                          isActive ? "scale-110 ring-4 ring-white" : "opacity-85"
+                          isActive ? "scale-110 ring-4 ring-ink-50" : "opacity-85"
                         )}
                       >
                         {s.n}
@@ -194,7 +194,7 @@ export default function Home() {
                     {step.output && (
                       <div className="flex items-center gap-2 rounded-lg bg-ink-50 px-3 py-2 text-sm">
                         <span className="text-ink-400">Produces</span>
-                        <code className="rounded bg-white px-2 py-0.5 font-mono text-xs font-semibold text-brand-700 shadow-sm">
+                        <code className="rounded bg-surface px-2 py-0.5 font-mono text-xs font-semibold text-brand-700 shadow-sm">
                           {step.output}
                         </code>
                       </div>
@@ -248,7 +248,7 @@ export default function Home() {
       {/* Link to first task */}
       <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="rounded-2xl border border-ink-200/70 bg-white p-6 shadow-soft sm:p-8">
+          <div className="rounded-2xl border border-ink-200/70 bg-surface p-6 shadow-soft sm:p-8">
             <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
               <div>
                 <h3 className="text-lg font-bold text-ink-900">

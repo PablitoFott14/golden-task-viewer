@@ -14,9 +14,9 @@ import { Reveal, SectionHeading } from "../components/ui";
 import { cx } from "../lib/assets";
 
 const freqColor: Record<string, string> = {
-  Frequent: "bg-rose-100 text-rose-700",
-  Occasional: "bg-amber-100 text-amber-700",
-  Rare: "bg-emerald-100 text-emerald-700",
+  Frequent: "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200",
+  Occasional: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200",
+  Rare: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200",
 };
 
 export default function Tracker() {
@@ -49,7 +49,7 @@ export default function Tracker() {
       )}
 
       <Reveal>
-        <div className="mt-12 rounded-xl border border-ink-200/70 bg-white p-5 text-sm text-ink-600 shadow-soft">
+        <div className="mt-12 rounded-xl border border-ink-200/70 bg-surface p-5 text-sm text-ink-600 shadow-soft">
           <p className="font-semibold text-ink-800">How this works</p>
           <ul className="mt-2 space-y-1.5 text-[13px]">
             <li>
@@ -86,7 +86,7 @@ function WeekCard({
   return (
     <div
       className={cx(
-        "overflow-hidden rounded-2xl border bg-white shadow-soft transition",
+        "overflow-hidden rounded-2xl border bg-surface shadow-soft transition",
         open ? "border-brand-200" : "border-ink-200/70"
       )}
     >
@@ -121,8 +121,8 @@ function WeekCard({
           >
             <div className="space-y-4 border-t border-ink-100 p-5">
               {/* Best */}
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50/40 p-4">
-                <div className="flex items-center gap-2 text-sm font-bold text-emerald-700">
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50/40 p-4 dark:border-emerald-500/40 dark:bg-emerald-500/10">
+                <div className="flex items-center gap-2 text-sm font-bold text-emerald-700 dark:text-emerald-300">
                   <Trophy size={16} /> Best Task of the Week
                 </div>
                 <p className="mt-2 text-sm font-semibold text-ink-900">
@@ -139,8 +139,8 @@ function WeekCard({
               </div>
 
               {/* Worst */}
-              <div className="rounded-xl border border-rose-200 bg-rose-50/40 p-4">
-                <div className="flex items-center gap-2 text-sm font-bold text-rose-700">
+              <div className="rounded-xl border border-rose-200 bg-rose-50/40 p-4 dark:border-rose-500/40 dark:bg-rose-500/10">
+                <div className="flex items-center gap-2 text-sm font-bold text-rose-700 dark:text-rose-300">
                   <TrendingDown size={16} /> Worst Task of the Week
                 </div>
                 <p className="mt-2 text-sm font-semibold text-ink-900">
@@ -189,7 +189,7 @@ function WeekCard({
                           {e.frequency}
                         </span>
                       </div>
-                      <div className="mt-2 flex gap-2 rounded-lg bg-white p-2.5 text-[13px] leading-relaxed text-ink-600">
+                      <div className="mt-2 flex gap-2 rounded-lg bg-surface p-2.5 text-[13px] leading-relaxed text-ink-600">
                         <Lightbulb
                           size={14}
                           className="mt-0.5 shrink-0 text-brand-500"
@@ -203,7 +203,7 @@ function WeekCard({
 
               {/* Notes */}
               {entry.notes && (
-                <div className="flex gap-2.5 rounded-lg border border-ink-100 bg-white p-3 text-[13px] text-ink-600">
+                <div className="flex gap-2.5 rounded-lg border border-ink-100 bg-surface p-3 text-[13px] text-ink-600">
                   <MessageSquare
                     size={14}
                     className="mt-0.5 shrink-0 text-ink-400"

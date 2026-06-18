@@ -68,6 +68,44 @@ export interface Rubric {
   enforces: string;
   /** Asset filenames or locations this rubric is grounded in. */
   evidence?: string[];
+  /**
+   * Evaluation result against the model's INITIAL trajectory, taken from
+   * rubrics.md (the source of truth). "present" = the criterion was satisfied,
+   * "not-present" = it was not. For a negative rubric, "present" is a failure
+   * (the model did the undesired thing) and is flagged visually.
+   */
+  status: "present" | "not-present";
+  /** What the model actually did regarding this criterion, grounded in the trajectory/workspace. */
+  observed?: string;
+}
+
+/** A single grounded observation of what the model actually did in its initial run. */
+export interface RunObservation {
+  id: string;
+  title: string;
+  /** What actually happened, taken from the workspace + trajectory. */
+  what: string;
+  /** Why it matters / what it teaches. */
+  lesson: string;
+  impact: "fail" | "partial" | "hallucination" | "ok";
+  /** Rubric numbers this observation affected. */
+  rubrics?: number[];
+}
+
+export interface ActualRun {
+  /** One-paragraph summary of the initial (failed) trajectory. */
+  summary: string;
+  /** Tool-usage stats pulled from the trajectory. */
+  toolStats: { label: string; value: number }[];
+  /** The folder tree the model actually produced. */
+  producedTree: FolderNode;
+  /** Grounded observations of what happened. */
+  observations: RunObservation[];
+}
+
+export interface RubricDesignNote {
+  title: string;
+  body: string;
 }
 
 export interface SilverStep {
@@ -124,8 +162,13 @@ export interface Task {
   email: { to: string[]; points: string[] };
   silver: SilverStep[];
   unitTests: UnitTest[];
+  rubricDesign: RubricDesignNote[];
   rubrics: Rubric[];
   friction: FrictionPoint[];
+  /** What the model actually did on the first run — grounded in the trajectory + workspace. */
+  actualRun: ActualRun;
+  /** The raw mixed caption file, exposed for reading inside the viewer. */
+  captionsFile: { path: string; note: string };
   artifactDocs: { label: string; file: string; description: string }[];
 }
 

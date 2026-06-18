@@ -1,7 +1,23 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
-import { Gem } from "lucide-react";
+import { Gem, Moon, Sun } from "lucide-react";
 import { cx } from "../lib/assets";
+import { useTheme } from "../lib/useTheme";
+
+function ThemeToggle() {
+  const [theme, toggle] = useTheme();
+  const dark = theme === "dark";
+  return (
+    <button
+      onClick={toggle}
+      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+      title={dark ? "Switch to light mode" : "Switch to dark mode"}
+      className="grid h-9 w-9 place-items-center rounded-lg border border-ink-200 bg-surface text-ink-600 transition hover:border-ink-300 hover:text-ink-900"
+    >
+      {dark ? <Sun size={17} /> : <Moon size={17} />}
+    </button>
+  );
+}
 
 function Brand() {
   return (
@@ -49,11 +65,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                 {l.label}
               </NavLink>
             ))}
+            <span className="mx-1.5 h-5 w-px bg-ink-200" />
+            <ThemeToggle />
           </nav>
         </div>
       </header>
       <main>{children}</main>
-      <footer className="mt-24 border-t border-ink-200/70 bg-white">
+      <footer className="mt-24 border-t border-ink-200/70 bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="text-sm text-ink-500">
             <span className="font-semibold text-ink-700">Golden Task Viewer</span> — a learning environment for Blue Shell contributors.

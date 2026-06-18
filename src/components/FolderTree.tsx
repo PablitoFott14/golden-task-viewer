@@ -92,7 +92,7 @@ function Node({ node, depth }: { node: FolderNode; depth: number }) {
 
 export default function FolderTree({ root }: { root: FolderNode }) {
   return (
-    <div className="rounded-xl border border-ink-200/70 bg-white p-3 shadow-soft">
+    <div className="rounded-xl border border-ink-200/70 bg-surface p-3 shadow-soft">
       <Node node={root} depth={0} />
     </div>
   );

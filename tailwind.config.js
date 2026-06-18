@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+const ink = (n) => `rgb(var(--ink-${n}) / <alpha-value>)`;
+
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   safelist: [
     { pattern: /(ring|border)-(gold|violet|emerald|amber|sky|rose|fuchsia)-300/, variants: ["hover"] },
@@ -11,18 +14,21 @@ export default {
         mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       colors: {
+        // Surface = card background. Light: white, Dark: lifted slate.
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        // Neutral ramp is CSS-variable backed so it inverts cleanly in dark mode.
         ink: {
-          50: "#f6f7f9",
-          100: "#eceef2",
-          200: "#d4d9e3",
-          300: "#aeb7c9",
-          400: "#8190a9",
-          500: "#5f6f8e",
-          600: "#4a5874",
-          700: "#3d485f",
-          800: "#353e50",
-          900: "#1c2230",
-          950: "#0e1119",
+          50: ink(50),
+          100: ink(100),
+          200: ink(200),
+          300: ink(300),
+          400: ink(400),
+          500: ink(500),
+          600: ink(600),
+          700: ink(700),
+          800: ink(800),
+          900: ink(900),
+          950: ink(950),
         },
         brand: {
           50: "#eef4ff",

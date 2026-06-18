@@ -171,6 +171,34 @@ The structural checks should cover two things:
 
 ### 12. Rubrics
 
+### Precision With Negative Rubrics
+- Positive rubrics must cover all prompt requirements, whether they are stated positively ("include X") or negatively ("do not include Y").
+- Negative rubrics should be written clearly, precisely, and using positive language.
+- Negative rubrics are only meant to capture undesired model behaviors, not prompt requirements.
+- Negative rubrics may cover genuine behavioral boundaries that should not be crossed, even if those behaviors were not observed in the trajectory.
+- Negative rubrics should never outnumber positive rubrics.
+- Do not feel forced to include negative rubrics. Only include them when they naturally emerge from the complexity of the task and scenario.
+
+
+> **Reminder:** The need for negative rubrics genuinely comes from the richness and complexity of the scenario, not from a requirement to include them in every task.
+
+
+### Rubric Final Checklist
+- **Self-contained · atomic · outcome-based · positively phrased.** One criterion \= one checkable outcome.  
+- **Grounded in the prompt.** If the prompt never asked for it, it can't be a positive criterion (this is the \#1 customer flag).  
+- **Weights \= difficulty to verify**, from `{-5, -3, -1, +1, +3, +5}` only. Any other value \= **invalid weights \= fail**.  
+  - **\+5 High** \= cross-modal/multi-source reconciliation (3+ difficulty dimensions).  
+  - **\+3 Medium** \= one reasoning/reconciliation step (exactly 2 dimensions).  
+  - **\+1 Low** \= mechanical single-source check (0–1 dimensions).  
+  - **Negatives** target *attractive wrong paths* the model is tempted to take (`-5` strongly pulled, `-3` plausible, `-1` rare). Rare-but-damaging failures → encode as a **unit test**, not a `-5`. Not overassumption of negative wetghts,
+- **Present / Not Present** marked correctly against the **initial** trajectory: positive \+ Not Present \= fail; negative \+ Present \= fail.  
+- **No contradictions** with the data or between criteria.  
+- **No reliance on illegible media** or undeliverable computations.  
+- **Spot checks ≤ 5** per group of similar outcomes (use spot checks for repeated actions — not 20 per-row criteria).
+
+**Visual judge routing note:** \~93% of criteria vendors flag as "needs visual" actually **don't**. The visual VLM judge only scores **pixels of an artifact the agent produces** (an image/video/PDF the agent creates). A criterion that reads an **uploaded input** image and checks a written claim is verified by the **text** judge. Don't route input-perception criteria to the VLM.
+
+
 Every rubric covers its explicit/implicit requirement of the prompt and boundling happens only when the same level data entry is being checked. 
 
 

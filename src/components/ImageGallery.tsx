@@ -52,8 +52,8 @@ export default function ImageGallery({
               className={cx(
                 "rounded-full px-3 py-1.5 text-xs font-semibold transition",
                 isActive
-                  ? "bg-ink-900 text-white"
-                  : "bg-white text-ink-600 border border-ink-200 hover:border-ink-300"
+                  ? "bg-ink-900 text-ink-50"
+                  : "bg-surface text-ink-600 border border-ink-200 hover:border-ink-300"
               )}
             >
               {f.label}
@@ -81,7 +81,7 @@ export default function ImageGallery({
                 transition={{ duration: 0.25 }}
                 onClick={() => setActive(idx)}
                 className={cx(
-                  "group relative overflow-hidden rounded-xl border bg-white text-left shadow-soft ring-1 ring-transparent transition hover:-translate-y-0.5 hover:shadow-glow",
+                  "group relative overflow-hidden rounded-xl border bg-surface text-left shadow-soft ring-1 ring-transparent transition hover:-translate-y-0.5 hover:shadow-glow",
                   "border-ink-200/70 hover:" + rs.ring
                 )}
               >
@@ -164,7 +164,7 @@ function Lightbox({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <button
@@ -193,9 +193,9 @@ function Lightbox({
         exit={{ opacity: 0, y: 14 }}
         transition={{ duration: 0.25 }}
         onClick={(e) => e.stopPropagation()}
-        className="grid max-h-[90vh] w-full max-w-5xl grid-cols-1 overflow-hidden rounded-2xl bg-white shadow-2xl lg:grid-cols-[1.3fr_1fr]"
+        className="grid max-h-[90vh] w-full max-w-5xl grid-cols-1 overflow-hidden rounded-2xl bg-surface shadow-2xl lg:grid-cols-[1.3fr_1fr]"
       >
-        <div className="relative flex items-center justify-center bg-ink-950 p-4">
+        <div className="relative flex items-center justify-center bg-[#0b0e16] p-4">
           {a.kind === "text" ? (
             <div className="p-10 text-center font-mono text-sm text-ink-300">
               {a.filename}
@@ -234,10 +234,10 @@ function Lightbox({
             <Field label="What it shows" body={a.whatItShows} />
             <Field label="Verdict" body={a.verdict} />
             <div>
-              <div className="mb-1 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-brand-600">
+              <div className="mb-1 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
                 <Lightbulb size={13} /> Why
               </div>
-              <p className="rounded-lg bg-brand-50/60 px-3 py-2 leading-relaxed text-ink-700">
+              <p className="rounded-lg bg-brand-50/60 px-3 py-2 leading-relaxed text-ink-700 dark:bg-brand-500/10">
                 {a.rationale}
               </p>
             </div>

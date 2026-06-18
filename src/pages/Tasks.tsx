@@ -24,7 +24,7 @@ export default function Tasks() {
             <Reveal key={t.meta.id} delay={i * 0.06}>
               <Link
                 to={`/tasks/${t.meta.id}`}
-                className="group block overflow-hidden rounded-2xl border border-ink-200/70 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
+                className="group block overflow-hidden rounded-2xl border border-ink-200/70 bg-surface shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
               >
                 <div className="grid grid-cols-4 gap-px bg-ink-100">
                   {previews.map((p) => (

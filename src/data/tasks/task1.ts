@@ -630,6 +630,34 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     { ref: "test_x_contains_required_date_folders", logic: "Verifies X/ contains 06-22/ and 06-07/.", group: "Date folders" },
   ],
 
+  rubricDesign: [
+    {
+      title: "Grounded, Atomic Checks",
+      body:
+        "Each positive rubric maps back to a prompt requirement or SSOT rule. The criteria stay outcome-based and self-contained: one folder, one date, one mismatch, or one state-changing action per check unless the items are the same-level contents of a single post.",
+    },
+    {
+      title: "Bundling Only When It Preserves Signal",
+      body:
+        "Repeated leaf work is bundled only when it belongs to the same logical unit, such as the four valid carousel images or the two dinner images. Independent date folders and platform folders remain separate so partial failures stay visible in the score.",
+    },
+    {
+      title: "Weights Follow Verification Difficulty",
+      body:
+        "+5 criteria cover high-impact cross-source or structural failures, +3 criteria cover focused reconciliation across a plan/date/asset or caption, and +1 criteria capture useful but lower-stakes behavior such as duplicate reporting.",
+    },
+    {
+      title: "Negative Rubrics Stay Rare",
+      body:
+        "The single negative rubric targets an attractive wrong path: inventing an Unassigned section that the prompt did not request. It is intentionally light so it discourages scope creep without outnumbering or overpowering the positive task requirements.",
+    },
+    {
+      title: "Judge Routing Is Text-Oriented",
+      body:
+        "Even when a criterion depends on understanding an uploaded image, the scored artifact is the model's written or file-system output. These criteria should be verified by the text judge, not routed to a visual judge that only evaluates pixels produced by the agent.",
+    },
+  ],
+
   rubrics: [
     {
       n: 1,
@@ -638,6 +666,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'use it as the SSOT to help me audit all the social media content.'",
       evidence: ["1780566865852.jpeg", "1780566865892.jpg"],
+      status: "not-present",
+      observed:
+        "The model opened both handwritten pages, but did not extract the plan correctly: the boxed [X] section on page 1 was never recognised as its own channel, so the reconstructed plan was missing X entirely.",
       rationale:
         "This is the foundational capability check. Both handwritten pages are the SSOT, and every other rubric depends on the plan being read correctly. It carries the heavier +5 weight because skipping or misreading the notes collapses the entire downstream audit. It is also the most natural place for the model to fail by reading only one page.",
     },
@@ -647,6 +678,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 5,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 2 (LinkedIn).",
+      status: "present",
+      observed:
+        "The model created a LinkedIn/ folder containing 06-14, 06-17 and 06-29 — the only platform besides Instagram it produced.",
       rationale:
         "Each platform folder is an explicit structural requirement, so each gets its own rubric at +5. Bundling the three platforms into one rubric would hide partial failures — and partial failure (missing an entire channel) is exactly the predicted failure mode. Keeping them separate makes the score reflect which channels survived.",
     },
@@ -656,6 +690,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 5,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 1 (Instagram).",
+      status: "present",
+      observed:
+        "An Instagram/ folder was created, but it was over-filled: the model dumped the X maintenance and dashboard posts inside it under 06-07 and 06-10.",
       rationale:
         "Same structural requirement as the other platforms, scored independently. Instagram is the channel models tend to over-fill (absorbing X content), so verifying it exists in isolation is necessary before checking what is inside it.",
     },
@@ -665,6 +702,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 5,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 1 (boxed [X] section).",
+      status: "not-present",
+      observed:
+        "No X/ folder existed at all. Its two posts were absorbed into Instagram — the single biggest failure of the run.",
       rationale:
         "This is the rubric that captures the headline trap. Because X is scribbled below Instagram on the same page, models routinely miss it entirely. Giving it a dedicated +5 rubric means the most common failure is heavily penalized and clearly visible in the score.",
     },
@@ -675,6 +715,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 14th LinkedIn post + corresponding image.",
       evidence: ["IMG_20260314_173522.png"],
+      status: "not-present",
+      observed:
+        "LinkedIn/06-14 did hold the right image, but its 351-word over-limit caption stayed in the folder, and the criterion was scored Not Present on the initial run.",
       rationale:
         "Checks correct image-to-post attribution at the date-folder level. The word 'only' matters: it fails the model both for omitting the right image and for padding the folder with extras, enforcing a clean one-image-per-plan mapping.",
     },
@@ -685,6 +728,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 17th post 'with phone image'.",
       evidence: ["phone.jpg"],
+      status: "not-present",
+      observed:
+        "The 06-17 folder kept BOTH phone.jpg and the unrelated tablet image update.png, so it was not only phone.jpg.",
       rationale:
         "The plan explicitly names a phone image for the 17th. This rewards the model for honoring an explicit asset cue and, via 'only', for not leaking unrelated images into the folder.",
     },
@@ -695,6 +741,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 5th Instagram 5-slide cybersecurity carousel.",
       evidence: ["carrousel_1.png", "carrousel_2.png", "carrousel_3.png", "carrsel_4.png"],
+      status: "not-present",
+      observed:
+        "The model kept all five carousel images — including carrousel_5.png (account monitoring), the slide that does not match the planned topic.",
       rationale:
         "Tests whether the model can keep the four genuine carousel slides while rejecting the look-alike fifth slide. It is a same-level bundle (four images, one post, one check) — which is exactly the case the method allows to be combined into a single rubric.",
     },
@@ -705,6 +754,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance-quote rule (06-05 is a Friday).",
       evidence: ["Screenshot_2026-05-29 091745.png", "quote_3.png", "IMG_33489034.png", "visual_3248329.png"],
+      status: "not-present",
+      observed:
+        "06-05 received no finance-quote image; the model never realised 06-05 is also a Friday quote day, so the quote slot was left empty.",
       rationale:
         "06-05 is both a carousel day and a Friday quote day, so it needs a finance quote too. Because the four quotes are interchangeable across the four Fridays, the rubric accepts any one of them — encoding the GTFA's deliberate non-uniqueness at the leaf level without breaking overall uniqueness.",
     },
@@ -714,6 +766,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'save each one individually as an MM-DD.txt file.'",
+      status: "not-present",
+      observed:
+        "The 06-05.txt file contained all five caption blocks, including the webcam (slide 3) and account-monitoring (slide 5) blocks that should have been dropped.",
       rationale:
         "This is the hardest caption-split check. The model must take the multi-part carousel caption, keep blocks 1/2/4, and drop blocks 3 (webcam, not phishing) and 5 (monitoring, not safe browsing). It tests fine-grained topic matching inside a single caption block, not just file-level routing.",
     },
@@ -724,6 +779,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 11th Instagram Q2 dinner recap.",
       evidence: ["visual_5960419.png", "visual_20260419.png"],
+      status: "not-present",
+      observed:
+        "Both dinner images were placed correctly, but the Q1 mismatch caption was left inside the 06-11 folder instead of being logged and removed.",
       rationale:
         "Confirms both dinner images are grouped together and nothing else leaks in. Pairing them in one rubric is valid because they are the same-level content of a single post.",
     },
@@ -733,6 +791,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance quote (06-12).",
+      status: "present",
+      observed:
+        "Screenshot_2026-05-29 091745.png (Einstein quote) was placed alone in Instagram/06-12 — one of the few clean passes.",
       rationale:
         "Enforces one-quote-per-Friday distribution. 'Remaining unused' and 'alone' together verify the model treats the four quotes as a set to spread across Fridays rather than dumping them all in one folder.",
     },
@@ -742,6 +803,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance quote (06-19).",
+      status: "present",
+      observed:
+        "IMG_33489034.png was placed alone in Instagram/06-19.",
       rationale:
         "Same distribution logic for the third Friday. Kept as a separate rubric (not bundled with 06-12/06-26) because each date folder is an independent placement the model can get right or wrong on its own.",
     },
@@ -751,6 +815,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance quote (06-26).",
+      status: "present",
+      observed:
+        "visual_3248329.png was placed alone in Instagram/06-26; by the fourth Friday only one quote remained, and the model spread them correctly across the three Fridays it did recognise.",
       rationale:
         "Closes the distribution: by the fourth Friday only one quote should remain. Phrasing it as 'the remaining' quietly checks that the previous three were placed correctly, so this rubric also validates the set was exhausted exactly once.",
     },
@@ -761,6 +828,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 22nd X dashboard preview post.",
       evidence: ["final viasual.png", "Dash.jpg"],
+      status: "not-present",
+      observed:
+        "The dashboard images were filed under Instagram/06-10, not X/06-22 — there was no X folder to receive them.",
       rationale:
         "Tests that the dashboard image lands in the right X date folder. It accepts either duplicate (or both) here because the duplicate-reporting requirement is graded separately by rubric 25 — this keeps each rubric measuring exactly one thing.",
     },
@@ -770,6 +840,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: split captions to MM-DD.txt / SSOT dashboard post.",
+      status: "not-present",
+      observed:
+        "The dashboard caption was saved as Instagram/06-10/06-10.txt, again under the wrong platform and date.",
       rationale:
         "Verifies the correct caption (the only block that matches cleanly) is split out and attributed to the dashboard post. It anchors on the concrete '24th June' detail so a vague or wrong caption can't pass.",
     },
@@ -780,6 +853,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 7th X support-maintenance post.",
       evidence: ["IMG_398573.png"],
+      status: "not-present",
+      observed:
+        "The maintenance illustration IMG_398573.png was filed under Instagram/06-07 rather than X/06-07.",
       rationale:
         "Confirms the maintenance illustration is the single image for 06-07. This is the X post most likely to be mis-dated or mis-placed once X is recovered, so isolating it catches partial X reconstruction.",
     },
@@ -789,6 +865,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'Consider missing everything that is not appearing… but is part of our planning.'",
+      status: "not-present",
+      observed:
+        "The model logged missing captions for 06-12, 06-19 and 06-26 — but omitted 06-05 and tied the rule to an invented under-500-word constraint, so the required four-Friday finding was incomplete.",
       rationale:
         "This is the first 'missing' bucket check. No finance-quote captions were recovered, so the model must positively report their absence in MEMORY.md rather than silently leaving the folders caption-less. It tests recognizing absence, which models often skip.",
     },
@@ -798,6 +877,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 14th post 'in <300 words'.",
+      status: "present",
+      observed:
+        "Logged correctly: MEMORY.md notes the 06-14 caption is 351 words and exceeds the limit.",
       rationale:
         "A cascade-point check: the prompt sets a length constraint and one caption violates it. The model has to actually evaluate the constraint against the content, not just file the caption — catching the over-length caption is the intended reasoning.",
     },
@@ -807,6 +889,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 17th post must mention Standard 500 + Plus unlimited.",
+      status: "present",
+      observed:
+        "Logged correctly: MEMORY.md flags that the 06-17 caption omits the Standard and Plus membership-tier details.",
       rationale:
         "Tests detection of a content omission, not a wrong value. The plan enumerates required details the caption never mentions; the model must compare the caption against the plan's required points and report what's absent.",
     },
@@ -817,6 +902,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 29th post must include Brandon's personal phone number.",
       evidence: ["persona_context.md"],
+      status: "present",
+      observed:
+        "Logged correctly, and then some — the model flagged (617) 555-0537 vs Brandon's (617) 555-0394, and even (incorrectly) attributed the wrong number to Maya.",
       rationale:
         "A cross-source check that reaches outside the plan into the persona/universe: the correct number lives in Brandon's profile. The model must cross-reference the caption's number against the persona to flag the error — and 06-29 is image-less, so it must surface only in MEMORY.",
     },
@@ -827,6 +915,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'Consider mismatching everything appearing but not fully matching the planning.'",
       evidence: ["carrousel_5.png"],
+      status: "present",
+      observed:
+        "Logged correctly: the slide-3 webcam and slide-5 monitoring caption mismatches and the carrousel_5.png image were all noted.",
       rationale:
         "Bundles the three same-level 06-05 mismatches (two caption blocks + one image) into one rubric, which the method permits because they all belong to the same post. It rewards the model for noticing that look-alike carousel content doesn't actually match the planned slide topics.",
     },
@@ -836,6 +927,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: 11th post recaps the Q2 dinner held June 1st.",
+      status: "present",
+      observed:
+        "Logged correctly: MEMORY.md notes the 06-11 caption recaps Q1 instead of the planned Q2.",
       rationale:
         "Tests semantic mismatch detection: the caption is topically close (a quarter recap) but wrong (Q1, not Q2). The model must read the caption's content against the plan's intent, not just match it by keyword to the dinner post.",
     },
@@ -845,6 +939,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: support maintenance ends 3am PST.",
+      status: "not-present",
+      observed:
+        "The model logged a maintenance mismatch, but anchored it to an invented plan of 12 AM to 8 AM BST — so the specific 4 AM-vs-3 AM PST finding was never produced.",
       rationale:
         "A value-mismatch check across modalities (handwritten note vs typed caption). The numbers are close, so it tests careful reconciliation — but it is one of several mismatch points, so a single misread here doesn't sink the whole task (avoiding the single-number gotcha).",
     },
@@ -855,6 +952,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — User-facing message",
       enforces: "Prompt: 'Any content removed should be included in your final message.'",
       evidence: ["IMG_39852.png", "Screenshot_2026-06-03 234708.png", "visual_8456934.png", "update.png"],
+      status: "not-present",
+      observed:
+        "The final message listed visual_8456934.png, IMG_39852.png and Screenshot_2026-06-03 234708.png as removed — but dropped update.png (left in a folder) and wrongly listed quote_3.png, so the required four-distractor set was not reported.",
       rationale:
         "Verifies the 'removable' bucket end-to-end: the four unrelated distractors must be both excluded from folders and explicitly surfaced to the user. Graded on the user-facing message (not the file tree) because the prompt asks for them to be reported, not stored.",
     },
@@ -865,6 +965,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Agent Behaviour — User-facing message",
       enforces: "Implicit good behavior: surface duplicates.",
       evidence: ["final viasual.png", "Dash.jpg"],
+      status: "present",
+      observed:
+        "Caught it: both the final message and MEMORY.md report that Dash.jpg and final viasual.png are byte-identical duplicates.",
       rationale:
         "A lighter +1 'good behavior' reward. Detecting the duplicate isn't strictly required to build the folders, so it carries a small weight — it differentiates careful models without dominating the score. It complements rubric 14, which intentionally accepts either file.",
     },
@@ -875,6 +978,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       category: "Task Completion — State change",
       enforces: "Prompt: 'send Trevor and Maya an email with the mismatches to fix.'",
       evidence: ["persona_context.md"],
+      status: "not-present",
+      observed:
+        "The final message claims Email sent to Trevor and Maya, but the trajectory contains no email or send action — only exec, write, read, image and memory_search calls. The state-change never happened.",
       rationale:
         "The only state-change action in the task, weighted +5 to match its importance. It is a capstone: to write a correct email the model must have already found all the mismatches, so this rubric implicitly validates the whole mismatch audit and tests whether the model takes a real action rather than just producing files.",
     },
@@ -884,6 +990,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       points: -1,
       category: "Agent Behaviour — Final answer/artifact",
       enforces: "Prompt defines only missing / mismatching / removable buckets.",
+      status: "present",
+      observed:
+        "Failure: the model invented an UNASSIGNED / EXTRA CONTENT section in MEMORY.md listing quote_3.png, IMG_39852.png and visual_8456934.png — a bucket the prompt never defined.",
       rationale:
         "The single negative rubric. The prompt defines exactly three buckets; inventing an 'Unassigned' catch-all is scope creep that pollutes the deliverable. The −1 penalty discourages the model from inventing structure the user never asked for — rewarding disciplined adherence to the specified format.",
     },
@@ -984,6 +1093,174 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
         "Tests the 'removable' bucket: noise that must be excluded and reported, mirroring a real messy recovery.",
     },
   ],
+
+  captionsFile: {
+    path: "mm_input/text_post.txt",
+    note: "Every recovered caption, mixed together in one numbered file. Note that block 6 contains the whole 5-part carousel caption, and a second block labelled '6.' holds the dashboard caption — the messy numbering is part of the audit.",
+  },
+
+  actualRun: {
+    summary:
+      "A single-turn run from seed. The model audited the content energetically but lost the X channel entirely, mis-dated the dashboard post, left mismatched content sitting inside post folders, invented an 'Unassigned' bucket, and signed off by claiming it had emailed the team — an action it never actually performed. The result lands well below the 50% positive-weight bar, which is exactly the genuine failure the task was engineered to produce and what justifies the Silver Trajectory.",
+    toolStats: [
+      { label: "exec", value: 23 },
+      { label: "image", value: 10 },
+      { label: "write", value: 8 },
+      { label: "read", value: 6 },
+      { label: "memory_search", value: 1 },
+    ],
+    producedTree: {
+      name: "social-media",
+      type: "folder",
+      children: [
+        {
+          name: "Instagram",
+          type: "folder",
+          role: "correct",
+          children: [
+            {
+              name: "06-05",
+              type: "folder",
+              note: "kept ALL FIVE carousel images + a 5-block caption",
+              children: [
+                { name: "carrousel_1.png", type: "image", role: "correct" },
+                { name: "carrousel_2.png", type: "image", role: "correct" },
+                { name: "carrousel_3.png", type: "image", role: "correct" },
+                { name: "carrousel_5.png", type: "image", role: "mismatch", note: "should have been removed (account monitoring ≠ safe browsing)" },
+                { name: "carrsel_4.png", type: "image", role: "correct" },
+                { name: "06-05.txt", type: "text", role: "mismatch", note: "all 5 blocks, incl. webcam + monitoring; no finance quote" },
+              ],
+            },
+            {
+              name: "06-07",
+              type: "folder",
+              role: "mismatch",
+              note: "this is an X post — filed under Instagram by mistake",
+              children: [
+                { name: "IMG_398573.png", type: "image", role: "mismatch" },
+                { name: "06-07.txt", type: "text", role: "mismatch", note: "4am vs 3am never caught; invented '8 AM BST'" },
+              ],
+            },
+            {
+              name: "06-10",
+              type: "folder",
+              role: "mismatch",
+              note: "the X dashboard post — wrong platform AND wrong date (plan: X/06-22)",
+              children: [
+                { name: "Dash.jpg", type: "image", role: "duplicate" },
+                { name: "final viasual.png", type: "image", role: "duplicate" },
+                { name: "06-10.txt", type: "text", role: "mismatch" },
+              ],
+            },
+            {
+              name: "06-11",
+              type: "folder",
+              note: "right images, but the Q1 mismatch caption was left inside",
+              children: [
+                { name: "visual_5960419.png", type: "image", role: "correct" },
+                { name: "visual_20260419.png", type: "image", role: "correct" },
+                { name: "06-11.txt", type: "text", role: "mismatch", note: "Q1 recap — should have been logged + removed" },
+              ],
+            },
+            { name: "06-12", type: "folder", note: "one quote, placed correctly", children: [{ name: "Screenshot_2026-05-29 091745.png", type: "image", role: "correct" }] },
+            { name: "06-19", type: "folder", note: "one quote, placed correctly", children: [{ name: "IMG_33489034.png", type: "image", role: "correct" }] },
+            { name: "06-26", type: "folder", note: "one quote, placed correctly", children: [{ name: "visual_3248329.png", type: "image", role: "correct" }] },
+          ],
+        },
+        {
+          name: "LinkedIn",
+          type: "folder",
+          role: "correct",
+          children: [
+            {
+              name: "06-14",
+              type: "folder",
+              children: [
+                { name: "IMG_20260314_173522.png", type: "image", role: "correct" },
+                { name: "06-14.txt", type: "text", role: "mismatch", note: "351 words — over the limit, left in place" },
+              ],
+            },
+            {
+              name: "06-17",
+              type: "folder",
+              note: "kept the wrong asset alongside the right one",
+              children: [
+                { name: "phone.jpg", type: "image", role: "correct" },
+                { name: "update.png", type: "image", role: "distractor", note: "tablet, not a phone — should have been removed" },
+                { name: "06-17.txt", type: "text", role: "mismatch" },
+              ],
+            },
+            {
+              name: "06-29",
+              type: "folder",
+              children: [{ name: "06-29.txt", type: "text", role: "mismatch", note: "wrong phone number" }],
+            },
+          ],
+        },
+        {
+          name: "✗ X  (never created)",
+          type: "folder",
+          role: "missing",
+          note: "the entire X channel was absorbed into Instagram",
+        },
+        {
+          name: "MEMORY.md",
+          type: "doc",
+          role: "mismatch",
+          note: "good mismatch logging, but added an invented 'UNASSIGNED / EXTRA CONTENT' section",
+        },
+      ],
+    },
+    observations: [
+      {
+        id: "no-x",
+        title: "The entire X channel vanished",
+        impact: "fail",
+        rubrics: [4, 14, 15, 16],
+        what: "No X/ folder was created. The support-maintenance post landed in Instagram/06-07 and the dashboard post in Instagram/06-10 — both absorbed under Instagram because the X plan is boxed below Instagram on the same handwritten page.",
+        lesson: "This is the headline failure the SSOT layout was designed to provoke. Models lean on page/layout structure, so the boxed [X] section gets lumped under Instagram. Four +5/+3 rubrics hinge on it.",
+      },
+      {
+        id: "dashboard-misdate",
+        title: "Dashboard post mis-dated to 06-10",
+        impact: "fail",
+        rubrics: [14, 15],
+        what: "Even setting the platform aside, the dashboard preview was filed under date 06-10. The plan places it on the 22nd. The model invented a date instead of reading the planned one.",
+        lesson: "Structural placement (platform + date) is graded independently from content. A wrong date fails the date-folder rubrics even when the right files are present.",
+      },
+      {
+        id: "log-but-keep",
+        title: "Mismatches logged, but left inside the folders",
+        impact: "partial",
+        rubrics: [6, 7, 9, 10],
+        what: "The model correctly noted several mismatches in MEMORY.md, yet still kept the offending content in the post folders: all five carousel slides, the 5-block 06-05 caption, the Q1 dinner caption, and update.png next to phone.jpg.",
+        lesson: "The prompt's 'mismatching' bucket means log AND remove from the post — detection alone is half the job. The 'only …' wording in the rubrics is what catches the leftovers.",
+      },
+      {
+        id: "unassigned",
+        title: "Invented an 'Unassigned' bucket",
+        impact: "fail",
+        rubrics: [27],
+        what: "MEMORY.md gained an 'UNASSIGNED / EXTRA CONTENT' section listing quote_3.png, IMG_39852.png and visual_8456934.png — a category the prompt never defined.",
+        lesson: "The prompt defines exactly three buckets: missing, mismatching, removable. Inventing a fourth is scope creep — and the run trips the single negative rubric (a negative criterion that is Present is a failure).",
+      },
+      {
+        id: "phantom-email",
+        title: "Claimed an email it never sent",
+        impact: "hallucination",
+        rubrics: [26],
+        what: "The final message states 'Email sent to Trevor and Maya.' The trajectory contains no email or send action — only exec, write, read, image and memory_search calls. The one state-change in the task was fabricated.",
+        lesson: "Never grade a state-change from the model's self-report. Verify the action in the trajectory. Here the only +5 state-change rubric fails despite a confident claim of success.",
+      },
+      {
+        id: "hallucinated-plan",
+        title: "Hallucinated plan details that aren't in the SSOT",
+        impact: "hallucination",
+        what: "The audit asserted ground truth the handwritten plan never states: maintenance '12 AM–8 AM BST', a 'June 9th' dashboard date, that '(617) 555-0537 is Maya's number', and a 'MARKETING watermark'. Some mismatch reports are anchored to invented facts.",
+        lesson: "A few criteria passed for the wrong reason. When cross-referencing GTFA vs. response, separate genuine findings from confident fabrication — it changes which rubrics legitimately count.",
+      },
+    ],
+  },
 
   artifactDocs: [
     { label: "Persona context", file: "persona_context.md", description: "Full persona profile the contributor built from the universe." },
