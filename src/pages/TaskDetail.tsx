@@ -501,9 +501,28 @@ export default function TaskDetail() {
             n={10}
             title="Unit Tests"
             kicker="Step 11 — Unit tests (reviewers only)"
-            sub="Reviewer-only checks for the platform folders and the date folders."
+            sub="Reviewer-only checks for the platform folders and the date folders. Click any test to reveal its code."
           >
-            <CodeReveal label="unit_tests.py" code={task.unitTestCode} />
+            <div className="grid gap-6 sm:grid-cols-2">
+              {["Platform folders", "Date folders"].map((group) => (
+                <div key={group}>
+                  <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">
+                    <FlaskConical size={15} className="text-brand-500" /> {group}
+                  </h3>
+                  <div className="space-y-2">
+                    {task.unitTests
+                      .filter((t) => t.group === group)
+                      .map((t) => (
+                        <CodeReveal
+                          key={t.ref}
+                          label={t.ref}
+                          code={`${task.unitTestPreamble}\n\n\n${t.code}`}
+                        />
+                      ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </Section>
 
           {/* ===== Rubrics ===== */}
@@ -623,10 +642,10 @@ function CodeReveal({ label, code }: { label: string; code: string }) {
         className="flex w-full items-center gap-3 p-3.5 text-left transition hover:bg-ink-50"
       >
         <FlaskConical size={16} className="shrink-0 text-brand-500" />
-        <span className="mr-auto rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-ink-600">
+        <span className="mr-auto min-w-0 truncate rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-ink-600">
           {label}
         </span>
-        <span className="text-xs font-semibold text-ink-500">{open ? "Hide code" : "View code"}</span>
+        <span className="shrink-0 text-xs font-semibold text-ink-500">{open ? "Hide" : "View code"}</span>
         {open ? (
           <EyeOff size={16} className="shrink-0 text-ink-400" />
         ) : (

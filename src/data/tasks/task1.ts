@@ -622,12 +622,54 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
   ],
 
   unitTests: [
-    { ref: "test_output_contains_x_platform_folder", logic: "Verifies the output includes an X/ folder.", group: "Platform folders" },
-    { ref: "test_output_contains_instagram_platform_folder", logic: "Verifies the output includes an Instagram/ folder.", group: "Platform folders" },
-    { ref: "test_output_contains_linkedin_platform_folder", logic: "Verifies the output includes a LinkedIn/ folder.", group: "Platform folders" },
-    { ref: "test_instagram_contains_required_date_folders", logic: "Verifies Instagram/ contains 06-05/, 06-11/, 06-12/, 06-19/, and 06-26/.", group: "Date folders" },
-    { ref: "test_linkedin_contains_required_date_folders", logic: "Verifies LinkedIn/ contains 06-14/ and 06-17/.", group: "Date folders" },
-    { ref: "test_x_contains_required_date_folders", logic: "Verifies X/ contains 06-22/ and 06-07/.", group: "Date folders" },
+    {
+      ref: "test_output_contains_x_platform_folder",
+      logic: "Verifies the output includes an X/ folder.",
+      group: "Platform folders",
+      code: `def test_output_contains_x_platform_folder():
+    assert "X" in _subdirs(OUTPUT_DIR), "Missing X/ platform folder"`,
+    },
+    {
+      ref: "test_output_contains_instagram_platform_folder",
+      logic: "Verifies the output includes an Instagram/ folder.",
+      group: "Platform folders",
+      code: `def test_output_contains_instagram_platform_folder():
+    assert "Instagram" in _subdirs(OUTPUT_DIR), "Missing Instagram/ platform folder"`,
+    },
+    {
+      ref: "test_output_contains_linkedin_platform_folder",
+      logic: "Verifies the output includes a LinkedIn/ folder.",
+      group: "Platform folders",
+      code: `def test_output_contains_linkedin_platform_folder():
+    assert "LinkedIn" in _subdirs(OUTPUT_DIR), "Missing LinkedIn/ platform folder"`,
+    },
+    {
+      ref: "test_instagram_contains_required_date_folders",
+      logic: "Verifies Instagram/ contains 06-05/, 06-11/, 06-12/, 06-19/, and 06-26/.",
+      group: "Date folders",
+      code: `def test_instagram_contains_required_date_folders():
+    expected = {"06-05", "06-11", "06-12", "06-19", "06-26"}
+    found = _subdirs(OUTPUT_DIR / "Instagram")
+    assert expected <= found, f"Instagram missing date folders: {expected - found}"`,
+    },
+    {
+      ref: "test_linkedin_contains_required_date_folders",
+      logic: "Verifies LinkedIn/ contains 06-14/ and 06-17/.",
+      group: "Date folders",
+      code: `def test_linkedin_contains_required_date_folders():
+    expected = {"06-14", "06-17"}
+    found = _subdirs(OUTPUT_DIR / "LinkedIn")
+    assert expected <= found, f"LinkedIn missing date folders: {expected - found}"`,
+    },
+    {
+      ref: "test_x_contains_required_date_folders",
+      logic: "Verifies X/ contains 06-22/ and 06-07/.",
+      group: "Date folders",
+      code: `def test_x_contains_required_date_folders():
+    expected = {"06-22", "06-07"}
+    found = _subdirs(OUTPUT_DIR / "X")
+    assert expected <= found, f"X missing date folders: {expected - found}"`,
+    },
   ],
 
   rubricDesign: [
@@ -1250,55 +1292,14 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     ],
   },
 
-  unitTestCode: `import os
-from pathlib import Path
+  unitTestPreamble: `from pathlib import Path
 
 # Point this at the agent's output root (the folder that holds the platform folders).
 OUTPUT_DIR = Path("social-media")
 
 
 def _subdirs(path: Path):
-    return {p.name for p in path.iterdir() if p.is_dir()} if path.is_dir() else set()
-
-
-# --- Platform folder tests ---
-
-def test_output_contains_instagram_platform_folder():
-    assert "Instagram" in _subdirs(OUTPUT_DIR), "Missing Instagram/ platform folder"
-
-
-def test_output_contains_x_platform_folder():
-    assert "X" in _subdirs(OUTPUT_DIR), "Missing X/ platform folder"
-
-
-def test_output_contains_linkedin_platform_folder():
-    assert "LinkedIn" in _subdirs(OUTPUT_DIR), "Missing LinkedIn/ platform folder"
-
-
-# --- Date folder tests ---
-
-def test_instagram_contains_required_date_folders():
-    expected = {"06-05", "06-11", "06-12", "06-19", "06-26"}
-    found = _subdirs(OUTPUT_DIR / "Instagram")
-    assert expected <= found, f"Instagram missing date folders: {expected - found}"
-
-
-def test_linkedin_contains_required_date_folders():
-    expected = {"06-14", "06-17"}
-    found = _subdirs(OUTPUT_DIR / "LinkedIn")
-    assert expected <= found, f"LinkedIn missing date folders: {expected - found}"
-
-
-def test_x_contains_required_date_folders():
-    expected = {"06-22", "06-07"}
-    found = _subdirs(OUTPUT_DIR / "X")
-    assert expected <= found, f"X missing date folders: {expected - found}"
-
-
-if __name__ == "__main__":
-    import pytest
-    pytest.main([__file__, "-rA", "--tb=short"])
-`,
+    return {p.name for p in path.iterdir() if p.is_dir()} if path.is_dir() else set()`,
 
   artifactDocs: [
     { label: "Persona context", file: "persona_context.md", description: "Full persona profile the contributor built from the universe." },

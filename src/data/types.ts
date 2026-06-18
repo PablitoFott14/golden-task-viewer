@@ -114,6 +114,8 @@ export interface UnitTest {
   ref: string;
   logic: string;
   group: string;
+  /** The pytest code revealed when the test's container is expanded. */
+  code: string;
 }
 
 export interface CaptionItem {
@@ -164,8 +166,8 @@ export interface Task {
   actualRun: ActualRun;
   /** The raw mixed caption file, exposed for reading inside the viewer. */
   captionsFile: { path: string; note: string };
-  /** Reviewer-only pytest code validating the structural folders. Shown on demand. */
-  unitTestCode: string;
+  /** Shared pytest scaffolding prepended to each unit test's revealed code. */
+  unitTestPreamble: string;
   artifactDocs: { label: string; file: string; description: string }[];
 }
 
