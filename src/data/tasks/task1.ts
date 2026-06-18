@@ -72,7 +72,7 @@ const task1: Task = {
         "Page 1 of the handwritten June draft, headed INSTAGRAM: the 11th (Q2 dinner recap), the 5th (5-slide cybersecurity carousel, with its five slide topics listed), and a weekly Friday finance-quote rule. A boxed [X] section underneath holds the 22nd dashboard-preview post and the 7th support-maintenance post that ends at 3am PST.",
       verdict: "Single source of truth for the Instagram + X plans.",
       rationale:
-        "Putting Instagram and X on the same page (with X scattered below Instagram) is the planted trap: models tend to lump the X posts under Instagram and miss the X channel entirely. Reading the SSOT correctly is the spine of the whole task.",
+        "Instagram and X share this page, with the X plan boxed directly below Instagram. It stays clearly legible and labelled as its own platform, so there is only one reasonable reading — two separate channels. Reading the SSOT correctly is the spine of the whole task.",
       tags: ["SSOT", "Instagram", "X", "rush note"],
     },
     {
@@ -670,7 +670,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       observed:
         "The model opened both handwritten pages, but did not extract the plan correctly: the boxed [X] section on page 1 was never recognised as its own channel, so the reconstructed plan was missing X entirely.",
       rationale:
-        "This is the foundational capability check. Both handwritten pages are the SSOT, and every other rubric depends on the plan being read correctly. It carries the heavier +5 weight because skipping or misreading the notes collapses the entire downstream audit. It is also the most natural place for the model to fail by reading only one page.",
+        "This is the foundational capability check. Both handwritten notes are the SSOT, and every other rubric depends on the plan being read correctly. It carries the heavier +5 weight because skipping or misreading the notes collapses the entire downstream audit. It is also the most natural place for the model to fail by reading one note but not the other, or by skimming past the boxed [X] plan beneath Instagram.",
     },
     {
       n: 2,
@@ -694,7 +694,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       observed:
         "An Instagram/ folder was created, but it was over-filled: the model dumped the X maintenance and dashboard posts inside it under 06-07 and 06-10.",
       rationale:
-        "Same structural requirement as the other platforms, scored independently. Instagram is the channel models tend to over-fill (absorbing X content), so verifying it exists in isolation is necessary before checking what is inside it.",
+        "Same structural requirement as the other platforms, scored independently. Instagram is the channel most likely to absorb the X posts if the boxed [X] section beneath it is skimmed, so verifying it exists in isolation is necessary before checking what is inside it.",
     },
     {
       n: 4,
@@ -704,9 +704,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 1 (boxed [X] section).",
       status: "not-present",
       observed:
-        "No X/ folder existed at all. Its two posts were absorbed into Instagram — the single biggest failure of the run.",
+        "No X/ folder existed at all; its two posts were placed under Instagram instead.",
       rationale:
-        "This is the rubric that captures the headline trap. Because X is scribbled below Instagram on the same page, models routinely miss it entirely. Giving it a dedicated +5 rubric means the most common failure is heavily penalized and clearly visible in the score.",
+        "X is boxed below Instagram on the same page — clearly legible, but easy to skip if the note isn't read in full. Giving it a dedicated +5 rubric means a missed channel is heavily penalized and clearly visible in the score.",
     },
     {
       n: 5,
@@ -1001,30 +1001,31 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
   friction: [
     {
       id: "x-under-ig",
-      title: "X scattered under Instagram",
+      title: "X plan boxed under Instagram",
       type: "perception",
-      where: "SSOT page 1 (1780566865852.jpeg)",
+      where: "Handwritten note 1 (1780566865852.jpeg)",
       description:
-        "The X plan is boxed below the Instagram plan on the same handwritten page, instead of on its own page.",
+        "The X plan sits in its own labelled box directly below the Instagram plan on the same handwritten page. It stays clearly legible as a separate platform — the only added complexity is that both channels share one page, while the intent (two different platforms) is unambiguous.",
       whyItWorks:
-        "Models lean on page/layout structure and lump X posts under Instagram, missing the entire X channel — the task's primary, reasoning-shaped failure mode.",
+        "Both channels share a page, which adds light complexity, but the boxed [X] section and the prompt's intent leave only one reasonable reading: two separate platforms.",
     },
     {
       id: "strike-16-14",
       title: "Crossed-out date (16th → 14th)",
       type: "mismatch",
-      where: "SSOT page 2 (LinkedIn)",
-      description: "The LinkedIn post date is written as 16th, struck out, and rewritten as 14th.",
+      where: "Handwritten note 2 (LinkedIn)",
+      description:
+        "Plan: the LinkedIn post date is written as 16th, struck through, and rewritten as 14th — the 14th is the intended date. The model must honor the strike-through rather than file the post under the crossed-out 16th.",
       whyItWorks:
         "Tests whether the model honors the strike-through. A model that reads the crossed-out value files the post under the wrong date.",
     },
     {
       id: "carousel-caption-split",
-      title: "Carousel caption only partly matches",
+      title: "Carousel caption only partly matches the planned slides",
       type: "mismatch",
-      where: "text_post.txt block 6 vs SSOT carousel slides",
+      where: "text_post.txt block 6 → Instagram 06-05",
       description:
-        "The 5-part carousel caption includes webcam (not phishing) and account-monitoring (not safe browsing) blocks.",
+        "Plan: the 5-slide carousel covers strong passwords, two-factor authentication, phishing awareness, software updates, and safe browsing habits. Caption file (block 6): slide 3 is written about webcam security (not phishing) and slide 5 about monitoring your accounts (not safe browsing). Keep blocks 1, 2 and 4; drop 3 and 5.",
       whyItWorks:
         "Forces topic-level matching inside a single caption — keep 3 blocks, drop 2 — rather than routing the whole block to one folder.",
     },
@@ -1033,34 +1034,38 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       title: "Caption over the 300-word limit",
       type: "mismatch",
       where: "text_post.txt block 1 → LinkedIn 06-14",
-      description: "The financial-ecosystem caption far exceeds the plan's <300-word constraint.",
+      description:
+        "Plan: the 14th LinkedIn post must explain financial ecosystems in under 300 words. Caption file (block 1): the financial-ecosystem caption runs well over 300 words.",
       whyItWorks:
         "A cascade point: the prompt sets the limit, the input violates it, and the model must notice and log it instead of silently including it.",
     },
     {
       id: "wrong-phone",
-      title: "Wrong phone number",
+      title: "Wrong phone number in the Boston-office caption",
       type: "mismatch",
       where: "text_post.txt block 3 → LinkedIn 06-29",
-      description: "The Boston-office caption lists (617) 555-0537 instead of Brandon's (617) 555-0394.",
+      description:
+        "Plan: the 29th Boston-office post must include Brandon's personal number, (617) 555-0394. Caption file (block 3): it lists (617) 555-0537.",
       whyItWorks:
         "Requires cross-referencing the caption against the persona/universe — difficulty that lives in the join between sources.",
     },
     {
       id: "q1-q2",
-      title: "Q1 vs Q2 caption swap",
+      title: "Wrong quarter in the dinner-recap caption",
       type: "mismatch",
       where: "text_post.txt block 4 → Instagram 06-11",
-      description: "The dinner-recap caption celebrates Q1 while the planned post recaps Q2.",
+      description:
+        "Plan: the 11th Instagram post recaps the Q2 team dinner held June 1st. Caption file (block 4): the recap celebrates closing out Q1 and references March 28th.",
       whyItWorks:
         "Semantically close but wrong — tests reading content meaning rather than keyword-matching to the dinner post.",
     },
     {
       id: "4am-3am",
-      title: "4am vs 3am maintenance time",
+      title: "Wrong maintenance end time",
       type: "mismatch",
       where: "text_post.txt block 5 → X 06-07",
-      description: "The maintenance caption ends at 4am PST; the SSOT says 3am.",
+      description:
+        "Plan: the 7th X support-maintenance window ends at 3am PST. Caption file (block 5): it states the window ends at 4am PST.",
       whyItWorks:
         "One of several mismatch points, so the careful number-reconciliation matters without the whole task hinging on a single digit.",
     },
@@ -1068,8 +1073,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       id: "missing-captions",
       title: "Missing finance-quote captions",
       type: "missing",
-      where: "Instagram Fridays (06-05/12/19/26)",
-      description: "No captions were recovered for the weekly finance-quote posts.",
+      where: "Instagram Fridays (06-05 / 06-12 / 06-19 / 06-26)",
+      description:
+        "Plan: each weekly Friday finance-quote post needs a caption. Caption file: no finance-quote caption was recovered for any of the four Fridays, so their absence must be reported.",
       whyItWorks:
         "Tests the 'missing' bucket: the model must positively report absence rather than leaving folders quietly incomplete.",
     },
@@ -1078,7 +1084,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       title: "Duplicate dashboard image",
       type: "removable",
       where: "final viasual.png vs Dash.jpg",
-      description: "Two pixel-identical dashboard images were recovered from different sources.",
+      description: "Two pixel-identical dashboard images were recovered from different sources; one should be removed.",
       whyItWorks:
         "Realistic multi-source artifact; rewards the model for deduplicating and reporting it.",
     },
@@ -1088,7 +1094,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       type: "removable",
       where: "IMG_39852, Screenshot_2026-06-03, visual_8456934, update",
       description:
-        "Ransomware graphic, live-webinar badge, mac-and-cheese recipe, and a 'latest update' tablet — none map to the plan.",
+        "Ransomware graphic, live-webinar badge, mac-and-cheese recipe, and a 'latest update' tablet — none map to any planned post, so all four must be removed and reported.",
       whyItWorks:
         "Tests the 'removable' bucket: noise that must be excluded and reported, mirroring a real messy recovery.",
     },
@@ -1194,7 +1200,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
           name: "✗ X  (never created)",
           type: "folder",
           role: "missing",
-          note: "the entire X channel was absorbed into Instagram",
+          note: "the X posts were placed under Instagram instead",
         },
         {
           name: "MEMORY.md",

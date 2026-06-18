@@ -380,7 +380,7 @@ export default function TaskDetail() {
                 <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">
                   <ScrollText size={16} className="text-brand-500" /> The output folder tree
                 </h3>
-                <FolderTree root={task.deliverableTree} />
+                <FolderTree root={task.deliverableTree} showRoles={false} />
               </div>
               <div>
                 <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">

@@ -11,11 +11,19 @@ import {
 import type { FolderNode } from "../data/types";
 import { cx, roleStyles } from "../lib/assets";
 
-function Node({ node, depth }: { node: FolderNode; depth: number }) {
+function Node({
+  node,
+  depth,
+  showRoles,
+}: {
+  node: FolderNode;
+  depth: number;
+  showRoles: boolean;
+}) {
   const [open, setOpen] = useState(depth < 2);
   const isFolder = node.type === "folder";
   const hasChildren = !!node.children?.length;
-  const rs = node.role ? roleStyles[node.role] : null;
+  const rs = showRoles && node.role ? roleStyles[node.role] : null;
 
   const icon = isFolder ? (
     open ? (
@@ -81,7 +89,7 @@ function Node({ node, depth }: { node: FolderNode; depth: number }) {
             className="overflow-hidden"
           >
             {node.children!.map((c, i) => (
-              <Node key={c.name + i} node={c} depth={depth + 1} />
+              <Node key={c.name + i} node={c} depth={depth + 1} showRoles={showRoles} />
             ))}
           </motion.div>
         )}
@@ -90,10 +98,16 @@ function Node({ node, depth }: { node: FolderNode; depth: number }) {
   );
 }
 
-export default function FolderTree({ root }: { root: FolderNode }) {
+export default function FolderTree({
+  root,
+  showRoles = true,
+}: {
+  root: FolderNode;
+  showRoles?: boolean;
+}) {
   return (
     <div className="rounded-xl border border-ink-200/70 bg-surface p-3 shadow-soft">
-      <Node node={root} depth={0} />
+      <Node node={root} depth={0} showRoles={showRoles} />
     </div>
   );
 }
