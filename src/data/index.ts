@@ -9,4 +9,4 @@ export function getTask(id: string): Task | undefined {
 }
 
 export * from "./types";
-export { methodSteps, playbookPrinciples } from "./method";
+export { methodSteps, modelCapabilityReference, playbookPrinciples } from "./method";

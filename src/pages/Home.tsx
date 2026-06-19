@@ -2,15 +2,17 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  AlertTriangle,
   ArrowRight,
   Compass,
   Lightbulb,
   Target,
   GitBranch,
   CheckCircle2,
+  ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { methodSteps } from "../data/method";
+import { methodSteps, modelCapabilityReference } from "../data/method";
 import { tasks } from "../data";
 import { Reveal, SectionHeading } from "../components/ui";
 import { cx } from "../lib/assets";
@@ -30,6 +32,21 @@ function phaseOf(n: number) {
   if (n <= 9) return 3;
   return 4;
 }
+
+const capabilityTone = {
+  reliable: {
+    label: "Build on it",
+    icon: ShieldCheck,
+    chip: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-500/30",
+    iconBox: "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-300",
+  },
+  lever: {
+    label: "Use as lever",
+    icon: AlertTriangle,
+    chip: "bg-amber-50 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-500/30",
+    iconBox: "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-300",
+  },
+};
 
 export default function Home() {
   const [activeStep, setActiveStep] = useState(1);
@@ -245,26 +262,108 @@ export default function Home() {
 
               <Link
                 to={`/tasks/${tasks[0].meta.id}`}
-                className={cx(
-                  "group mt-3 flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-br p-5 text-white shadow-soft transition hover:brightness-110",
-                  phaseColors[phaseOf(step.n)]
-                )}
+                className="group mt-4 flex items-center justify-between gap-3 rounded-xl border border-ink-200/80 bg-ink-50/70 p-4 text-ink-800 transition hover:border-brand-300 hover:bg-brand-50/50 dark:bg-ink-100/40"
               >
                 <span>
-                  <span className="block text-[11px] font-bold uppercase tracking-wide text-white/80">
+                  <span className="block text-[11px] font-bold uppercase tracking-wide text-brand-600">
                     Theory into practice
                   </span>
-                  <span className="mt-0.5 block text-base font-extrabold leading-snug sm:text-lg">
+                  <span className="mt-0.5 block text-base font-extrabold leading-snug text-ink-900">
                     See the method applied to a real task
                   </span>
                 </span>
                 <ArrowRight
-                  size={22}
-                  className="shrink-0 transition-transform group-hover:translate-x-1"
+                  size={20}
+                  className="shrink-0 text-brand-600 transition-transform group-hover:translate-x-1"
                 />
               </Link>
             </div>
           </div>
+
+          <Reveal className="mt-14 border-t border-ink-200/70 pt-12">
+            <SectionHeading
+              eyebrow="Visual reference"
+              title="Model capabilities and task levers"
+              sub="Use reliable skills as building blocks, then choose realistic limitations as the source of task difficulty. This keeps complexity grounded instead of decorative."
+            />
+
+            <div className="mt-7 overflow-hidden rounded-2xl border border-ink-200/80 bg-surface shadow-soft">
+              <div className="grid gap-4 border-b border-ink-200/70 bg-ink-50 px-5 py-5 md:grid-cols-[1fr_1.4fr] md:items-center">
+                <div>
+                  <div className="text-sm font-extrabold text-ink-900">
+                    Quick calibration table
+                  </div>
+                  <p className="mt-1 text-sm leading-relaxed text-ink-500">
+                    Do not build tasks from model strengths alone. Combine a reliable baseline with a natural failure lever.
+                  </p>
+                </div>
+                <div className="grid gap-2 text-sm sm:grid-cols-2">
+                  <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300">
+                    <span className="font-bold">Build on it:</span> expected to work, so it anchors the task.
+                  </div>
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
+                    <span className="font-bold">Use as lever:</span> where the task can honestly become hard.
+                  </div>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full border-collapse text-left text-sm">
+                  <thead className="bg-surface">
+                    <tr className="border-b border-ink-200/70 text-[11px] font-bold uppercase tracking-wide text-ink-400">
+                      <th className="w-40 px-5 py-3">Role</th>
+                      <th className="min-w-56 px-5 py-3">Capability or limitation</th>
+                      <th className="min-w-[22rem] px-5 py-3">What contributors should know</th>
+                      <th className="min-w-[22rem] px-5 py-3">Design move</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-ink-200/60">
+                    {modelCapabilityReference.map((item) => {
+                      const tone = capabilityTone[item.kind];
+                      const Icon = tone.icon;
+                      return (
+                        <tr
+                          key={`${item.kind}-${item.capability}`}
+                          className="align-top transition hover:bg-ink-50/70"
+                        >
+                          <td className="px-5 py-4">
+                            <span
+                              className={cx(
+                                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold",
+                                tone.chip
+                              )}
+                            >
+                              <Icon size={13} />
+                              {tone.label}
+                            </span>
+                          </td>
+                          <td className="px-5 py-4 font-semibold text-ink-900">
+                            {item.capability}
+                          </td>
+                          <td className="px-5 py-4 leading-relaxed text-ink-600">
+                            {item.summary}
+                          </td>
+                          <td className="px-5 py-4 leading-relaxed text-ink-700">
+                            <div className="flex gap-2.5">
+                              <span
+                                className={cx(
+                                  "mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg",
+                                  tone.iconBox
+                                )}
+                              >
+                                <Icon size={14} />
+                              </span>
+                              <span>{item.contributorMove}</span>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
     </div>

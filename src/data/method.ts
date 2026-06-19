@@ -1,4 +1,4 @@
-import type { MethodStep, PlaybookPrinciple } from "./types";
+import type { MethodStep, ModelCapabilityReference, PlaybookPrinciple } from "./types";
 
 export const playbookPrinciples: PlaybookPrinciple[] = [
   {
@@ -24,6 +24,123 @@ export const playbookPrinciples: PlaybookPrinciple[] = [
   {
     title: "Validate the ≥50% failure threshold early",
     body: "Run the initial trajectory and confirm the model fails the way you predicted and crosses the 50% positive-weight threshold. Discovering gaps at the GTFA stage is far cheaper than discovering them after writing rubrics.",
+  },
+];
+
+export const modelCapabilityReference: ModelCapabilityReference[] = [
+  {
+    kind: "reliable",
+    capability: "Text input reasoning",
+    summary: "Parses PDFs, Markdown, plain text, JSON, CSV, and similar files accurately.",
+    contributorMove: "Use text as a foundation, then make the task depend on reconciliation across sources.",
+  },
+  {
+    kind: "reliable",
+    capability: "Registered tool use",
+    summary: "Calendar, contacts, email, file writes, and code execution work when the skill is present.",
+    contributorMove: "Check the loadout and make tool expectations explicit in the prompt context.",
+  },
+  {
+    kind: "reliable",
+    capability: "Command execution",
+    summary: "Runs shell commands, Python scripts, ffmpeg, Whisper, pip installs, and available CLI tools.",
+    contributorMove: "Let code help with deterministic outputs, but still evaluate whether the model used the right method.",
+  },
+  {
+    kind: "reliable",
+    capability: "Image reading",
+    summary: "Reads screenshots, receipts, photos, handwritten notes, charts, and diagrams through the read tool.",
+    contributorMove: "Use images for evidence, but avoid making one perception miss decide the whole task.",
+  },
+  {
+    kind: "reliable",
+    capability: "Video frame extraction",
+    summary: "Can extract frames with ffmpeg and then inspect the resulting image.",
+    contributorMove: "Use timestamped frame checks when the scenario naturally requires finding a visual moment.",
+  },
+  {
+    kind: "reliable",
+    capability: "Short audio transcription",
+    summary: "Clean recordings under 60 seconds usually transcribe accurately with local Whisper.",
+    contributorMove: "Use short audio as one evidence source, not as the only thing the task tests.",
+  },
+  {
+    kind: "reliable",
+    capability: "Workspace deliverables",
+    summary: "Creates Markdown, CSV, JSON, text, HTML, folders, and organized file outputs reliably.",
+    contributorMove: "Make the deliverable structure checkable, then layer in reasoning requirements.",
+  },
+  {
+    kind: "reliable",
+    capability: "Explicit multi-source reasoning",
+    summary: "Usually checks multiple sources when the prompt clearly asks it to compare them.",
+    contributorMove: "Phrase cross-checking naturally in the user request and supporting files.",
+  },
+  {
+    kind: "reliable",
+    capability: "Explicit formatting constraints",
+    summary: "Follows exact section order, file names, and column names when stated in the prompt.",
+    contributorMove: "Put important formatting rules in the actual prompt or referenced task inputs.",
+  },
+  {
+    kind: "reliable",
+    capability: "Policy rules in input files",
+    summary: "Applies thresholds, exclusion lists, and conditional rules when told to consult the policy.",
+    contributorMove: "Use policy docs as nested context, then verify the model followed the right branch.",
+  },
+  {
+    kind: "lever",
+    capability: "Single-source reliance",
+    summary: "May read one source and skip a second source that contradicts it.",
+    contributorMove: "Create a natural conflict between two sources that must be reconciled.",
+  },
+  {
+    kind: "lever",
+    capability: "Precise-number fabrication",
+    summary: "May invent exact values when no clear source contains them.",
+    contributorMove: "Remove exact scales or dates when unsupported precision should be penalized.",
+  },
+  {
+    kind: "lever",
+    capability: "Filename-as-evidence",
+    summary: "May trust a filename instead of inspecting the actual file contents.",
+    contributorMove: "Use plausible misleading filenames where the pixels tell a different story.",
+  },
+  {
+    kind: "lever",
+    capability: "Handwritten digit confusion",
+    summary: "Can confuse digits such as 6 vs 8, 1 vs 7, or 3 vs 8.",
+    contributorMove: "Let the handwritten value feed a larger calculation or ordering decision.",
+  },
+  {
+    kind: "lever",
+    capability: "Protected-content auto-correction",
+    summary: "May fix typos, slang, or child-written wording that should be preserved.",
+    contributorMove: "Make preservation an explicit, realistic requirement in the task.",
+  },
+  {
+    kind: "lever",
+    capability: "Skipped no-action conditionals",
+    summary: "May perform an action even when the condition says no action is needed.",
+    contributorMove: "Use conditional workflows where the correct answer is sometimes to stop.",
+  },
+  {
+    kind: "lever",
+    capability: "Wrong tool or channel",
+    summary: "May default to email, messaging, or another available route incorrectly.",
+    contributorMove: "Require a specific channel and verify the state change happened there.",
+  },
+  {
+    kind: "lever",
+    capability: "First-text-match anchoring",
+    summary: "May prefer the first written option over later visual evidence.",
+    contributorMove: "Place plausible wrong text before the visual evidence that resolves the truth.",
+  },
+  {
+    kind: "lever",
+    capability: "Missed implicit prerequisites",
+    summary: "May estimate instead of looking up prerequisite context mentioned in passing.",
+    contributorMove: "Make the missing prerequisite discoverable through tools, memory, or input files.",
   },
 ];
 

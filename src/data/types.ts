@@ -223,3 +223,10 @@ export interface PlaybookPrinciple {
   title: string;
   body: string;
 }
+
+export interface ModelCapabilityReference {
+  kind: "reliable" | "lever";
+  capability: string;
+  summary: string;
+  contributorMove: string;
+}
