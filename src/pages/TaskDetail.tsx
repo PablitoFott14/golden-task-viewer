@@ -13,6 +13,7 @@ import {
   Eye,
   EyeOff,
   ExternalLink,
+  Gauge,
 } from "lucide-react";
 import { getTask } from "../data";
 import type { FrictionPoint } from "../data/types";
@@ -24,6 +25,12 @@ import FolderTree from "../components/FolderTree";
 import RubricExplorer from "../components/RubricExplorer";
 import TrajectoryReport from "../components/TrajectoryReport";
 import MarkdownDoc from "../components/MarkdownDoc";
+
+const difficultyChip: Record<string, string> = {
+  Medium: "bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300",
+  Hard: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
+  "Very Hard": "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+};
 
 const SECTIONS = [
   { id: "overview", label: "Overview" },
@@ -123,6 +130,14 @@ export default function TaskDetail() {
         <div className="min-w-0 space-y-20">
           {/* ===== Overview ===== */}
           <Section id="overview" n={1} title={m.title} kicker="Golden Task">
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              <span className={cx("chip", difficultyChip[m.difficulty] ?? "bg-ink-100 text-ink-600")}>
+                <Gauge size={12} /> {m.difficulty}
+              </span>
+              <span className="chip bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                <CheckCircle2 size={12} /> {m.status}
+              </span>
+            </div>
             <p className="text-lg leading-relaxed text-ink-600">{m.oneLiner}</p>
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
               <Stat label="Category" value={m.category} />

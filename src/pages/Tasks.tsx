@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Image, Layers } from "lucide-react";
+import { ArrowRight, Image, Layers, Gauge } from "lucide-react";
 import { tasks } from "../data";
 import { Reveal, SectionHeading } from "../components/ui";
-import { assetUrl } from "../lib/assets";
+import { assetUrl, cx } from "../lib/assets";
+
+const difficultyChip: Record<string, string> = {
+  Medium: "bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300",
+  Hard: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
+  "Very Hard": "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+};
 
 export default function Tasks() {
   return (
@@ -18,15 +24,19 @@ export default function Tasks() {
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
         {tasks.map((t, i) => {
           const previews = t.assets
-            .filter((a) => a.kind === "image")
+            .filter((a) => a.kind !== "text")
             .slice(0, 4);
+          const imageCount = t.assets.filter((a) => a.kind !== "text").length;
           return (
             <Reveal key={t.meta.id} delay={i * 0.06}>
               <Link
                 to={`/tasks/${t.meta.id}`}
                 className="group block overflow-hidden rounded-2xl border border-ink-200/70 bg-surface shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
               >
-                <div className="grid grid-cols-4 gap-px bg-ink-100">
+                <div
+                  className="grid gap-px bg-ink-100"
+                  style={{ gridTemplateColumns: `repeat(${Math.min(previews.length, 4)}, minmax(0, 1fr))` }}
+                >
                   {previews.map((p) => (
                     <div key={p.filename} className="aspect-square overflow-hidden bg-ink-100">
                       <img
@@ -40,6 +50,9 @@ export default function Tasks() {
                 </div>
                 <div className="p-6">
                   <div className="flex flex-wrap items-center gap-2">
+                    <span className={cx("chip", difficultyChip[t.meta.difficulty] ?? "bg-ink-100 text-ink-600")}>
+                      <Gauge size={12} /> {t.meta.difficulty}
+                    </span>
                     <span className="chip bg-ink-100 text-ink-600">{t.meta.category}</span>
                     <span className="chip bg-ink-100 text-ink-600">{t.meta.subcategory}</span>
                   </div>
@@ -53,7 +66,7 @@ export default function Tasks() {
                   <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-ink-500">
                     <span className="inline-flex items-center gap-1.5">
                       <Image size={14} className="text-brand-500" />
-                      {t.assets.filter((a) => a.kind === "image").length} images
+                      {imageCount} visual inputs
                     </span>
                     <span className="inline-flex items-center gap-1.5">
                       <Layers size={14} className="text-brand-500" />
