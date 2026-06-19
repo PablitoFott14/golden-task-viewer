@@ -64,6 +64,12 @@ export interface Rubric {
   category: string;
   /** Authored by the viewer: the reasoning behind why this rubric exists. */
   rationale: string;
+  /** Three-level justification (from the autorater viewer). Empty when the model satisfied the criterion. */
+  whyCorrect?: string;
+  whyImportant?: string;
+  whatWrong?: string;
+  /** Evaluation target: where the criterion is judged (Final answer/artifact, User-facing message, State change…). */
+  evalTarget: string;
   /** Which prompt instruction / plan rule this enforces. */
   enforces: string;
   /** Asset filenames or locations this rubric is grounded in. */

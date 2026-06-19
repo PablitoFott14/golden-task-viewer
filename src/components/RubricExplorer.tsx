@@ -4,13 +4,14 @@ import {
   ChevronDown,
   Lightbulb,
   Link2,
-  Tag,
   Scale,
   ClipboardCheck,
   Check,
   X,
   AlertTriangle,
   Activity,
+  Crosshair,
+  CheckCircle2,
 } from "lucide-react";
 import type { Rubric, RubricDesignNote } from "../data/types";
 import { cx } from "../lib/assets";
@@ -200,6 +201,9 @@ export default function RubricExplorer({
                     <span className={cx("chip", categoryColor(r.category))}>
                       {r.category.split("—")[0].trim()}
                     </span>
+                    <span className="chip bg-ink-100 text-ink-600 dark:bg-ink-200/60">
+                      <Crosshair size={12} /> {r.evalTarget}
+                    </span>
                     <StatusBadge rubric={r} />
                   </span>
                   <span className="mt-1.5 block text-sm font-medium leading-snug text-ink-800">
@@ -225,35 +229,58 @@ export default function RubricExplorer({
                   >
                     <div className="space-y-3 border-t border-ink-100 px-4 pb-4 pt-3">
                       <div className="grid gap-2 sm:grid-cols-2">
-                        <Meta icon={<Link2 size={13} />} label="What it checks (enforces)" value={r.enforces} />
-                        <Meta icon={<Tag size={13} />} label="Grading category" value={r.category} />
-                      </div>
-                      <div className="rounded-lg bg-brand-50/60 p-3 dark:bg-brand-500/10">
-                        <div className="mb-1 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
-                          <Lightbulb size={13} /> Why this rubric exists &amp; why it matters
-                        </div>
-                        <p className="text-[13px] leading-relaxed text-ink-700">{r.rationale}</p>
-                      </div>
-                      {r.observed && (
-                        <div
-                          className={cx(
-                            "rounded-lg p-3",
-                            satisfied
-                              ? "bg-emerald-50/70 dark:bg-emerald-500/10"
-                              : "bg-rose-50/70 dark:bg-rose-500/10"
-                          )}
-                        >
+                        <Meta icon={<Link2 size={13} />} label="What this check enforces" value={r.enforces} />
+                        {r.observed && (
                           <div
                             className={cx(
-                              "mb-1 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide",
-                              satisfied ? "text-emerald-700 dark:text-emerald-300" : "text-rose-700 dark:text-rose-300"
+                              "rounded-lg border p-2.5",
+                              satisfied
+                                ? "border-emerald-100 bg-emerald-50/60 dark:border-emerald-500/30 dark:bg-emerald-500/10"
+                                : "border-rose-100 bg-rose-50/60 dark:border-rose-500/30 dark:bg-rose-500/10"
                             )}
                           >
-                            <Activity size={13} /> In the initial run
+                            <div
+                              className={cx(
+                                "mb-0.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide",
+                                satisfied ? "text-emerald-700 dark:text-emerald-300" : "text-rose-700 dark:text-rose-300"
+                              )}
+                            >
+                              <Activity size={13} /> In the initial run
+                            </div>
+                            <p className="text-[13px] leading-snug text-ink-700">{r.observed}</p>
                           </div>
-                          <p className="text-[13px] leading-relaxed text-ink-700">{r.observed}</p>
+                        )}
+                      </div>
+
+                      {(r.whyCorrect || r.whyImportant || r.whatWrong) && (
+                        <div className="space-y-2 rounded-lg border border-brand-100 bg-brand-50/40 p-3 dark:border-brand-500/20 dark:bg-brand-500/10">
+                          {r.whyCorrect && (
+                            <Justification
+                              icon={<CheckCircle2 size={13} />}
+                              tone="brand"
+                              label="Why the rubric is correct"
+                              body={r.whyCorrect}
+                            />
+                          )}
+                          {r.whyImportant && (
+                            <Justification
+                              icon={<Lightbulb size={13} />}
+                              tone="brand"
+                              label="Why the rubric is important"
+                              body={r.whyImportant}
+                            />
+                          )}
+                          {r.whatWrong && (
+                            <Justification
+                              icon={<X size={13} />}
+                              tone="rose"
+                              label="What the model did wrong"
+                              body={r.whatWrong}
+                            />
+                          )}
                         </div>
                       )}
+
                       {r.evidence && r.evidence.length > 0 && (
                         <div className="flex flex-wrap items-center gap-1.5">
                           <Scale size={13} className="text-ink-400" />
@@ -337,6 +364,31 @@ function ScoreCard({
         {value}
       </div>
       {hint && <div className="mt-0.5 text-[10px] leading-tight text-ink-400">{hint}</div>}
+    </div>
+  );
+}
+
+function Justification({
+  icon,
+  label,
+  body,
+  tone,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  body: string;
+  tone: "brand" | "rose";
+}) {
+  const head =
+    tone === "rose"
+      ? "text-rose-700 dark:text-rose-300"
+      : "text-brand-700 dark:text-brand-300";
+  return (
+    <div>
+      <div className={cx("mb-0.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide", head)}>
+        {icon} {label}
+      </div>
+      <p className="text-[13px] leading-relaxed text-ink-700">{body}</p>
     </div>
   );
 }

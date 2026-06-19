@@ -531,7 +531,6 @@ export default function TaskDetail() {
             n={11}
             title="The Rubric Set"
             kicker="Step 12 — Rubrics"
-            sub="The exact 27 criteria, each marked Present / Not Present against the initial run. Open any criterion to see why it exists, what it checks, and what the model did against it."
           >
             <RubricExplorer rubrics={task.rubrics} designNotes={task.rubricDesign} />
           </Section>

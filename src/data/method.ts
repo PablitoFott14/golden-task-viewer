@@ -58,7 +58,7 @@ export const methodSteps: MethodStep[] = [
   {
     n: 3,
     key: "choose",
-    title: "Choose the Idea",
+    title: "Choosing the Idea",
     short: "Pick the scenario with the most room for genuine complexity.",
     detail:
       "Select the idea you can ground most believably in the persona's reality while leaving room to create realistic complexity aligned with the category and subcategory.",
@@ -83,7 +83,7 @@ export const methodSteps: MethodStep[] = [
   {
     n: 5,
     key: "mm",
-    title: "Final Decision on MM Context",
+    title: "The Multimodal Inputs",
     short: "Lock the multimodal inputs and the friction you'll plant.",
     detail:
       "Commit to the concrete inputs: handwritten notes as the SSOT, a captions file, and an image set. Introduce controlled mismatches and friction — captions over the limit, mismatched dates, unrelated images — nothing forced, just realistic mess.",
@@ -110,7 +110,7 @@ export const methodSteps: MethodStep[] = [
   {
     n: 7,
     key: "gtfa",
-    title: "GTFA Creation",
+    title: "The Ground Truth Final Answer",
     short: "Build the one correct answer by hand.",
     detail:
       "Craft the Ground Truth Final Answer that a correct silver trajectory would produce. It doubles as the Desired Outcome and lets you confirm early whether the task can meet the 50% genuine rubric failure threshold.",
@@ -149,7 +149,7 @@ export const methodSteps: MethodStep[] = [
   {
     n: 10,
     key: "silver",
-    title: "Silver Trajectory",
+    title: "The Silver Trajectory",
     short: "Guide the model to the correct answer, restoring to seed.",
     detail:
       "Always restore to seed — do not start fresh. Guide the model toward the correct response with as many follow-up prompts as needed until the correct solution is reached.",
@@ -161,7 +161,7 @@ export const methodSteps: MethodStep[] = [
   {
     n: 11,
     key: "tests",
-    title: "Unit Tests (Reviewers Only)",
+    title: "Unit Tests",
     short: "Name the structural checks reviewers will implement.",
     detail:
       "Define reviewer-only unit test references — names and descriptions, not the tests themselves. These cover what is structurally important: required folders exist and contain the expected sub-folders.",
@@ -173,7 +173,7 @@ export const methodSteps: MethodStep[] = [
   {
     n: 12,
     key: "rubrics",
-    title: "Rubrics",
+    title: "The Rubric Set",
     short: "One rubric per explicit/implicit requirement.",
     detail:
       "Every rubric covers an explicit or implicit requirement of the prompt. Bundling happens only when the same level of data entry is being checked. Each rubric is weighted and tied to a grading category.",

@@ -46,15 +46,20 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="max-w-3xl"
           >
-            <h1 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-              Golden Task Viewer
+            <h1 className="text-3xl font-black leading-[1.05] tracking-tight text-ink-900 sm:text-5xl">
+              Natural complexity is what drives success
+              <span className="bg-gradient-to-r from-brand-600 to-violet-500 bg-clip-text text-transparent">
+                {" "}in this project.
+              </span>
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-500">
-              Understand how successful Blue Shell tasks are designed — from persona
-              research through rubric creation. Browse the method, then see it applied
-              step by step in a real example.
+            <p className="mt-4 max-w-2xl text-lg font-bold uppercase tracking-wide text-brand-600 sm:text-2xl">
+              Let your imagination lead the way.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-500">
+              Realistic, naturally complex scenarios are the foundation of every successful task —
+              not artificial constraints or forced difficulty.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
               <Link to="/tasks" className="btn-primary">
                 Explore Golden Tasks <ArrowRight size={16} />
               </Link>
@@ -240,6 +245,12 @@ export default function Home() {
                   </div>
                 </motion.div>
               </AnimatePresence>
+              <Link
+                to={`/tasks/${tasks[0].meta.id}`}
+                className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-brand-200 bg-brand-50/60 px-4 py-2.5 text-sm font-bold text-brand-700 transition hover:bg-brand-100 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300"
+              >
+                See the method applied to a real task <ArrowRight size={15} />
+              </Link>
             </div>
           </div>
         </div>
