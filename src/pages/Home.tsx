@@ -195,21 +195,6 @@ export default function Home() {
                     </p>
                   </div>
                   <div className="space-y-4 p-6">
-                    <Link
-                      to={`/tasks/${tasks[0].meta.id}`}
-                      className={cx(
-                        "group flex items-center justify-between gap-3 rounded-xl bg-gradient-to-br p-4 text-white shadow-soft transition hover:brightness-110",
-                        phaseColors[phaseOf(step.n)]
-                      )}
-                    >
-                      <span className="text-sm font-extrabold leading-snug sm:text-base">
-                        See the method applied to a real task
-                      </span>
-                      <ArrowRight
-                        size={20}
-                        className="shrink-0 transition-transform group-hover:translate-x-1"
-                      />
-                    </Link>
                     <div>
                       <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">
                         Key moves
@@ -245,6 +230,27 @@ export default function Home() {
                   </div>
                 </motion.div>
               </AnimatePresence>
+
+              <Link
+                to={`/tasks/${tasks[0].meta.id}`}
+                className={cx(
+                  "group mt-3 flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-br p-5 text-white shadow-soft transition hover:brightness-110",
+                  phaseColors[phaseOf(step.n)]
+                )}
+              >
+                <span>
+                  <span className="block text-[11px] font-bold uppercase tracking-wide text-white/80">
+                    Theory into practice
+                  </span>
+                  <span className="mt-0.5 block text-base font-extrabold leading-snug sm:text-lg">
+                    See the method applied to a real task
+                  </span>
+                </span>
+                <ArrowRight
+                  size={22}
+                  className="shrink-0 transition-transform group-hover:translate-x-1"
+                />
+              </Link>
             </div>
           </div>
         </div>
