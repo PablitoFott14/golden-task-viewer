@@ -8,7 +8,6 @@ import {
   Target,
   GitBranch,
   CheckCircle2,
-  BookOpen,
 } from "lucide-react";
 import { methodSteps } from "../data/method";
 import { tasks } from "../data";
@@ -227,12 +226,6 @@ export default function Home() {
                         ))}
                       </ul>
                     </div>
-                    {step.playbookLink && (
-                      <div className="flex items-center gap-2 border-t border-ink-100 pt-3 text-xs text-ink-400">
-                        <BookOpen size={13} />
-                        Playbook: <span className="font-medium text-ink-600">{step.playbookLink}</span>
-                      </div>
-                    )}
                     <div className="flex gap-2 pt-1">
                       <button
                         disabled={step.n === 1}
