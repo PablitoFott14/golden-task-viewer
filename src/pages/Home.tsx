@@ -8,6 +8,7 @@ import {
   Target,
   GitBranch,
   CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 import { methodSteps } from "../data/method";
 import { tasks } from "../data";
@@ -195,6 +196,17 @@ export default function Home() {
                     </p>
                   </div>
                   <div className="space-y-4 p-6">
+                    {step.callouts?.map((c) => (
+                      <div
+                        key={c.title}
+                        className="rounded-xl border border-gold-300 bg-gold-50/70 p-3.5 dark:border-gold-500/40 dark:bg-gold-500/10"
+                      >
+                        <div className="flex items-center gap-1.5 text-[12px] font-extrabold uppercase tracking-wide text-gold-700 dark:text-gold-300">
+                          <Sparkles size={13} className="shrink-0" /> {c.title}
+                        </div>
+                        <p className="mt-1 text-[13px] leading-relaxed text-ink-700">{c.body}</p>
+                      </div>
+                    ))}
                     <div>
                       <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">
                         Key moves

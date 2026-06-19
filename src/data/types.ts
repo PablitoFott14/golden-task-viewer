@@ -215,6 +215,8 @@ export interface MethodStep {
   output?: string;
   playbookLink?: string;
   tips: string[];
+  /** Prominent highlighted takeaways shown above the Key Moves on the step card. */
+  callouts?: { title: string; body: string }[];
 }
 
 export interface PlaybookPrinciple {

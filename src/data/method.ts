@@ -88,6 +88,12 @@ export const methodSteps: MethodStep[] = [
       "Vary formats: handwritten notes + captions file + image set.",
       "Avoid the single-character gotcha as the whole-task failure; spread the load across sources.",
     ],
+    callouts: [
+      {
+        title: "Vary the multimodal mix across tasks",
+        body: "Don't reach for the same input pattern every time. Different tasks should combine different modalities — images, documents, spreadsheets, videos, handwritten notes, screenshots — and let each one carry part of the reasoning. The mix should feel native to the scenario, never mechanically inserted to tick a 'multimodal' box.",
+      },
+    ],
   },
   {
     n: 6,
@@ -100,6 +106,16 @@ export const methodSteps: MethodStep[] = [
     tips: [
       "Open with something the persona would actually say — no role-play scaffolding or dev-spec step lists.",
       "Keep constraints implicit; let the referenced files and inputs carry the structural detail.",
+    ],
+    callouts: [
+      {
+        title: "Vary the final artifact, too",
+        body: "Output variety matters as much as input variety. Avoid requesting the same deliverable structure task after task — different scenarios naturally call for different formats, artifact types, and levels of detail. A folder tree, a slide deck, a spreadsheet, a written report, a state change: let the scenario decide the output, not habit.",
+      },
+      {
+        title: "MEMORY.md is optional — and never created from scratch",
+        body: "Only ask for it when a task genuinely benefits from tracking information over time. When you do reference MEMORY.md, assume it already exists and instruct the model to update, append to, or read from it — don't tell the model to create a new MEMORY.md unless the task explicitly requires one.",
+      },
     ],
   },
   {
