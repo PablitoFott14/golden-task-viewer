@@ -196,14 +196,21 @@ export default function Home() {
                     </p>
                   </div>
                   <div className="space-y-4 p-6">
-                    {step.output && (
-                      <div className="flex items-center gap-2 rounded-lg bg-ink-50 px-3 py-2 text-sm">
-                        <span className="text-ink-400">Produces</span>
-                        <code className="rounded bg-surface px-2 py-0.5 font-mono text-xs font-semibold text-brand-700 shadow-sm">
-                          {step.output}
-                        </code>
-                      </div>
-                    )}
+                    <Link
+                      to={`/tasks/${tasks[0].meta.id}`}
+                      className={cx(
+                        "group flex items-center justify-between gap-3 rounded-xl bg-gradient-to-br p-4 text-white shadow-soft transition hover:brightness-110",
+                        phaseColors[phaseOf(step.n)]
+                      )}
+                    >
+                      <span className="text-sm font-extrabold leading-snug sm:text-base">
+                        See the method applied to a real task
+                      </span>
+                      <ArrowRight
+                        size={20}
+                        className="shrink-0 transition-transform group-hover:translate-x-1"
+                      />
+                    </Link>
                     <div>
                       <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">
                         Key moves
@@ -245,40 +252,9 @@ export default function Home() {
                   </div>
                 </motion.div>
               </AnimatePresence>
-              <Link
-                to={`/tasks/${tasks[0].meta.id}`}
-                className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-brand-200 bg-brand-50/60 px-4 py-2.5 text-sm font-bold text-brand-700 transition hover:bg-brand-100 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300"
-              >
-                See the method applied to a real task <ArrowRight size={15} />
-              </Link>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Link to first task */}
-      <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
-        <Reveal>
-          <div className="rounded-2xl border border-ink-200/70 bg-surface p-6 shadow-soft sm:p-8">
-            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-              <div>
-                <h3 className="text-lg font-bold text-ink-900">
-                  See the method applied to a real task
-                </h3>
-                <p className="mt-1 text-sm text-ink-500">
-                  Walk through every artifact, friction point, and rubric of{" "}
-                  <strong>{tasks[0].meta.title}</strong>.
-                </p>
-              </div>
-              <Link
-                to={`/tasks/${tasks[0].meta.id}`}
-                className="btn-primary shrink-0"
-              >
-                Open task <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        </Reveal>
       </section>
     </div>
   );
