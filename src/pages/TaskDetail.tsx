@@ -57,6 +57,20 @@ export default function TaskDetail() {
   }
 
   const m = task.meta;
+  const nv = task.narrative ?? {};
+  const gtfaBehavior = nv.gtfaBehavior ?? [
+    "Organize every piece of content by platform first, then by planned date in MM-DD folders, with each post's media and its split MM-DD.txt caption inside.",
+    "Produce a MEMORY.md that logs anything missing or mismatching, in the Platform > MM-DD > issue format the prompt defines.",
+    "Report any removed content in the final user-facing message.",
+    "Send Trevor and Maya an email summarizing the mismatches to fix.",
+  ];
+  const silverSuccess: [string, string][] = nv.silverSuccess ?? [
+    ["Workspace changes", "All content reorganized into the correct Platform › MM-DD folder tree, including the recovered X channel."],
+    ["State change", "The email to trevor@vaulta.io and maya@vaulta.io was actually sent with the mismatches."],
+    ["Final assistant response", "Every removed distractor and the duplicate were reported back to the user."],
+    ["Final artifacts", "MEMORY.md logs all missing and mismatching items in the required format; captions split into MM-DD.txt files."],
+  ];
+  const unitGroups = nv.unitTestGroups ?? ["Platform folders", "Date folders"];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -235,20 +249,18 @@ export default function TaskDetail() {
             n={5}
             title="The Multimodal Inputs"
             kicker="Step 5 — MM inputs"
-            sub="Two handwritten notes are the SSOT. A mixed caption file and 23 images must be audited against them. Filter by role and click any asset for details."
+            sub={nv.inputsSub ?? "Two handwritten notes are the SSOT. A mixed caption file and 23 images must be audited against them. Filter by role and click any asset for details."}
           >
             {/* SSOT spotlight */}
             <div className="mb-8">
               <div className="mb-2 flex items-center gap-2">
                 <span className="chip bg-gold-100 text-gold-800">SSOT</span>
                 <h3 className="text-sm font-bold text-ink-900">
-                  The two handwritten pages — the single source of truth
+                  {nv.ssotTitle ?? "The two handwritten pages — the single source of truth"}
                 </h3>
               </div>
               <p className="mb-4 max-w-2xl text-sm text-ink-500">
-                The notes are intentionally messy, but still readable — a rushed two-page draft jotted down
-                during the emergency meeting, covering the whole of June. When a line is genuinely hard to
-                make out, the GTFA is the tie-breaker for what it says.
+                {nv.ssotBlurb ?? "The notes are intentionally messy, but still readable — a rushed two-page draft jotted down during the emergency meeting, covering the whole of June. When a line is genuinely hard to make out, the GTFA is the tie-breaker for what it says."}
               </p>
               <div className="grid gap-4 md:grid-cols-2">
                 {task.assets
@@ -280,44 +292,71 @@ export default function TaskDetail() {
 
             {/* full gallery */}
             <h3 className="mb-3 text-sm font-bold text-ink-900">
-              Every recovered asset, classified
+              {nv.galleryTitle ?? "Every recovered asset, classified"}
             </h3>
             <ImageGallery
               assets={task.assets.filter((a) => a.role !== "ssot")}
               assetRoot={task.assetRoot}
             />
 
-            {/* Raw caption file, exposed inline */}
-            <div className="mt-8">
-              <h3 className="mb-1 text-sm font-bold text-ink-900">The mixed caption file</h3>
-              <p className="mb-3 max-w-2xl text-sm text-ink-500">
-                <code className="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs text-brand-700">
-                  text_post.txt
-                </code>{" "}
-                holds every recovered June caption in one file — numbered, but not attributed to any post.
-              </p>
-              <RawFile
-                label="Read the raw text_post.txt"
-                file="text_post.txt"
-                note={task.captionsFile.note}
-                url={assetUrl(task.assetRoot, task.captionsFile.path)}
-              />
-            </div>
+            {/* Raw caption file, exposed inline (task1) */}
+            {task.captionsFile && (
+              <div className="mt-8">
+                <h3 className="mb-1 text-sm font-bold text-ink-900">The mixed caption file</h3>
+                <p className="mb-3 max-w-2xl text-sm text-ink-500">
+                  <code className="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs text-brand-700">
+                    text_post.txt
+                  </code>{" "}
+                  holds every recovered June caption in one file — numbered, but not attributed to any post.
+                </p>
+                <RawFile
+                  label="Read the raw text_post.txt"
+                  file="text_post.txt"
+                  note={task.captionsFile.note}
+                  url={assetUrl(task.assetRoot, task.captionsFile.path)}
+                />
+              </div>
+            )}
+
+            {/* Written specification / template files, exposed inline */}
+            {task.inputDocs && task.inputDocs.length > 0 && (
+              <div className="mt-8">
+                <h3 className="mb-1 text-sm font-bold text-ink-900">The written specification</h3>
+                <p className="mb-3 max-w-2xl text-sm text-ink-500">
+                  These files carry the structural rules the deck must follow — read alongside the images,
+                  not in place of them.
+                </p>
+                {task.inputDocs.map((d) =>
+                  d.markdown ? (
+                    <ExpandableDoc
+                      key={d.file}
+                      label={d.label}
+                      file={d.file}
+                      url={assetUrl(task.assetRoot, `mm_input/${d.file}`)}
+                    />
+                  ) : (
+                    <RawFile
+                      key={d.file}
+                      label={d.label}
+                      file={d.file}
+                      note={d.note}
+                      url={assetUrl(task.assetRoot, `mm_input/${d.file}`)}
+                    />
+                  )
+                )}
+              </div>
+            )}
 
             {/* Controlled friction, integrated here */}
             <div className="mt-10">
               <div className="mb-2 flex items-center gap-2">
                 <AlertTriangle size={16} className="text-gold-500" />
                 <h3 className="text-sm font-bold text-ink-900">
-                  The controlled friction planted across these inputs
+                  {nv.frictionTitle ?? "The controlled friction planted across these inputs"}
                 </h3>
               </div>
               <p className="mb-4 max-w-2xl text-sm text-ink-500">
-                Each friction point below was embedded on purpose, yet every one is the kind of mess a real
-                June recovery would contain. It is spread deliberately across the handwritten notes, the
-                images, and the mixed caption file — so no single misread decides the task. Together they
-                cover mismatches to log, files expected to be removed, and information that is simply
-                missing.
+                {nv.frictionBlurb ?? "Each friction point below was embedded on purpose, yet every one is the kind of mess a real June recovery would contain. It is spread deliberately across the handwritten notes, the images, and the mixed caption file — so no single misread decides the task. Together they cover mismatches to log, files expected to be removed, and information that is simply missing."}
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {task.friction.map((f) => (
@@ -373,26 +412,21 @@ export default function TaskDetail() {
             n={7}
             title="The Ground Truth Final Answer"
             kicker="Step 7 — GTFA"
-            sub="The one correct deliverable, built by hand before the prompt was written. This is the intended solution and the behavior a correct agent should produce."
+            sub={nv.gtfaSub ?? "The one correct deliverable, built by hand before the prompt was written. This is the intended solution and the behavior a correct agent should produce."}
           >
             <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
               <div>
                 <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">
-                  <ScrollText size={16} className="text-brand-500" /> The output folder tree
+                  <ScrollText size={16} className="text-brand-500" /> {nv.gtfaTreeTitle ?? "The output folder tree"}
                 </h3>
                 <FolderTree root={task.deliverableTree} showRoles={false} />
               </div>
               <div>
                 <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">
-                  <CheckCircle2 size={16} className="text-emerald-500" /> The expected behavior
+                  <CheckCircle2 size={16} className="text-emerald-500" /> {nv.gtfaBehaviorTitle ?? "The expected behavior"}
                 </h3>
                 <ul className="space-y-2.5">
-                  {[
-                    "Organize every piece of content by platform first, then by planned date in MM-DD folders, with each post's media and its split MM-DD.txt caption inside.",
-                    "Produce a MEMORY.md that logs anything missing or mismatching, in the Platform > MM-DD > issue format the prompt defines.",
-                    "Report any removed content in the final user-facing message.",
-                    "Send Trevor and Maya an email summarizing the mismatches to fix.",
-                  ].map((t) => (
+                  {gtfaBehavior.map((t) => (
                     <li key={t} className="flex gap-2.5 text-[13px] leading-relaxed text-ink-700">
                       <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-emerald-500" />
                       <span>{t}</span>
@@ -413,7 +447,7 @@ export default function TaskDetail() {
             n={8}
             title="What the Model Actually Did"
             kicker="Steps 8–9 — Run & cross-reference"
-            sub="Reconstructed directly from the seed trajectory and its workspace — a single prompt-agent interaction, compared against the GTFA."
+            sub={nv.actualSub ?? "Reconstructed directly from the seed trajectory and its workspace — a single prompt-agent interaction, compared against the GTFA."}
           >
             <TrajectoryReport run={task.actualRun} />
           </Section>
@@ -424,7 +458,7 @@ export default function TaskDetail() {
             n={9}
             title="The Silver Trajectory"
             kicker="Step 10 — Silver trajectory"
-            sub="Targeted follow-ups guide the model to the correct answer, always restoring to seed. Each one targets a specific failure observed in the run above."
+            sub={nv.silverSub ?? "Targeted follow-ups guide the model to the correct answer, always restoring to seed. Each one targets a specific failure observed in the run above."}
           >
             <div className="relative space-y-4 pl-8">
               <div className="absolute bottom-4 left-[11px] top-4 w-px bg-ink-200" />
@@ -462,19 +496,14 @@ export default function TaskDetail() {
                       Correct solution reached
                     </div>
                     <h3 className="text-xl font-extrabold leading-tight">
-                      The model completed everything the user asked for
+                      {nv.silverSuccessHeadline ?? "The model completed everything the user asked for"}
                     </h3>
                   </div>
                 </div>
               </div>
               <div className="bg-emerald-50/70 p-5 dark:bg-emerald-500/10">
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {[
-                    ["Workspace changes", "All content reorganized into the correct Platform › MM-DD folder tree, including the recovered X channel."],
-                    ["State change", "The email to trevor@vaulta.io and maya@vaulta.io was actually sent with the mismatches."],
-                    ["Final assistant response", "Every removed distractor and the duplicate were reported back to the user."],
-                    ["Final artifacts", "MEMORY.md logs all missing and mismatching items in the required format; captions split into MM-DD.txt files."],
-                  ].map(([h, b]) => (
+                  {silverSuccess.map(([h, b]) => (
                     <div
                       key={h}
                       className="flex gap-2.5 rounded-xl border border-emerald-200 bg-surface p-3.5 dark:border-emerald-500/30"
@@ -501,10 +530,10 @@ export default function TaskDetail() {
             n={10}
             title="Unit Tests"
             kicker="Step 11 — Unit tests (reviewers only)"
-            sub="Reviewer-only checks for the platform folders and the date folders. Click any test to reveal its code."
+            sub={nv.testsSub ?? "Reviewer-only checks for the platform folders and the date folders. Click any test to reveal its code."}
           >
             <div className="grid gap-6 sm:grid-cols-2">
-              {["Platform folders", "Date folders"].map((group) => (
+              {unitGroups.map((group) => (
                 <div key={group}>
                   <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">
                     <FlaskConical size={15} className="text-brand-500" /> {group}

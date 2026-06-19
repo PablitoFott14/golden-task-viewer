@@ -170,11 +170,40 @@ export interface Task {
   friction: FrictionPoint[];
   /** What the model actually did on the first run — grounded in the trajectory + workspace. */
   actualRun: ActualRun;
-  /** The raw mixed caption file, exposed for reading inside the viewer. */
-  captionsFile: { path: string; note: string };
+  /** The raw mixed caption file, exposed for reading inside the viewer. Optional — not every task has one. */
+  captionsFile?: { path: string; note: string };
+  /** Extra written input files (specs, templates) exposed inline in the MM-inputs section. */
+  inputDocs?: { file: string; label: string; note?: string; markdown?: boolean }[];
   /** Shared pytest scaffolding prepended to each unit test's revealed code. */
   unitTestPreamble: string;
   artifactDocs: { label: string; file: string; description: string }[];
+  /**
+   * Task-specific copy for the walkthrough. Every Golden Task shares the same
+   * 12-step methodology, but the wording, structure, and emphasis differ per
+   * task — these override the default (task1) narrative where provided.
+   */
+  narrative?: TaskNarrative;
+}
+
+export interface TaskNarrative {
+  inputsSub?: string;
+  ssotTitle?: string;
+  ssotBlurb?: string;
+  galleryTitle?: string;
+  frictionTitle?: string;
+  frictionBlurb?: string;
+  gtfaSub?: string;
+  gtfaTreeTitle?: string;
+  gtfaBehaviorTitle?: string;
+  gtfaBehavior?: string[];
+  actualSub?: string;
+  silverSub?: string;
+  silverSuccessHeadline?: string;
+  /** [heading, body] pairs for the "correct solution reached" grid. */
+  silverSuccess?: [string, string][];
+  testsSub?: string;
+  /** Ordered unit-test group names; tests are bucketed by their `group` field. */
+  unitTestGroups?: string[];
 }
 
 export interface MethodStep {
