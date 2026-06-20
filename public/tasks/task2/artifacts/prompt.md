@@ -1,4 +1,4 @@
-Last few weeks have been crazy and I have my CFP program asset allocation presentation in 10 days. Between work and everything else going on at home, I haven't had the chance to create even the draft. However, I have a solid idea on what I want it to look like. 
+Last few weeks have been crazy and I want to finish my asset allocation presentation within the next 10 days. Between work and everything else going on at home, I haven't had the chance to create even the draft. However, I have a solid idea on what I want it to look like. 
 
 I need your help materializing all this ideas into a file called asset_allocation.pptx. My idea for this presentation is to document a practical asset allocation case study of an investor who starts at age 25 and retires at 45 with the purpose to illustrate how correct asset allocation decisions can produce meaningful long-term outcomes in a 20-year horizon. I have updated some personal notes, images I had stored for reference and, more importantly, a presentation.md file detailing what should be covered in the presentation. I'm not expecting this to be the final version, but yes a very advanced one. 
 

@@ -4,13 +4,13 @@ const task2: Task = {
   meta: {
     id: "task2",
     serviceId: "6a17cc59ea9a7319a6ca06cd",
-    title: "CFP Asset Allocation Deck",
-    category: "Productivity & Documents",
-    subcategory: "Financial Presentation Building",
+    title: "Asset Allocation Case-Study Deck",
+    category: "Visual Learning",
+    subcategory: "Lab/Fieldwork Documentation",
     universe: "aaliyah_jenkins",
     personaName: "Aaliyah Jenkins",
     oneLiner:
-      "Build a CFP-program asset-allocation deck from a messy note and reference images — with deterministic 20-year compounding — then schedule a mentor review and email the deck.",
+      "Build a self-study asset-allocation case-study deck from a messy note and reference images — with deterministic 20-year compounding — then schedule a mentor review and email the deck.",
     difficulty: "Very Hard",
     outputType: "asset_allocation.pptx (7 slides) + calendar event + email",
     modalities: ["Handwritten note", "Returns screenshot", "Portfolio chart", "Risk pyramid", "Markdown spec"],
@@ -21,17 +21,17 @@ const task2: Task = {
 
   personaHighlights: [
     { label: "Role", value: "Level 2 Teller @ Scioto Valley Community Bank, Columbus" },
-    { label: "Studying", value: "Enrolled in a CFP certification program" },
+    { label: "Finances", value: "Financially conscious self-learner — Fidelity 401k, house fund, careful budgeter" },
     { label: "Family", value: "Husband Leonard + two kids (Marcus 8, Zoe 5)" },
-    { label: "Mentor", value: "Carlton Davis — retired, reviews her work" },
+    { label: "Mentor", value: "Carlton Davis — retired former ops manager at her bank, reviews her work" },
   ],
 
   brainstorm: [
     {
-      title: "CFP Asset Allocation Presentation",
-      body: "Build an advanced PowerPoint draft for Aaliyah's CFP program — a realistic asset-allocation case study with correct long-term calculations, strict formatting, and a mentor review workflow.",
+      title: "Asset Allocation Case-Study Presentation",
+      body: "Build an advanced PowerPoint draft for a self-directed asset-allocation study — a realistic case study with correct long-term calculations, strict formatting, and a mentor review workflow.",
       chosen: true,
-      why: "It gives the strongest mix of realistic pressure, multimodal reasoning, artifact creation, and state-changing actions. Aaliyah works in banking and is in a CFP program, so a polished asset-allocation deck is natural to her week. It also leaves room for genuine complexity without feeling artificial: the agent must read messy notes, interpret financial visuals, calculate long-term outcomes, build the deck, find the right mentor contact, infer the review time from a calendar pattern, and send it.",
+      why: "It stays naturally aligned with the assigned Visual Learning / Lab/Fieldwork Documentation category — a self-learner using gathered media (a handwritten note, a returns screenshot, charts) to understand a topic and document it into a study artifact. It's grounded in Aaliyah's real profile: she's a financially conscious bank teller who keeps a 401k, budgets carefully, and works inside a bank every day, so studying asset allocation on her own and documenting it is believable without inventing any credential she isn't enrolled in. It also leaves room for genuine complexity: the agent must OCR a messy note, interpret financial diagrams, calculate long-term outcomes, document them into the deck, find the right mentor contact (Carlton Davis, a real universe contact), infer the review time from a calendar pattern, and send it.",
     },
     {
       title: "Homeownership Affordability Review",
@@ -46,7 +46,7 @@ const task2: Task = {
   ],
 
   realityFirst: [
-    "The agent must build a CFP-style deck from partially organized source material — so the context should feel gathered in a rush, not handed over as a clean spreadsheet.",
+    "The agent must build the case-study deck from partially organized source material — so the context should feel gathered in a rush, not handed over as a clean spreadsheet.",
     "Profile values fit a handwritten note rather than a typed brief — a realistic source of friction for a busy student preparing late.",
     "The financial data should live in visual sources, forcing the agent to extract the right rows, columns, and asset classes instead of relying on prompt text.",
     "Some images are reference material for reasoning, not content to paste in — so the agent must tell 'use an input' apart from 'copy an input'.",
@@ -116,7 +116,7 @@ const task2: Task = {
 
   captions: [],
 
-  prompt: `Last few weeks have been crazy and I have my CFP program asset allocation presentation in 10 days. Between work and everything else going on at home, I haven't had the chance to create even the draft. However, I have a solid idea on what I want it to look like.
+  prompt: `Last few weeks have been crazy and I want to finish my asset allocation presentation within the next 10 days. Between work and everything else going on at home, I haven't had the chance to create even the draft. However, I have a solid idea on what I want it to look like.
 
 I need your help materializing all this ideas into a file called asset_allocation.pptx. My idea for this presentation is to document a practical asset allocation case study of an investor who starts at age 25 and retires at 45 with the purpose to illustrate how correct asset allocation decisions can produce meaningful long-term outcomes in a 20-year horizon. I have updated some personal notes, images I had stored for reference and, more importantly, a presentation.md file detailing what should be covered in the presentation. I'm not expecting this to be the final version, but yes a very advanced one.
 

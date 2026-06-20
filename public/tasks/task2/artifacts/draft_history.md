@@ -1,6 +1,6 @@
 # Agent Objective
 
-Aaliyah Jenkins is a 37-year-old Level 2 bank teller at Scioto Valley Community Bank in Columbus, Ohio. She is enrolled in a CFP certification program and has a practical asset allocation presentation due in five days. She has a clear idea of what she wants: a structured presentation built around a case study demonstrating how correctasset allocation decisions can lead to important long-term outcomes over a 20 year investment horizon beginning at age 25.
+Aaliyah Jenkins is a 37-year-old Level 2 bank teller at Scioto Valley Community Bank in Columbus, Ohio. She is financially conscious and a self-directed learner (she keeps a Fidelity 401k, a house fund, and budgets carefully), and she is putting together a practical asset allocation presentation to deepen her own investing knowledge, which she wants to finish in the next 10 days. She has a clear idea of what she wants: a structured presentation built around a case study demonstrating how correct asset allocation decisions can lead to important long-term outcomes over a 20 year investment horizon beginning at age 25.
 
 Beyond the presentation, Aaliyah would like Carlton Davis, her retired mentor, to review the deck idea before proceeding with the final versions.  For this, she needs the agent to schedule a 15-minute review meeting with Carlton on Monday after her regular 9:30 AM team meeting and to email him the actual version of the presentation.
 ---
@@ -13,7 +13,7 @@ The desired outcome is compounded by two sections:
 - A 'sset_allocation.pptx' presentation with the following information:
 Slide 1 - Project Title:The title of the presentation `Asset Allocation - The Long-Term Power of Diversification` along with a relevant image illustrating the topic of the presentation.
 
-Slide 2 - Investor Profile: Starting age = 25, retirement age = 50, initial investment amount = $5000, monthly contribution = $300, risk tolerance = medium.
+Slide 2 - Investor Profile: Starting age = 25, retirement age = 45, initial investment amount = $5000, monthly contribution = $300, risk tolerance = medium.
 
 Slide 3 - Portfolio & Risk Level: Stocks -> 50% (Growth), Bonds -> 30% (Secure), Housing -> 15% (Growth), Gold -> 5% (Speculative)
 .
