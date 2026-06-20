@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { methodSteps, modelCapabilityReference } from "../data/method";
+import type { ModelCapabilityReference } from "../data/types";
 import { tasks } from "../data";
 import { Reveal, SectionHeading } from "../components/ui";
 import { cx } from "../lib/assets";
@@ -33,6 +34,10 @@ function phaseOf(n: number) {
   return 4;
 }
 
+function scrollToId(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+}
+
 const capabilityTone = {
   reliable: {
     label: "Build on it",
@@ -51,6 +56,8 @@ const capabilityTone = {
 export default function Home() {
   const [activeStep, setActiveStep] = useState(1);
   const step = methodSteps.find((s) => s.n === activeStep)!;
+  const reliable = modelCapabilityReference.filter((c) => c.kind === "reliable");
+  const levers = modelCapabilityReference.filter((c) => c.kind === "lever");
 
   return (
     <div>
@@ -81,10 +88,25 @@ export default function Home() {
                 Explore Golden Tasks <ArrowRight size={16} />
               </Link>
               <button
-                onClick={() => document.getElementById("method")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => scrollToId("method")}
                 className="btn-ghost"
               >
                 <Compass size={16} /> See the method
+              </button>
+            </div>
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              <span className="text-[13px] font-semibold text-ink-400">Jump straight to:</span>
+              <button
+                onClick={() => scrollToId("capabilities")}
+                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[13px] font-bold text-emerald-700 transition hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300"
+              >
+                <ShieldCheck size={14} /> Model capabilities
+              </button>
+              <button
+                onClick={() => scrollToId("levers")}
+                className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[13px] font-bold text-amber-700 transition hover:bg-amber-100 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300"
+              >
+                <AlertTriangle size={14} /> Task levers
               </button>
             </div>
           </motion.div>
@@ -282,90 +304,139 @@ export default function Home() {
 
           <Reveal className="mt-14 border-t border-ink-200/70 pt-12">
             <SectionHeading
-              eyebrow="Visual reference"
-              title="Model capabilities and task levers"
-              sub="Use reliable skills as building blocks, then choose realistic limitations as the source of task difficulty. This keeps complexity grounded instead of decorative."
+              eyebrow="Task-design guide"
+              title="What the model can — and can't — reliably do"
+              sub="This is the foundation for every design decision. Reliable capabilities are what you build on; the model's limitations are where genuine challenge comes from. A strong task pairs a dependable baseline with one or more natural failure modes — never strengths alone (too easy), never an isolated gotcha (not a real capability test)."
             />
 
-            <div className="mt-7 overflow-hidden rounded-2xl border border-ink-200/80 bg-surface shadow-soft">
-              <div className="grid gap-4 border-b border-ink-200/70 bg-ink-50 px-5 py-5 md:grid-cols-[1fr_1.4fr] md:items-center">
-                <div>
-                  <div className="text-sm font-extrabold text-ink-900">
-                    Quick calibration table
-                  </div>
-                  <p className="mt-1 text-sm leading-relaxed text-ink-500">
-                    Do not build tasks from model strengths alone. Combine a reliable baseline with a natural failure lever.
-                  </p>
+            <div className="mt-7 grid gap-3 sm:grid-cols-3">
+              {[
+                {
+                  icon: <ShieldCheck size={16} />,
+                  box: "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-300",
+                  head: "Capabilities are foundations",
+                  body: "Skills the model handles reliably. Anchor the task on them — but a task that only exercises these will be too easy to fail.",
+                },
+                {
+                  icon: <AlertTriangle size={16} />,
+                  box: "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-300",
+                  head: "Limitations are your levers",
+                  body: "Where the model struggles. Each weakness is a lever you can pull to create honest difficulty that a careful agent could still get wrong.",
+                },
+                {
+                  icon: <GitBranch size={16} />,
+                  box: "bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-300",
+                  head: "Design combines both",
+                  body: "Difficulty comes from requiring a reliable skill and a known weakness together — naturally in the scenario, not bolted on.",
+                },
+              ].map((c) => (
+                <div key={c.head} className="rounded-xl border border-ink-200/70 bg-surface p-4 shadow-soft">
+                  <div className={cx("grid h-9 w-9 place-items-center rounded-lg", c.box)}>{c.icon}</div>
+                  <h3 className="mt-3 text-sm font-bold text-ink-900">{c.head}</h3>
+                  <p className="mt-1 text-[13px] leading-relaxed text-ink-500">{c.body}</p>
                 </div>
-                <div className="grid gap-2 text-sm sm:grid-cols-2">
-                  <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300">
-                    <span className="font-bold">Build on it:</span> expected to work, so it anchors the task.
-                  </div>
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
-                    <span className="font-bold">Use as lever:</span> where the task can honestly become hard.
-                  </div>
-                </div>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="min-w-full border-collapse text-left text-sm">
-                  <thead className="bg-surface">
-                    <tr className="border-b border-ink-200/70 text-[11px] font-bold uppercase tracking-wide text-ink-400">
-                      <th className="w-40 px-5 py-3">Role</th>
-                      <th className="min-w-56 px-5 py-3">Capability or limitation</th>
-                      <th className="min-w-[22rem] px-5 py-3">What contributors should know</th>
-                      <th className="min-w-[22rem] px-5 py-3">Design move</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-ink-200/60">
-                    {modelCapabilityReference.map((item) => {
-                      const tone = capabilityTone[item.kind];
-                      const Icon = tone.icon;
-                      return (
-                        <tr
-                          key={`${item.kind}-${item.capability}`}
-                          className="align-top transition hover:bg-ink-50/70"
-                        >
-                          <td className="px-5 py-4">
-                            <span
-                              className={cx(
-                                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold",
-                                tone.chip
-                              )}
-                            >
-                              <Icon size={13} />
-                              {tone.label}
-                            </span>
-                          </td>
-                          <td className="px-5 py-4 font-semibold text-ink-900">
-                            {item.capability}
-                          </td>
-                          <td className="px-5 py-4 leading-relaxed text-ink-600">
-                            {item.summary}
-                          </td>
-                          <td className="px-5 py-4 leading-relaxed text-ink-700">
-                            <div className="flex gap-2.5">
-                              <span
-                                className={cx(
-                                  "mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg",
-                                  tone.iconBox
-                                )}
-                              >
-                                <Icon size={14} />
-                              </span>
-                              <span>{item.contributorMove}</span>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              ))}
             </div>
+
+            <div className="mt-9 space-y-10">
+              <CapabilityGroup
+                id="capabilities"
+                kind="reliable"
+                title="What it can reliably do — your foundations"
+                blurb="Assume these work. Use them to anchor a task, then make the task depend on more than just these."
+                headWhat="What this means"
+                headMove="How to use it in a task"
+                items={reliable}
+              />
+              <CapabilityGroup
+                id="levers"
+                kind="lever"
+                title="What it can't reliably do — your task levers"
+                blurb="These are the failure modes that create real challenge. Require one or more, in a way that feels natural to the persona and scenario."
+                headWhat="What goes wrong"
+                headMove="How to turn it into challenge"
+                items={levers}
+              />
+            </div>
+
+            <p className="mt-6 text-xs leading-relaxed text-ink-400">
+              Grounded in the project reference{" "}
+              <a
+                href={`${import.meta.env.BASE_URL}method/what_the_model_can_do.md`}
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono font-semibold text-brand-600 underline-offset-2 hover:underline dark:text-brand-300"
+              >
+                what_the_model_can_do.md
+              </a>{" "}
+              — the source of truth for what the model can and cannot reliably do.
+            </p>
           </Reveal>
         </div>
       </section>
+    </div>
+  );
+}
+
+function CapabilityGroup({
+  id,
+  kind,
+  title,
+  blurb,
+  headWhat,
+  headMove,
+  items,
+}: {
+  id: string;
+  kind: "reliable" | "lever";
+  title: string;
+  blurb: string;
+  headWhat: string;
+  headMove: string;
+  items: ModelCapabilityReference[];
+}) {
+  const tone = capabilityTone[kind];
+  const Icon = tone.icon;
+  return (
+    <div id={id} className="scroll-mt-24">
+      <div className="mb-4 flex items-start gap-3">
+        <span className={cx("mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl", tone.iconBox)}>
+          <Icon size={18} />
+        </span>
+        <div>
+          <h3 className="text-lg font-extrabold text-ink-900">{title}</h3>
+          <p className="mt-0.5 max-w-2xl text-sm leading-relaxed text-ink-500">{blurb}</p>
+        </div>
+      </div>
+      <div className="overflow-hidden rounded-2xl border border-ink-200/80 bg-surface shadow-soft">
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse text-left text-sm">
+            <thead className="bg-ink-50">
+              <tr className="border-b border-ink-200/70 text-[11px] font-bold uppercase tracking-wide text-ink-400">
+                <th className="min-w-52 px-5 py-3">{kind === "reliable" ? "Capability" : "Limitation"}</th>
+                <th className="min-w-[20rem] px-5 py-3">{headWhat}</th>
+                <th className="min-w-[20rem] px-5 py-3">{headMove}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-ink-200/60">
+              {items.map((item) => (
+                <tr key={item.capability} className="align-top transition hover:bg-ink-50/70">
+                  <td className="px-5 py-4 font-semibold text-ink-900">{item.capability}</td>
+                  <td className="px-5 py-4 leading-relaxed text-ink-600">{item.summary}</td>
+                  <td className="px-5 py-4 leading-relaxed text-ink-700">
+                    <div className="flex gap-2.5">
+                      <span className={cx("mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg", tone.iconBox)}>
+                        <Icon size={14} />
+                      </span>
+                      <span>{item.contributorMove}</span>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
