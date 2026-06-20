@@ -21,9 +21,12 @@ import { assetUrl, docUrl, cx } from "../lib/assets";
 import { useScrollSpy } from "../lib/useScrollSpy";
 import { Pill, Stat, RawText } from "../components/ui";
 import ImageGallery from "../components/ImageGallery";
+import ReferenceGallery from "../components/ReferenceGallery";
 import FolderTree from "../components/FolderTree";
+import DeckOutline from "../components/DeckOutline";
 import RubricExplorer from "../components/RubricExplorer";
 import TrajectoryReport from "../components/TrajectoryReport";
+import RunComparison from "../components/RunComparison";
 import MarkdownDoc from "../components/MarkdownDoc";
 
 const difficultyChip: Record<string, string> = {
@@ -322,10 +325,17 @@ export default function TaskDetail() {
             <h3 className="mb-3 text-sm font-bold text-ink-900">
               {nv.galleryTitle ?? "Every recovered asset, classified"}
             </h3>
-            <ImageGallery
-              assets={task.assets.filter((a) => a.role !== "ssot")}
-              assetRoot={task.assetRoot}
-            />
+            {nv.inputsVariant === "reference" ? (
+              <ReferenceGallery
+                assets={task.assets.filter((a) => a.role !== "ssot")}
+                assetRoot={task.assetRoot}
+              />
+            ) : (
+              <ImageGallery
+                assets={task.assets.filter((a) => a.role !== "ssot")}
+                assetRoot={task.assetRoot}
+              />
+            )}
 
             {/* Raw caption file, exposed inline (task1) */}
             {task.captionsFile && (
@@ -442,18 +452,24 @@ export default function TaskDetail() {
             kicker="Step 7 — GTFA"
             sub={nv.gtfaSub ?? "The one correct deliverable, built by hand before the prompt was written. This is the intended solution and the behavior a correct agent should produce."}
           >
-            <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+            <div className={task.gtfaView ? "space-y-8" : "grid gap-6 lg:grid-cols-[1.2fr_1fr]"}>
               <div>
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">
-                  <ScrollText size={16} className="text-brand-500" /> {nv.gtfaTreeTitle ?? "The output folder tree"}
-                </h3>
-                <FolderTree root={task.deliverableTree} showRoles={false} />
+                {task.gtfaView ? (
+                  <DeckOutline view={task.gtfaView} />
+                ) : (
+                  <>
+                    <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">
+                      <ScrollText size={16} className="text-brand-500" /> {nv.gtfaTreeTitle ?? "The output folder tree"}
+                    </h3>
+                    <FolderTree root={task.deliverableTree} showRoles={false} />
+                  </>
+                )}
               </div>
               <div>
                 <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">
                   <CheckCircle2 size={16} className="text-emerald-500" /> {nv.gtfaBehaviorTitle ?? "The expected behavior"}
                 </h3>
-                <ul className="space-y-2.5">
+                <ul className={task.gtfaView ? "grid gap-2.5 sm:grid-cols-2" : "space-y-2.5"}>
                   {gtfaBehavior.map((t) => (
                     <li key={t} className="flex gap-2.5 text-[13px] leading-relaxed text-ink-700">
                       <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-emerald-500" />
@@ -477,7 +493,11 @@ export default function TaskDetail() {
             kicker="Steps 8–9 — Run & cross-reference"
             sub={nv.actualSub ?? "Reconstructed directly from the seed trajectory and its workspace — a single prompt-agent interaction, compared against the GTFA."}
           >
-            <TrajectoryReport run={task.actualRun} />
+            {task.actualRun.layout === "compare" ? (
+              <RunComparison run={task.actualRun} />
+            ) : (
+              <TrajectoryReport run={task.actualRun} />
+            )}
           </Section>
 
           {/* ===== Silver ===== */}

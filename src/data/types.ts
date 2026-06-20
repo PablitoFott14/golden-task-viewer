@@ -25,6 +25,8 @@ export interface MMAsset {
   platform?: Platform;
   date?: string; // MM-DD
   tags?: string[];
+  /** For reference-style inputs: what this input contributes (e.g. "Slide 4 returns"). */
+  purpose?: string;
 }
 
 export interface BrainstormIdea {
@@ -91,6 +93,12 @@ export interface RunObservation {
   title: string;
   /** A concise, factual recreation of what the model did — no interpretation. */
   what: string;
+  /** What the GTFA / prompt required for this point (drives the expected-vs-actual layout). */
+  expected?: string;
+  /** Where the finding is grounded — a trajectory/workspace pointer (e.g. a file or call). */
+  evidence?: string;
+  /** Whether the model got this right ("pass") or wrong ("fail"). Defaults to fail when expected is set. */
+  outcome?: "pass" | "fail";
   /** Rubric numbers this observation maps to. */
   rubrics?: number[];
 }
@@ -98,10 +106,20 @@ export interface RunObservation {
 export interface ActualRun {
   /** Short factual framing of the initial run. */
   summary: string;
-  /** The folder tree the model actually produced. */
-  producedTree: FolderNode;
+  /** How to present the run: "tree" (produced folder tree) or "compare" (expected vs actual). */
+  layout?: "tree" | "compare";
+  /** The folder tree the model actually produced (for the "tree" layout). */
+  producedTree?: FolderNode;
   /** Grounded observations of what happened. */
   observations: RunObservation[];
+}
+
+/** A deck-shaped GTFA view: a slide storyboard plus the state changes it drives. */
+export interface GtfaDeckView {
+  kind: "deck";
+  artifactName: string;
+  slides: { n: number; title: string; body: string; empty?: boolean }[];
+  stateChanges: { kind: "calendar" | "email"; title: string; detail: string }[];
 }
 
 export interface RubricDesignNote {
@@ -162,6 +180,8 @@ export interface Task {
   prompt: string;
   promptAnnotations: { quote: string; meaning: string }[];
   deliverableTree: FolderNode;
+  /** Optional task-native GTFA visualization; when present it replaces the folder tree. */
+  gtfaView?: GtfaDeckView;
   memory: MemoryEntry[];
   removed: { item: string; why: string }[];
   email: { to: string[]; points: string[] };
@@ -190,6 +210,8 @@ export interface Task {
 export interface TaskNarrative {
   realitySub?: string;
   inputsSub?: string;
+  /** "audit" (default, task1 role chips) or "reference" (task2 purpose-driven inputs). */
+  inputsVariant?: "audit" | "reference";
   ssotTitle?: string;
   ssotBlurb?: string;
   galleryTitle?: string;

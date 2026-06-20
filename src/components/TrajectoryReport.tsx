@@ -10,16 +10,18 @@ export default function TrajectoryReport({ run }: { run: ActualRun }) {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <div>
-          <h3 className="mb-3 text-sm font-bold text-ink-900">
-            What it actually produced
-          </h3>
-          <p className="mb-3 text-[13px] leading-relaxed text-ink-500">
-            The folder tree from the seed run. Compare it against the Ground Truth above — the colored
-            chips mark where it diverged.
-          </p>
-          <FolderTree root={run.producedTree} />
-        </div>
+        {run.producedTree && (
+          <div>
+            <h3 className="mb-3 text-sm font-bold text-ink-900">
+              What it actually produced
+            </h3>
+            <p className="mb-3 text-[13px] leading-relaxed text-ink-500">
+              The folder tree from the seed run. Compare it against the Ground Truth above — the colored
+              chips mark where it diverged.
+            </p>
+            <FolderTree root={run.producedTree} />
+          </div>
+        )}
         <div>
           <h3 className="mb-3 text-sm font-bold text-ink-900">What the model did</h3>
           <div className="space-y-3">

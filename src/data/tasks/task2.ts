@@ -85,6 +85,7 @@ const task2: Task = {
       whatItShows:
         "A decade-by-decade average-annual-return table — ten rows (1930s–2020s) and six columns (Stocks, Cash, Bonds, Housing, Gold, Inflation).",
       verdict: "Source of the 2010s/2020s returns for Stocks, Bonds, Housing, and Gold.",
+      purpose: "Slide 4 returns",
       rationale:
         "Most of the table is noise. The model must select only two rows (2010s, 2020s) and four of the six columns — Cash and Inflation are not part of the portfolio. This is where the task is genuinely multimodal.",
       tags: ["returns", "row/column selection"],
@@ -97,6 +98,7 @@ const task2: Task = {
       whatItShows:
         "A 'Diversified Portfolio Allocation' pie chart: Stocks 50%, Bonds 30%, Housing 15%, Gold 5%.",
       verdict: "Source of the Slide 3 allocation percentages.",
+      purpose: "Slide 3 allocation",
       rationale:
         "Provides the allocation split that Slide 3 reports and that the portfolio-level reasoning depends on. Read from the chart rather than the prompt text.",
       tags: ["allocation", "Slide 3"],
@@ -109,6 +111,7 @@ const task2: Task = {
       whatItShows:
         "An investment risk pyramid with four tiers — Foundation, Secure, Growth, and Speculative — listing the instruments that belong to each.",
       verdict: "Source of each asset's risk tier on Slide 3.",
+      purpose: "Slide 3 risk tiers",
       rationale:
         "The model must map each portfolio asset to a tier (Stocks → Growth, Bonds → Secure, Housing → Growth, Gold → Speculative) instead of copying the allocation percentages. It connects asset classes to risk categories — a reconciliation step, not a lookup.",
       tags: ["risk tiers", "mapping"],
@@ -178,6 +181,24 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
         type: "doc",
         note: "to c.davis.columbus@outlook.com, asset_allocation.pptx attached, asks him to take a look and share thoughts",
       },
+    ],
+  },
+
+  gtfaView: {
+    kind: "deck",
+    artifactName: "asset_allocation.pptx",
+    slides: [
+      { n: 1, title: "Asset Allocation — The Long-Term Power of Diversification", body: "Exact title + a relevant image illustrating the topic." },
+      { n: 2, title: "Investor Profile", body: "Age 25 → 45, $5,000 initial, $300/mo, risk tolerance medium — transcribed from the note, not pasted." },
+      { n: 3, title: "Portfolio & Risk Level", body: "Stocks 50% (Growth), Bonds 30% (Secure), Housing 15% (Growth), Gold 5% (Speculative). Text only." },
+      { n: 4, title: "Long Term Projections", body: "Returns table + initial-only growth chained across the decade: Stocks $70,518.14, Gold $40,113.73, Bonds $7,036.25, Housing $14,963.33." },
+      { n: 5, title: "The Power of Consistency — When Everything Changes", body: "Single-asset disclaimer + $300/mo growth: Stocks $435,532.09, Gold $382,237.75, Bonds $83,632.72, Housing $157,407.59." },
+      { n: 6, title: "Risk & Return Analysis", body: "Intentionally left empty — title only.", empty: true },
+      { n: 7, title: "Recommendation & Conclusion", body: "≤100 words, stating the four Slide 5 per-asset final values." },
+    ],
+    stateChanges: [
+      { kind: "calendar", title: "Carlton review event", detail: "Mon 8 Jun 2026, 10:00–10:15 AM — inferred from her regular team-meeting pattern." },
+      { kind: "email", title: "Email to Carlton", detail: "To c.davis.columbus@outlook.com with asset_allocation.pptx attached, asking him to take a look and share thoughts." },
     ],
   },
 
@@ -787,71 +808,80 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
 
   actualRun: {
     summary:
-      "Single-turn run from seed. The model wrote a build_presentation.py and produced asset_allocation.pptx with all seven titled slides, and it completed both the Carlton calendar event and the email. But it compounded each decade independently from $5,000 on Slide 4, used a nominal monthly rate for the Slide 5 contributions, pasted the handwritten note onto Slide 2, and reduced the Slide 7 conclusion to one portfolio-weighted figure. Measured against the GTFA, it clears well under half of the positive rubric weight.",
-    producedTree: {
-      name: "asset_allocation.pptx",
-      type: "folder",
-      role: "mismatch",
-      children: [
-        { name: "Slide 1 — Project Title", type: "doc", role: "mismatch", note: "correct title, but used the risk-pyramid input as the cover image" },
-        { name: "Slide 2 — Investor Profile", type: "doc", role: "mismatch", note: "pasted the handwritten note image; 'Moderate – Medium' + extra horizon row" },
-        { name: "Slide 3 — Portfolio & Risk Level", type: "doc", role: "correct", note: "allocations + tiers mapped correctly, text only" },
-        { name: "Slide 4 — Long Term Projections", type: "doc", role: "mismatch", note: "each decade compounded independently from $5,000" },
-        { name: "Slide 5 — The Power of Consistency", type: "doc", role: "mismatch", note: "nominal monthly rate; four-column table; added a portfolio-weighted total" },
-        { name: "Slide 6 — Risk & Return Analysis", type: "doc", role: "correct", note: "scored as empty" },
-        { name: "Slide 7 — Recommendation & Conclusion", type: "doc", role: "mismatch", note: "one portfolio-weighted figure instead of the four per-asset values" },
-        { name: "Calendar event (Carlton)", type: "doc", role: "correct", note: "Mon 8 Jun 2026, 10:00–10:15 AM" },
-        { name: "Email (Carlton)", type: "doc", role: "correct", note: "deck attached, review requested" },
-      ],
-    },
+      "Single-turn run from seed. The model wrote a build_presentation.py and produced asset_allocation.pptx with all seven titled slides, and it completed both the Carlton calendar event and the email. The surface looked right — but cross-referencing the workspace script and the trajectory against the GTFA exposes where the deeper reasoning broke. Each finding below pins the expected behavior to what the model actually did and to the evidence for it.",
+    layout: "compare",
     observations: [
       {
         id: "independent-decades",
-        title: "Compounded each decade independently from $5,000",
+        title: "20-year horizon compounded as two separate decades",
+        outcome: "fail",
         rubrics: [10, 19],
-        what: "Slide 4 applied the 2020s rate to the original $5,000 instead of the 2010s ending balance, so the initial-only final values did not match the GTFA and the -5 negative fired.",
+        expected: "Chain the horizon: compound $5,000 through the 2010s, then carry that ending balance into the 2020s — final values Stocks $70,518.14, Gold $40,113.73, Bonds $7,036.25, Housing $14,963.33.",
+        what: "Slide 4 applied each decade's rate to the original $5,000 separately, so the 2020s column never used the 2010s ending balance and every final value was far below the GTFA.",
+        evidence: "build_presentation.py → compound_growth(INITIAL, returns_2020s[asset], 10) called on $5,000, not on the Phase-1 result.",
       },
       {
         id: "monthly-rate",
-        title: "Wrong monthly-contribution methodology",
+        title: "Wrong monthly-contribution compounding basis",
+        outcome: "fail",
         rubrics: [12, 20],
-        what: "Slide 5 compounded the $300 contributions with a nominal monthly rate (r/12) rather than the effective monthly rate, so the contribution totals were wrong and the -3 negative fired.",
+        expected: "Compound the $300 monthly contributions at the effective monthly rate (1 + r)^(1/12) − 1, chained across both phases, to reach Stocks $435,532.09, Gold $382,237.75, Bonds $83,632.72, Housing $157,407.59.",
+        what: "Slide 5 used a nominal monthly rate (r/12), so the contribution totals diverged from the GTFA even though the decade chaining was applied here.",
+        evidence: "build_presentation.py → compound_growth_with_contributions(): monthly_rate = r / 12.0.",
       },
       {
         id: "source-image",
-        title: "Pasted the handwritten note onto Slide 2",
+        title: "Reference note pasted into the deck as content",
+        outcome: "fail",
         rubrics: [18, 7],
-        what: "The note image was added to Slide 2 as a 'Source: Investor notes' thumbnail, triggering the -3 negative; the profile also used 'Moderate – Medium' and an extra row, so Slide 2 was scored Not Present.",
+        expected: "Read the handwritten note for the profile values only; transcribe them onto Slide 2 (risk tolerance 'medium'), with no source image embedded.",
+        what: "The note image was added to Slide 2 as a 'Source: Investor notes' thumbnail, and the profile read 'Moderate – Medium' with an extra horizon row — so Slide 2 was Not Present and the -3 negative fired.",
+        evidence: "build_presentation.py → slide2.shapes.add_picture(notes_img, …) + RISK_TOL = 'Moderate – Medium'.",
       },
       {
         id: "conclusion",
         title: "Conclusion collapsed to one blended figure",
+        outcome: "fail",
         rubrics: [15],
-        what: "Slide 7 reported a portfolio-weighted final value instead of the four required per-asset values from Slide 5.",
+        expected: "A ≤100-word Slide 7 conclusion stating the four Slide 5 per-asset final values explicitly.",
+        what: "Slide 7 reported a single portfolio-weighted final value instead of the four required per-asset numbers.",
+        evidence: "build_presentation.py → weighted_total = sum(final_values[a] * portfolio[a] / 100) surfaced as the headline figure.",
       },
       {
         id: "format",
-        title: "Font sizes and table format off-spec",
+        title: "Table format and font sizes off-spec",
+        outcome: "fail",
         rubrics: [3, 13],
-        what: "Several text boxes fell outside the required size bands, and the Slide 5 table used four columns instead of the three-column asset_classes.md template.",
+        expected: "Follow the three-column asset_classes.md template and the presentation.md font-size bands (title 28–32pt, body 16–18pt, table 13–14pt).",
+        what: "The Slide 5 table used four columns, and several text boxes fell outside the required size bands.",
+        evidence: "build_presentation.py → tbl5 built with cols5 = 4; assorted Pt() sizes outside the spec bands.",
       },
       {
         id: "slide1-image",
         title: "Slide 1 reused a reference input as its cover",
+        outcome: "fail",
         rubrics: [6],
-        what: "Slide 1 had the exact title but used risk.png as its image rather than a relevant illustration of the topic.",
+        expected: "Slide 1 carries the exact title plus a relevant image illustrating the asset-allocation topic.",
+        what: "Slide 1 had the correct title but used the risk pyramid (a reasoning input) as the cover image.",
+        evidence: "build_presentation.py → slide1 add_picture(os.path.join(INPUT_DIR, 'risk.png'), …).",
       },
       {
         id: "layout",
         title: "Slide 5 layout crowding",
+        outcome: "fail",
         rubrics: [21],
-        what: "The stacked disclaimer, table, and summary lines crowded Slide 5, breaking visual consistency and firing the -1 negative.",
+        expected: "Lay out each slide without overlap or crowding.",
+        what: "The stacked disclaimer, table, and multiple summary lines crowded Slide 5, breaking visual consistency.",
+        evidence: "build_presentation.py → Slide 5 stacks disclaimer + table + three summary textboxes with tight vertical offsets.",
       },
       {
         id: "state-changes",
         title: "Both state changes completed correctly",
+        outcome: "pass",
         rubrics: [16, 17],
-        what: "The 15-minute Carlton review event (Mon 8 Jun, 10:00–10:15) and the email with the deck attached were both performed.",
+        expected: "Create the 15-minute Carlton review (Mon 8 Jun, 10:00–10:15) and email the deck to c.davis.columbus@outlook.com.",
+        what: "Both the calendar event and the email with the deck attached were performed as required.",
+        evidence: "Trajectory → calendar create + email send tool calls to c.davis.columbus@outlook.com with asset_allocation.pptx.",
       },
     ],
   },
@@ -918,7 +948,8 @@ def _workspace_state():
     ssotTitle: "The handwritten note + presentation.md — the source of truth",
     ssotBlurb:
       "The investor-profile values live on a rushed handwritten note; the slide structure, exact titles, and formatting rules live in presentation.md (shown below). Together they define what 'correct' means — every other input is read against them.",
-    galleryTitle: "The reference inputs, classified",
+    inputsVariant: "reference",
+    galleryTitle: "The reference inputs — and what each one feeds",
     frictionTitle: "The reasoning traps planted across these inputs",
     frictionBlurb:
       "None of these are perception gotchas. Each is an attractive wrong path a careful reader could still take — decade-labeled data that invites independent compounding, a monthly rate with two plausible definitions, reference images that look like slide content. Difficulty lives in the joins between sources, not in any single hard-to-read value.",
