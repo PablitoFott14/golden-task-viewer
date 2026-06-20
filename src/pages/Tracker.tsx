@@ -61,7 +61,7 @@ export default function Tracker() {
               <code className="rounded bg-ink-100 px-1 py-0.5 font-mono text-xs text-brand-700">
                 src/data/tracker.ts
               </code>{" "}
-              — follow the existing format.
+              , following the existing format.
             </li>
             <li>
               Over time, this timeline shows which error patterns persist and

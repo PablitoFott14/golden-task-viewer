@@ -74,7 +74,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <footer className="mt-24 border-t border-ink-200/70 bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="text-sm text-ink-500">
-            <span className="font-semibold text-ink-700">Golden Task Viewer</span> — a learning environment for Blue Shell contributors.
+            <span className="font-semibold text-ink-700">Golden Task Viewer</span>, a learning environment for Blue Shell contributors.
           </div>
         </div>
       </footer>

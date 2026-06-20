@@ -16,7 +16,7 @@ export default function TrajectoryReport({ run }: { run: ActualRun }) {
               What it actually produced
             </h3>
             <p className="mb-3 text-[13px] leading-relaxed text-ink-500">
-              The folder tree from the seed run. Compare it against the Ground Truth above — the colored
+              The folder tree from the seed run. Compare it against the Ground Truth above. The colored
               chips mark where it diverged.
             </p>
             <FolderTree root={run.producedTree} />

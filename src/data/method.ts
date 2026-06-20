@@ -15,11 +15,11 @@ export const playbookPrinciples: PlaybookPrinciple[] = [
   },
   {
     title: "Difficulty lives in the joins",
-    body: "The model is robust to surface lookups. Genuine difficulty comes from 2–3 independent sources that must agree — a note, a caption file, an image set. Spread failure across multiple points so one perception miss doesn't decide everything.",
+    body: "The model is robust to surface lookups. Genuine difficulty comes from 2–3 independent sources that must agree: a note, a caption file, an image set. Spread failure across multiple points so one perception miss doesn't decide everything.",
   },
   {
     title: "Confirm the GTFA is unique",
-    body: "There must be exactly one defensible solution. If two equally valid answers exist, the task is underspecified — tighten the prompt before continuing.",
+    body: "There must be exactly one defensible solution. If two equally valid answers exist, the task is underspecified, so tighten the prompt before continuing.",
   },
   {
     title: "Validate the ≥50% failure threshold early",
@@ -151,10 +151,10 @@ export const methodSteps: MethodStep[] = [
     title: "Persona Understanding",
     short: "Load the universe and get fluent in who you are designing for.",
     detail:
-      "Load the Service Universe Artifact ID first. In the Database tab, ask the agent for full persona context — occupation, relationships, interests, ongoing projects, communication style. Generate a persona_context.md and, from then on, step into the persona's shoes.",
+      "Load the Service Universe Artifact ID first. In the Database tab, ask the agent for full persona context: occupation, relationships, interests, ongoing projects, and communication style. Generate a persona_context.md and, from then on, step into the persona's shoes.",
     output: "persona_context.md",
     tips: [
-      "Capture occupation, relationships, projects, and communication style — you reuse all of it downstream.",
+      "Capture occupation, relationships, projects, and communication style, since you reuse all of it downstream.",
       "The category and subcategory must fit the persona's life naturally, not be bolted on.",
     ],
   },
@@ -166,7 +166,7 @@ export const methodSteps: MethodStep[] = [
     detail:
       "Based on the assigned Category, Subcategory, and the persona context, brainstorm realistic task ideas that would naturally arise in this persona's day-to-day. Don't lock onto the first angle.",
     tips: [
-      "Generate 2–3 distinct angles before committing — the first idea is rarely the strongest.",
+      "Generate 2–3 distinct angles before committing, since the first idea is rarely the strongest.",
       "Sketch 3–4 failure modes upfront; these become the task's center of gravity.",
     ],
   },
@@ -186,7 +186,7 @@ export const methodSteps: MethodStep[] = [
     n: 4,
     key: "reality",
     title: "Build the Reality First",
-    short: "Decide what multimodal context could exist — before writing a prompt.",
+    short: "Decide what multimodal context could exist, before writing a prompt.",
     detail:
       "Don't build the prompt yet. Ask: which multimodal context could I gather or create to support this idea, and which of it would realistically increase complexity? Design the world the persona lives in first.",
     tips: [
@@ -200,7 +200,7 @@ export const methodSteps: MethodStep[] = [
     title: "The Multimodal Inputs",
     short: "Lock the multimodal inputs and the friction you'll plant.",
     detail:
-      "Commit to the concrete inputs: handwritten notes as the SSOT, a captions file, and an image set. Introduce controlled mismatches and friction — captions over the limit, mismatched dates, unrelated images — nothing forced, just realistic mess.",
+      "Commit to the concrete inputs: handwritten notes as the SSOT, a captions file, and an image set. Introduce controlled mismatches and friction, such as captions over the limit, mismatched dates, and unrelated images. Nothing forced, just realistic mess.",
     tips: [
       "Vary formats: handwritten notes + captions file + image set.",
       "Avoid the single-character gotcha as the whole-task failure; spread the load across sources.",
@@ -208,7 +208,7 @@ export const methodSteps: MethodStep[] = [
     callouts: [
       {
         title: "Vary the multimodal mix across tasks",
-        body: "Don't reach for the same input pattern every time. Different tasks should combine different modalities — images, documents, spreadsheets, videos, handwritten notes, screenshots — and let each one carry part of the reasoning. The mix should feel native to the scenario, never mechanically inserted to tick a 'multimodal' box.",
+        body: "Don't reach for the same input pattern every time. Different tasks should combine different modalities, such as images, documents, spreadsheets, videos, handwritten notes, and screenshots, and let each one carry part of the reasoning. The mix should feel native to the scenario, never mechanically inserted to tick a 'multimodal' box.",
       },
     ],
   },
@@ -221,17 +221,17 @@ export const methodSteps: MethodStep[] = [
       "Write the final prompt so it stays natural and fully grounded in the reality and evidence you created. Open with something the persona would actually say; let the nested context carry the structural detail.",
     output: "prompt.md",
     tips: [
-      "Open with something the persona would actually say — no role-play scaffolding or dev-spec step lists.",
+      "Open with something the persona would actually say, with no role play scaffolding or dev spec step lists.",
       "Keep constraints implicit; let the referenced files and inputs carry the structural detail.",
     ],
     callouts: [
       {
         title: "Vary the final artifact, too",
-        body: "Output variety matters as much as input variety. Avoid requesting the same deliverable structure task after task — different scenarios naturally call for different formats, artifact types, and levels of detail. A folder tree, a slide deck, a spreadsheet, a written report, a state change: let the scenario decide the output, not habit.",
+        body: "Output variety matters as much as input variety. Avoid requesting the same deliverable structure task after task. Different scenarios naturally call for different formats, artifact types, and levels of detail. A folder tree, a slide deck, a spreadsheet, a written report, a state change: let the scenario decide the output, not habit.",
       },
       {
-        title: "MEMORY.md is optional — and never created from scratch",
-        body: "Only ask for it when a task genuinely benefits from tracking information over time. When you do reference MEMORY.md, assume it already exists and instruct the model to update, append to, or read from it — don't tell the model to create a new MEMORY.md unless the task explicitly requires one.",
+        title: "MEMORY.md is optional, and never created from scratch",
+        body: "Only ask for it when a task genuinely benefits from tracking information over time. When you do reference MEMORY.md, assume it already exists and instruct the model to update, append to, or read from it. Don't tell the model to create a new MEMORY.md unless the task explicitly requires one.",
       },
     ],
   },
@@ -245,7 +245,7 @@ export const methodSteps: MethodStep[] = [
     output: "GTFA.md",
     tips: [
       "Document the chain of reasoning: which inputs you consulted and in what order.",
-      "Confirm exactly one defensible answer exists — if two do, the task is underspecified.",
+      "Confirm exactly one defensible answer exists; if two do, the task is underspecified.",
     ],
   },
   {
@@ -254,10 +254,10 @@ export const methodSteps: MethodStep[] = [
     title: "Run in OpenClaw",
     short: "One clean, single-turn agent interaction.",
     detail:
-      "Run the prompt in the OpenClaw environment as a single prompt-agent interaction — no multi-turn, no follow-ups. If you forget the multimodal context, reset and start fresh rather than patching it in.",
+      "Run the prompt in the OpenClaw environment as a single prompt and agent interaction, with no multiple turns and no follow-ups. If you forget the multimodal context, reset and start fresh rather than patching it in.",
     tips: [
-      "Run it as a single prompt-agent interaction — no multi-turn, no follow-ups.",
-      "If you forgot to upload context, reset the agent — never patch it in afterward.",
+      "Run it as a single prompt and agent interaction, with no multiple turns and no follow-ups.",
+      "If you forgot to upload context, reset the agent, and never patch it in afterward.",
     ],
   },
   {
@@ -278,9 +278,9 @@ export const methodSteps: MethodStep[] = [
     title: "The Silver Trajectory",
     short: "Guide the model to the correct answer, restoring to seed.",
     detail:
-      "Always restore to seed — do not start fresh. Guide the model toward the correct response with as many follow-up prompts as needed until the correct solution is reached.",
+      "Always restore to seed and do not start fresh. Guide the model toward the correct response with as many follow-up prompts as needed until the correct solution is reached.",
     tips: [
-      "Always restore to seed — never start a fresh conversation.",
+      "Always restore to seed, and never start a fresh conversation.",
       "Target each follow-up at a specific, observed failure; end at the verified correct solution.",
     ],
   },
@@ -290,7 +290,7 @@ export const methodSteps: MethodStep[] = [
     title: "Unit Tests",
     short: "Name the structural checks reviewers will implement.",
     detail:
-      "Define reviewer-only unit test references — names and descriptions, not the tests themselves. These cover what is structurally important: required folders exist and contain the expected sub-folders.",
+      "Define reviewer only unit test references: names and descriptions, not the tests themselves. These cover what is structurally important, namely that the required folders exist and contain the expected subfolders.",
     tips: [
       "Structural checks only: platform folders exist and contain the expected date folders.",
       "These are references for reviewers, not graded rubric items.",

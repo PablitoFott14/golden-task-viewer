@@ -162,7 +162,7 @@ export default function TaskDetail() {
             id="persona"
             n={2}
             title="Persona Understanding"
-            kicker="Step 1 — Persona"
+            kicker="Step 1: Persona"
             sub="Load the universe, then ask the Database agent for the persona's full context before doing anything else. The category must fit the persona's life naturally."
           >
             {task.personaPrompt && (
@@ -174,7 +174,7 @@ export default function TaskDetail() {
                   “{task.personaPrompt}”
                 </p>
                 <p className="mt-2 text-[12px] leading-relaxed text-ink-400">
-                  The response becomes <code className="rounded bg-ink-100 px-1 py-0.5 font-mono text-[11px] text-brand-700">persona_context.md</code> — and from here on, you reason as the persona.
+                  The response becomes <code className="rounded bg-ink-100 px-1 py-0.5 font-mono text-[11px] text-brand-700">persona_context.md</code>. From here on, you reason as the persona.
                 </p>
               </div>
             )}
@@ -202,7 +202,7 @@ export default function TaskDetail() {
             id="brainstorm"
             n={3}
             title="Brainstorming & Choosing"
-            kicker="Steps 2–3 — Brainstorm & choose"
+            kicker="Steps 2–3: Brainstorm & choose"
             sub="Three realistic angles were considered. The chosen one leaves the most room for natural complexity."
           >
             <div className="grid gap-4 md:grid-cols-3">
@@ -241,8 +241,8 @@ export default function TaskDetail() {
             id="reality"
             n={4}
             title="Build the Reality First"
-            kicker="Step 4 — Build the reality"
-            sub={nv.realitySub ?? "After the idea is chosen but before the task is defined, pressure-test the scenario: would this really happen, and what would have to be true for it to? That reasoning decides what context to build — then lock the strategy for it."}
+            kicker="Step 4: Build the reality"
+            sub={nv.realitySub ?? "After the idea is chosen but before the task is defined, pressure-test the scenario: would this really happen, and what would have to be true for it to? That reasoning decides what context to build, then lock the strategy for it."}
           >
             <div className="grid gap-6 md:grid-cols-2">
               <div>
@@ -279,7 +279,7 @@ export default function TaskDetail() {
             id="inputs"
             n={5}
             title="The Multimodal Inputs"
-            kicker="Step 5 — MM inputs"
+            kicker="Step 5: MM inputs"
             sub={nv.inputsSub ?? "Two handwritten notes are the SSOT. A mixed caption file and 23 images must be audited against them. Filter by role and click any asset for details."}
           >
             {/* SSOT spotlight */}
@@ -287,11 +287,11 @@ export default function TaskDetail() {
               <div className="mb-2 flex items-center gap-2">
                 <span className="chip bg-gold-100 text-gold-800">SSOT</span>
                 <h3 className="text-sm font-bold text-ink-900">
-                  {nv.ssotTitle ?? "The two handwritten pages — the single source of truth"}
+                  {nv.ssotTitle ?? "The two handwritten pages, the single source of truth"}
                 </h3>
               </div>
               <p className="mb-4 max-w-2xl text-sm text-ink-500">
-                {nv.ssotBlurb ?? "The notes are intentionally messy, but still readable — a rushed two-page draft jotted down during the emergency meeting, covering the whole of June. When a line is genuinely hard to make out, the GTFA is the tie-breaker for what it says."}
+                {nv.ssotBlurb ?? "The notes are intentionally messy but still readable, a rushed two-page draft jotted down during the emergency meeting, covering the whole of June. When a line is genuinely hard to make out, the GTFA is the tie-breaker for what it says."}
               </p>
               <div className="grid gap-4 md:grid-cols-2">
                 {task.assets
@@ -345,7 +345,7 @@ export default function TaskDetail() {
                   <code className="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs text-brand-700">
                     text_post.txt
                   </code>{" "}
-                  holds every recovered June caption in one file — numbered, but not attributed to any post.
+                  holds every recovered June caption in one file, numbered but not attributed to any post.
                 </p>
                 <RawFile
                   label="Read the raw text_post.txt"
@@ -361,7 +361,7 @@ export default function TaskDetail() {
               <div className="mt-8">
                 <h3 className="mb-1 text-sm font-bold text-ink-900">The written specification</h3>
                 <p className="mb-3 max-w-2xl text-sm text-ink-500">
-                  These files carry the structural rules the deck must follow — read alongside the images,
+                  These files carry the structural rules the deck must follow. Read them alongside the images,
                   not in place of them.
                 </p>
                 {task.inputDocs.map((d) =>
@@ -394,7 +394,7 @@ export default function TaskDetail() {
                 </h3>
               </div>
               <p className="mb-4 max-w-2xl text-sm text-ink-500">
-                {nv.frictionBlurb ?? "Each friction point below was embedded on purpose, yet every one is the kind of mess a real June recovery would contain. It is spread deliberately across the handwritten notes, the images, and the mixed caption file — so no single misread decides the task. Together they cover mismatches to log, files expected to be removed, and information that is simply missing."}
+                {nv.frictionBlurb ?? "Each friction point below was embedded on purpose, yet every one is the kind of mess a real June recovery would contain. It is spread deliberately across the handwritten notes, the images, and the mixed caption file, so no single misread decides the task. Together they cover mismatches to log, files expected to be removed, and information that is simply missing."}
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {task.friction.map((f) => (
@@ -409,7 +409,7 @@ export default function TaskDetail() {
             id="prompt"
             n={6}
             title="Materialize the Prompt"
-            kicker="Step 6 — The prompt"
+            kicker="Step 6: The prompt"
             sub="The prompt stays high-level and natural. The annotations on the right explain the structural intent behind each key phrase."
           >
             <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
@@ -449,7 +449,7 @@ export default function TaskDetail() {
             id="gtfa"
             n={7}
             title="The Ground Truth Final Answer"
-            kicker="Step 7 — GTFA"
+            kicker="Step 7: GTFA"
             sub={nv.gtfaSub ?? "The one correct deliverable, built by hand before the prompt was written. This is the intended solution and the behavior a correct agent should produce."}
           >
             <div className={task.gtfaView ? "space-y-8" : "grid gap-6 lg:grid-cols-[1.2fr_1fr]"}>
@@ -490,8 +490,8 @@ export default function TaskDetail() {
             id="actual"
             n={8}
             title="What the Model Actually Did"
-            kicker="Steps 8–9 — Run & cross-reference"
-            sub={nv.actualSub ?? "Reconstructed directly from the seed trajectory and its workspace — a single prompt-agent interaction, compared against the GTFA."}
+            kicker="Steps 8–9: Run & cross-reference"
+            sub={nv.actualSub ?? "Reconstructed directly from the seed trajectory and its workspace. A single prompt and agent interaction, compared against the GTFA."}
           >
             {task.actualRun.layout === "compare" ? (
               <RunComparison run={task.actualRun} />
@@ -505,7 +505,7 @@ export default function TaskDetail() {
             id="silver"
             n={9}
             title="The Silver Trajectory"
-            kicker="Step 10 — Silver trajectory"
+            kicker="Step 10: Silver trajectory"
             sub={nv.silverSub ?? "Targeted follow-ups guide the model to the correct answer, always restoring to seed. Each one targets a specific failure observed in the run above."}
           >
             <div className="relative space-y-4 pl-8">
@@ -565,8 +565,8 @@ export default function TaskDetail() {
                   ))}
                 </div>
                 <p className="mt-3 text-[13px] font-semibold text-emerald-700 dark:text-emerald-300">
-                  End state: the deliverable now matches the Ground Truth Final Answer — restored from
-                  seed, never started fresh.
+                  End state: the deliverable now matches the Ground Truth Final Answer, restored from
+                  seed and never started fresh.
                 </p>
               </div>
             </div>
@@ -577,7 +577,7 @@ export default function TaskDetail() {
             id="tests"
             n={10}
             title="Unit Tests"
-            kicker="Step 11 — Unit tests (reviewers only)"
+            kicker="Step 11: Unit tests (reviewers only)"
             sub={nv.testsSub ?? "Reviewer-only checks for the platform folders and the date folders. Click any test to reveal its code."}
           >
             <div className="grid gap-6 sm:grid-cols-2">
@@ -607,7 +607,7 @@ export default function TaskDetail() {
             id="rubrics"
             n={11}
             title="The Rubric Set"
-            kicker="Step 12 — Rubrics"
+            kicker="Step 12: Rubrics"
           >
             <RubricExplorer rubrics={task.rubrics} designNotes={task.rubricDesign} />
           </Section>
@@ -624,7 +624,7 @@ export default function TaskDetail() {
               {task.artifactDocs.map((d) => (
                 <ExpandableDoc
                   key={d.file}
-                  label={`${d.label} — ${d.description}`}
+                  label={`${d.label}: ${d.description}`}
                   file={d.file}
                   url={docUrl(task.assetRoot, d.file)}
                 />

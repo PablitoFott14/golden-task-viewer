@@ -35,7 +35,7 @@ export const weeklyEntries: WeekEntry[] = [
       why: "Strong persona adherence, natural complexity across 3 platforms, well-planted friction that tests reasoning rather than perception. The 50% failure bar was met cleanly, and every rubric is traceable to a specific prompt requirement.",
     },
     worst: {
-      title: "(Placeholder — add when data is available)",
+      title: "(Placeholder, add when data is available)",
       issues: [
         "Replace this entry with the actual worst-performing task of the week.",
         "Document the specific issues: weak persona fit, forced gotchas, under-threshold failure, etc.",
@@ -45,12 +45,12 @@ export const weeklyEntries: WeekEntry[] = [
       {
         error: "Lumping X posts under Instagram when both appear on the same SSOT page",
         frequency: "Frequent",
-        tip: "Always verify the model creates a separate folder for each platform listed in the SSOT — check by name, not by page position.",
+        tip: "Always verify the model creates a separate folder for each platform listed in the SSOT. Check by name, not by page position.",
       },
       {
         error: "Silently including mismatching content in post folders instead of logging it to MEMORY.md",
         frequency: "Frequent",
-        tip: "The prompt defines three buckets (correct, missing, mismatching). Content that doesn't fully match the plan is a mismatch — it goes to MEMORY.md, not into the folder.",
+        tip: "The prompt defines three buckets (correct, missing, mismatching). Content that doesn't fully match the plan is a mismatch, so it goes to MEMORY.md, not into the folder.",
       },
       {
         error: "Missing the Q1 vs Q2 semantic mismatch in the dinner recap caption",

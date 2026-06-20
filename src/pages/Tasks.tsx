@@ -17,7 +17,7 @@ export default function Tasks() {
         <SectionHeading
           eyebrow="The library"
           title="Golden Tasks"
-          sub="Each task is a complete, reconstructed example — browse the reasoning, the multimodal inputs, the Ground Truth answer, and the full rubric set. More tasks will appear here over time."
+          sub="Each task is a complete, reconstructed example. Browse the reasoning, the multimodal inputs, the Ground Truth answer, and the full rubric set. More tasks will appear here over time."
         />
       </Reveal>
 
@@ -94,7 +94,7 @@ export default function Tasks() {
             </div>
             <p className="mt-3 text-sm font-semibold text-ink-600">More tasks coming</p>
             <p className="mt-1 text-xs text-ink-400">
-              The platform is built to scale — drop a new task into the data layer and it
+              The platform is built to scale. Drop a new task into the data layer and it
               appears here.
             </p>
           </div>

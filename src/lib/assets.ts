@@ -36,7 +36,7 @@ export const roleStyles: Record<AssetRole, RoleStyle> = {
     chip: "bg-gold-100 text-gold-800",
     dot: "bg-gold-500",
     ring: "ring-gold-300",
-    description: "Source of truth — the plan everything is graded against.",
+    description: "Source of truth: the plan everything is graded against.",
   },
   captions: {
     label: "Captions",
@@ -57,28 +57,28 @@ export const roleStyles: Record<AssetRole, RoleStyle> = {
     chip: "bg-amber-100 text-amber-700",
     dot: "bg-amber-500",
     ring: "ring-amber-300",
-    description: "Present but doesn't fully match the plan — log to MEMORY.md.",
+    description: "Present but doesn't fully match the plan, so log it to MEMORY.md.",
   },
   missing: {
     label: "Missing",
     chip: "bg-sky-100 text-sky-700",
     dot: "bg-sky-500",
     ring: "ring-sky-300",
-    description: "Planned but absent — report as missing.",
+    description: "Planned but absent, so report it as missing.",
   },
   distractor: {
     label: "Remove",
     chip: "bg-rose-100 text-rose-700",
     dot: "bg-rose-500",
     ring: "ring-rose-300",
-    description: "Unrelated noise — remove and report.",
+    description: "Unrelated noise, so remove and report it.",
   },
   duplicate: {
     label: "Duplicate",
     chip: "bg-fuchsia-100 text-fuchsia-700",
     dot: "bg-fuchsia-500",
     ring: "ring-fuchsia-300",
-    description: "Copy of another asset — keep one, report the rest.",
+    description: "Copy of another asset, so keep one and report the rest.",
   },
 };
 

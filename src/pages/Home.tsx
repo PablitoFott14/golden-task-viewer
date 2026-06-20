@@ -77,7 +77,7 @@ export default function Home() {
               Let your imagination lead the way.
             </p>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-500">
-              Realistic, naturally complex scenarios are the foundation of every successful task —
+              Realistic, naturally complex scenarios are the foundation of every successful task,
               not artificial constraints or forced difficulty.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
@@ -126,7 +126,7 @@ export default function Home() {
             {
               icon: <GitBranch />,
               title: "Planning before execution",
-              body: "Design the task before building it. Stay in control of the requirements instead of improvising midway and discovering critical issues later — don't jump into the pool before checking whether there's water in it.",
+              body: "Design the task before building it. Stay in control of the requirements instead of improvising midway and discovering critical issues later. Don't jump into the pool before checking whether there's water in it.",
             },
           ].map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
