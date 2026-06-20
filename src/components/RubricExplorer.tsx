@@ -318,7 +318,7 @@ function StatusBadge({ rubric: r }: { rubric: Rubric }) {
   if (negativePresent) {
     return (
       <span className="chip bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200">
-        <AlertTriangle size={12} /> Present · negative finding
+        <AlertTriangle size={12} /> Present
       </span>
     );
   }
