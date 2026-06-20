@@ -160,8 +160,21 @@ export default function TaskDetail() {
             n={2}
             title="Persona Understanding"
             kicker="Step 1 — Persona"
-            sub="The category must fit the persona's life naturally."
+            sub="Load the universe, then ask the Database agent for the persona's full context before doing anything else. The category must fit the persona's life naturally."
           >
+            {task.personaPrompt && (
+              <div className="mb-6 rounded-2xl border border-ink-200/70 bg-surface p-5 shadow-soft">
+                <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-brand-600">
+                  <MessageSquare size={13} /> The prompt sent to the Database agent
+                </div>
+                <p className="text-[14px] italic leading-relaxed text-ink-700">
+                  “{task.personaPrompt}”
+                </p>
+                <p className="mt-2 text-[12px] leading-relaxed text-ink-400">
+                  The response becomes <code className="rounded bg-ink-100 px-1 py-0.5 font-mono text-[11px] text-brand-700">persona_context.md</code> — and from here on, you reason as the persona.
+                </p>
+              </div>
+            )}
             <div className="grid gap-3 sm:grid-cols-2">
               {task.personaHighlights.map((h) => (
                 <div
@@ -226,12 +239,12 @@ export default function TaskDetail() {
             n={4}
             title="Build the Reality First"
             kicker="Step 4 — Build the reality"
-            sub="Before writing the prompt, decide what multimodal context could realistically exist for this June recovery — then lock the strategy for it."
+            sub={nv.realitySub ?? "After the idea is chosen but before the task is defined, pressure-test the scenario: would this really happen, and what would have to be true for it to? That reasoning decides what context to build — then lock the strategy for it."}
           >
             <div className="grid gap-6 md:grid-cols-2">
               <div>
                 <h3 className="mb-3 text-sm font-bold text-ink-900">
-                  What context could exist?
+                  Validating &amp; shaping the scenario
                 </h3>
                 <ul className="space-y-2.5">
                   {task.realityFirst.map((r) => (

@@ -18,6 +18,8 @@ const task2: Task = {
   },
   assetRoot: "tasks/task2",
   personaDocPath: "tasks/task2/artifacts/persona_context.md",
+  personaPrompt:
+    "Hey, I need to get familiar with Aaliyah Jenkins's background and situation. Could you help me understand the key aspects of her profile, such as her occupation, personal relationships, interests, ongoing projects, and any other relevant context that would help me better understand her day-to-day life, responsibilities, and priorities?",
 
   personaHighlights: [
     { label: "Role", value: "Level 2 Teller @ Scioto Valley Community Bank, Columbus" },
@@ -34,24 +36,23 @@ const task2: Task = {
       why: "It stays naturally aligned with the assigned Visual Learning / Lab/Fieldwork Documentation category — a self-learner using gathered media (a handwritten note, a returns screenshot, charts) to understand a topic and document it into a study artifact. It's grounded in Aaliyah's real profile: she's a financially conscious bank teller who keeps a 401k, budgets carefully, and works inside a bank every day, so studying asset allocation on her own and documenting it is believable without inventing any credential she isn't enrolled in. It also leaves room for genuine complexity: the agent must OCR a messy note, interpret financial diagrams, calculate long-term outcomes, document them into the deck, find the right mentor contact (Carlton Davis, a real universe contact), infer the review time from a calendar pattern, and send it.",
     },
     {
-      title: "Homeownership Affordability Review",
-      body: "Audit a possible home purchase using Aaliyah and Leonard's income, debts, and savings against a specific property they're considering, then prepare a recommendation.",
+      title: "House-Hunt Field Documentation",
+      body: "Document the homes Aaliyah and Leonard toured into a visual comparison study — open-house photos, Zillow screenshots, and her handwritten walkthrough notes organized into a structured deck that documents what she observed at each property.",
       chosen: false,
     },
     {
-      title: "Cooking Sponsorship Planning",
-      body: "Help Aaliyah evaluate a sponsored recipe-video offer, compare it against her current creator income, and prepare a small content plan balancing family time and brand requirements.",
+      title: "Recipe Technique Study Log",
+      body: "Turn process photos and handwritten notes from her own cooking sessions into an illustrated technique log — documenting each step's visuals and observations into a reference artifact she can learn from and reuse.",
       chosen: false,
     },
   ],
 
   realityFirst: [
-    "The agent must build the case-study deck from partially organized source material — so the context should feel gathered in a rush, not handed over as a clean spreadsheet.",
-    "Profile values fit a handwritten note rather than a typed brief — a realistic source of friction for a busy student preparing late.",
-    "The financial data should live in visual sources, forcing the agent to extract the right rows, columns, and asset classes instead of relying on prompt text.",
-    "Some images are reference material for reasoning, not content to paste in — so the agent must tell 'use an input' apart from 'copy an input'.",
-    "The calculation should be multi-step: the 2010s and 2020s form one continuous 20-year horizon, and the monthly-contribution version compounds each $300 on top of the prior phase's ending balance.",
-    "The task should require tool use beyond the artifact: find Carlton, infer the review time from the team-meeting pattern, schedule it, and send the deck.",
+    "Would a bank teller really self-study asset allocation and document it? Yes — Aaliyah keeps a 401k, budgets carefully, and works inside a bank, so the topic is native to her life and needs no invented credential to be believable.",
+    "For the study to feel real, the source material has to look gathered on the fly — a value jotted on paper, a returns screenshot, a couple of charts — rather than a clean spreadsheet someone prepared for the agent.",
+    "For the work to be genuine reasoning and not transcription, the data has to live in the visuals: the right rows and columns must be picked out of a busy returns table, and asset classes mapped to risk tiers from a separate diagram.",
+    "For the math to be a true test, the horizon has to be one continuous 20-year chain and the contribution version has to build on the prior phase — so a 'two separate decades' shortcut is wrong but tempting.",
+    "For the workflow to extend past the file, the universe has to supply a real reviewer (Carlton) and a schedulable pattern (her team meeting), so the review and email are grounded rather than invented.",
   ],
 
   mmStrategy: [
@@ -910,6 +911,8 @@ def _workspace_state():
   ],
 
   narrative: {
+    realitySub:
+      "Once the deck idea is chosen, pressure-test it before defining anything: would Aaliyah really study asset allocation this way, and what would have to be true for it to hold? That reasoning decides which messy, gathered inputs to build — then the strategy locks them in.",
     inputsSub:
       "The handwritten note and presentation.md are the source of truth. Four reference inputs and two spec files must be read and reconciled into a seven-slide deck — every input drives a checkable output. Filter by role and click any asset for details.",
     ssotTitle: "The handwritten note + presentation.md — the source of truth",

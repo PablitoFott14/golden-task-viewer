@@ -18,6 +18,8 @@ const task1: Task = {
   },
   assetRoot: "tasks/task1",
   personaDocPath: "tasks/task1/artifacts/persona_context.md",
+  personaPrompt:
+    "Hey, I need to get familiar with Brandon Lewis's background and situation. Could you help me understand the key aspects of his profile, such as his occupation, personal relationships, interests, ongoing projects, and any other relevant context that would help me better understand his day-to-day life, responsibilities, and priorities?",
 
   personaHighlights: [
     { label: "Role", value: "Product Manager @ Vaulta.io (Boston fintech)" },
@@ -46,11 +48,11 @@ const task1: Task = {
   ],
 
   realityFirst: [
-    "The agent must audit a company's full monthly plan spanning multiple platforms — so the context needs to be rich, with many images and supporting materials.",
-    "The urgent framing fits a handwritten note made in a rush plus messy multimodal context recovered from different sources.",
-    "Because the original plan was lost, the recovered information should come from multiple locations and formats — not one clean source of truth.",
-    "Some information should exist in only one source, forcing the agent to genuinely audit and reconcile rather than look up.",
-    "The social context should feel believable for a fintech company.",
+    "Would a fintech startup really lose a month of social planning? It holds up if the plan only ever lived in one person's notes and devices and was never centralized — so a scramble-to-recover-before-posting framing is believable rather than contrived.",
+    "For there to be anything to audit, the recovered context has to be scattered across formats and sources — a rushed handwritten plan, images people happened to have, captions saved loosely in one file — not a single clean document.",
+    "For the audit to be real work and not a lookup, some details must survive in only one place, so the agent has to reconcile across sources to rebuild them.",
+    "For the mismatches to feel natural, they should be the kind of mess a hurried recovery produces — a wrong quarter, an over-length caption, a duplicated image — not planted gotchas a careful reader would never make.",
+    "All of it has to read as a plausible fintech month, so the topics, dates, and channels stay consistent with Brandon's startup and persona.",
   ],
 
   mmStrategy: [

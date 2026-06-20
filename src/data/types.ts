@@ -152,6 +152,8 @@ export interface Task {
   assetRoot: string;
   personaHighlights: { label: string; value: string }[];
   personaDocPath: string;
+  /** The actual persona-gathering prompt sent to the universe Database agent to generate persona_context.md. */
+  personaPrompt?: string;
   brainstorm: BrainstormIdea[];
   realityFirst: string[];
   mmStrategy: string[];
@@ -186,6 +188,7 @@ export interface Task {
 }
 
 export interface TaskNarrative {
+  realitySub?: string;
   inputsSub?: string;
   ssotTitle?: string;
   ssotBlurb?: string;
