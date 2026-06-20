@@ -398,7 +398,7 @@ export default function TaskDetail() {
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {task.friction.map((f) => (
-                  <FrictionCard key={f.id} f={f} />
+                  <FrictionCard key={f.id} f={f} showType={nv.showFrictionTypes !== false} />
                 ))}
               </div>
             </div>
@@ -691,7 +691,7 @@ const frictionLabel: Record<FrictionPoint["type"], string> = {
   perception: "Notes",
 };
 
-function FrictionCard({ f }: { f: FrictionPoint }) {
+function FrictionCard({ f, showType = true }: { f: FrictionPoint; showType?: boolean }) {
   return (
     <div className="rounded-xl border border-ink-200/70 bg-surface p-4 shadow-soft">
       <div className="flex items-start justify-between gap-2">
@@ -699,9 +699,11 @@ function FrictionCard({ f }: { f: FrictionPoint }) {
           <AlertTriangle size={15} className="text-gold-500" />
           {f.title}
         </h3>
-        <span className={cx("chip shrink-0", frictionTone[f.type])}>
-          {frictionLabel[f.type]}
-        </span>
+        {showType && (
+          <span className={cx("chip shrink-0", frictionTone[f.type])}>
+            {frictionLabel[f.type]}
+          </span>
+        )}
       </div>
       <div className="mt-1.5 font-mono text-[11px] text-ink-400">{f.where}</div>
       <p className="mt-2 text-[13px] leading-relaxed text-ink-600">{f.description}</p>

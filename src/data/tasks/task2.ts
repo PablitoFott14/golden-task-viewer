@@ -949,6 +949,7 @@ def _workspace_state():
     ssotBlurb:
       "The investor-profile values live on a rushed handwritten note; the slide structure, exact titles, and formatting rules live in presentation.md (shown below). Together they define what 'correct' means — every other input is read against them.",
     inputsVariant: "reference",
+    showFrictionTypes: false,
     galleryTitle: "The reference inputs — and what each one feeds",
     frictionTitle: "The reasoning traps planted across these inputs",
     frictionBlurb:

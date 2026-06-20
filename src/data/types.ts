@@ -212,6 +212,8 @@ export interface TaskNarrative {
   inputsSub?: string;
   /** "audit" (default, task1 role chips) or "reference" (task2 purpose-driven inputs). */
   inputsVariant?: "audit" | "reference";
+  /** Show the per-friction type chip (Missing/Mismatch/Remove/Notes). Off for tasks where those audit categories don't apply. */
+  showFrictionTypes?: boolean;
   ssotTitle?: string;
   ssotBlurb?: string;
   galleryTitle?: string;
