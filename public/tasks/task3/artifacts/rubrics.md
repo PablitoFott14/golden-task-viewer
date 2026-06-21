@@ -4,9 +4,9 @@
 4. The `### 1. Current Liquid Cash` section of `final_insights.md` states the current liquid cash as `$6,700.00`. (+1) -> Task Completion - Final answer/artifact | Not Present
 5. The `### 2. Remaining Amount Needed` section of `final_insights.md` states the remaining amount needed as `$18,300.00`. (+3) -> Task Completion - Final answer/artifact | Not Present
 6. The `#### 3a. Recommended Positions to Sell` list in the `final_insights.md` includes the bullet `- APPLE — Value After +5%: $7,000.00`. (+1) -> Task Completion - Final answer/artifact | Present
-7. The `#### 3a. Recommended Positions to Sell` list in the `final_insights.md` includes the bullet `- MICROSOFT — Value After +5%: $5,300.00`. (+5) -> Task Completion - Final answer/artifact | Not Present
+7. The `#### 3a. Recommended Positions to Sell` list in the `final_insights.md` includes the bullet `- MICROSOFT — Value After +5%: $5,300.00`. (+1) -> Task Completion - Final answer/artifact | Not Present
 8. The `#### 3a. Recommended Positions to Sell` list in the `final_insights.md` includes the bullet `- NVIDIA — Value After +5%: $6,000.00`. (+1) -> Task Completion - Final answer/artifact | Present
-9. The `#### 3b. Estimated Funds Generated` section of `final_insights.md` states the estimated funds generated as `$18,300.00`. (+3) -> Task Completion - Final answer/artifact | Not Present
+9. The `#### 3b. Estimated Funds Generated` section of `final_insights.md` states the estimated funds generated as `$18,300.00`. (+5) -> Task Completion - Final answer/artifact | Not Present
 10. The `#### 3b. Estimated Funds Generated` section of `final_insights.md` states the total available after sales as `$25,000.00`, indicating that it meets the `$25,000` launch budget. (+3) -> Task Completion - Final answer/artifact | Not Present
 11. The model correctly selects the regular retail price (`$25.00`) over the current sale price (`$18.75`) as the reference for production cost calculations, consistent with the user's retail price intent. (+3) -> Agent Behavior - Trajectory | Present
 12. The `#### 4a. Stanley Quencher Pricing` section of `final_insights.md` states the Stanley Quencher price as `$25.00`. (+1) -> Task Completion - Final answer/artifact | Present

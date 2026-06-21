@@ -315,7 +315,7 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
     {
       title: "Weights track complexity, not importance",
       body:
-        "Each weight reflects how much reasoning the criterion takes to get right, not how important it feels. The two +5 criteria are the compounding tables on Slides 4 and 5, since each one reconciles the screenshot returns, the continuous 20-year horizon, and a chained compounding methodology at once. A +3 covers one reasoning or reconciliation step, such as reading the profile from the messy note, reconciling the pie with the pyramid, selecting the right rows and columns, the conclusion synthesis, or each state change. A +1 covers mechanical single source checks such as the file existing, color, font, rounding, the exact slide titles, the disclaimer, the table column shape, and leaving Slide 6 empty. Criteria that call for the same reviewer action carry the same weight.",
+        "Each weight reflects how much reasoning the criterion takes to get right, not how important it feels. The two +5 criteria are the compounding tables on Slides 4 and 5, since each one reconciles the screenshot returns, the continuous 20-year horizon, and a chained compounding methodology at once. A +3 covers one reasoning or reconciliation step, such as reading the profile from the messy note, reconciling the pie with the pyramid, selecting the right rows and columns, the conclusion synthesis, or scheduling the mentor review (which needs the meeting time inferred from the calendar pattern). A +1 covers mechanical single source checks such as the file existing, color, font, rounding, the exact slide titles, the disclaimer, the table column shape, leaving Slide 6 empty, and emailing the deck (a mechanical send once the recipient and attachment are known). The two state changes carry different weights for that reason: inferring the review time is reasoning, sending the email is not.",
     },
     {
       title: "Deterministic math is objectively gradable",
@@ -566,7 +566,7 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
     {
       n: 17,
       text: "An email is sent to `c.davis.columbus@outlook.com` with `asset_allocation.pptx` attached and asks Carlton to take a look and share any thoughts.",
-      points: 3,
+      points: 1,
       category: "Task Completion — State change",
       evalTarget: "State change",
       enforces: "Prompt: 'send the deck over, asking him to please take a look and share any thoughts.'",

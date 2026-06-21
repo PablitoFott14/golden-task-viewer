@@ -321,7 +321,7 @@ I've also included a final_artifact_format.md file that defines the exact struct
     {
       title: "Weights track complexity, not importance",
       body:
-        "Each weight reflects how much reasoning the criterion takes to get right, not how critical it feels. The single +5 is the subset-sum correctness, since it reconciles the note values, the retrieved liquidity, and the closest-over constraint at once. A +3 covers the genuine reasoning and retrieval steps (consulting the accounts, extracting the five positions, the dependent computations, choosing retail over the sale price). A +1 covers mechanical statements that only restate a known value in the right section, and the file simply existing.",
+        "Each weight reflects how much reasoning the criterion takes to get right, not how critical it feels. The single +5 is the subset-sum correctness, carried by the estimated funds generated figure, since reaching it reconciles the note values, the retrieved liquidity, and the closest-over constraint at once. A +3 covers the other genuine reasoning and retrieval steps: consulting the accounts, extracting the five positions, computing the remaining target, validating the closest-over total, and choosing retail over the sale price. A +1 covers mechanical work that only restates a known value or checks a single condition: the per-position bullets are presence checks (the selection reasoning behind them is credited once, in the funds figure), and so are the manufacturing arithmetic and the file existing.",
     },
     {
       title: "One root cause, graded where it surfaces",
@@ -414,13 +414,13 @@ I've also included a final_artifact_format.md file that defines the exact struct
     {
       n: 7,
       text: "The `#### 3a. Recommended Positions to Sell` list in the `final_insights.md` includes the bullet `- MICROSOFT — Value After +5%: $5,300.00`.",
-      points: 5,
+      points: 1,
       category: "Task Completion — Final answer/artifact",
       evalTarget: "Final answer/artifact",
       enforces: "GTFA: the unique closest-over combination is Apple + Microsoft + Nvidia.",
       status: "not-present",
       observed: "The artifact does not list Microsoft among the recommended positions; the model chose a different, oversold combination.",
-      rationale: "The discriminating subset-sum check. The only clean three-position combination that reaches $18,300 without overselling includes Microsoft, so getting this right means the whole selection (note values, liquidity, closest-over constraint) was reconciled correctly. It carries the heaviest +5.",
+      rationale: "A bullet-presence check, the same mechanical action as the Apple and Nvidia bullets, so it is weighted +1 like them. The selection reasoning it reflects is credited once, in the estimated funds figure. Microsoft is simply the position the model dropped when it oversold.",
       whyCorrect: "The user doesn't want to oversell, and the combination must get as close as possible to the $25,000 while still staying over it. The only three-position combination that meets the target includes Microsoft.",
       whyImportant: "There is a single source of truth defining the stock combination required to reach $18,300, and that combination includes Microsoft.",
       whatWrong: "The model uses a different stock combination after incorrectly assuming the full $25,000 must come from selling stocks and omitting the existing $6,700 liquidity.",
@@ -439,13 +439,13 @@ I've also included a final_artifact_format.md file that defines the exact struct
     {
       n: 9,
       text: "The `#### 3b. Estimated Funds Generated` section of `final_insights.md` states the estimated funds generated as `$18,300.00`.",
-      points: 3,
+      points: 5,
       category: "Task Completion — Final answer/artifact",
       evalTarget: "Final answer/artifact",
       enforces: "GTFA: the sum of the correct combination is $18,300.00.",
       status: "not-present",
       observed: "The artifact states the estimated funds generated as $25,000.42 instead of $18,300.00.",
-      rationale: "The result of the selection; reporting it correctly requires the correct combination, so it carries a +3.",
+      rationale: "The estimated funds figure is the direct output of the subset-sum, reconciling the five note values, the retrieved liquidity, and the closest-over constraint at once. It is the most complex criterion in the task, so it carries the +5.",
       whyCorrect: "The prompt required the model to account for the user's existing $6,700 liquidity when determining how much needed to be generated from selling stocks. Since the target was $25,000, the stock sales only needed to generate $18,300.00.",
       whyImportant: "This amount defines the actual target value the recommended positions must cover after the 5% increase. If the model uses a different amount, the selected positions and final recommendation are based on the wrong funding target.",
       whatWrong: "The model incorrectly treated the full $25,000 as needing to come from stock sales, instead of subtracting the existing $6,700 liquidity first.",

@@ -691,7 +691,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       title: "Weights Track Complexity, Not Importance",
       body:
-        "Each weight reflects how much reasoning the criterion takes to get right and to verify, not how important it feels. The single +5 is the one criterion that needs cross-source reasoning over both handwritten pages to reconstruct the whole plan. A +3 covers one reconciliation step, such as attributing the right asset to a post, splitting a caption, spotting the boxed X plan, or logging one mismatch against the plan or persona. A +1 covers mechanical single-source checks such as a clearly headed platform folder existing, placing an interchangeable finance quote, or reporting the duplicate. Criteria that call for the same reviewer action carry the same weight.",
+        "Each weight reflects how much reasoning the criterion takes to get right and to verify, not how important it feels. The single +5 is the one criterion that needs cross-source reasoning over both handwritten pages to reconstruct the whole plan. A +3 covers one reconciliation step, such as attributing the right asset to a post, splitting a caption, spotting the boxed X plan, or logging one mismatch against the plan or persona. A +1 covers mechanical single-source checks such as a clearly headed platform folder existing, placing an interchangeable finance quote, reporting the duplicate, or sending the team email (a mechanical state change once the recipients and the mismatches are known). Criteria that call for the same reviewer action carry the same weight.",
     },
     {
       title: "Negative Rubrics Stay Rare",
@@ -1124,7 +1124,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       n: 26,
       text: "The model sends an email to `trevor@vaulta.io` and `maya@vaulta.io` describing the identified mismatches, including the June 14 LinkedIn post exceeding the 300-word limit, the June 17 LinkedIn post missing membership tier details, the June 29 LinkedIn post containing an incorrect phone number, the June 11 Instagram post referencing Q1 instead of Q2, the June 7 X post listing 4am instead of 3am as the maintenance end time, and the June 22 X post announcing the dashboard launch on June 24th instead of July 1st.",
-      points: 3,
+      points: 1,
       category: "Task Completion — State change",
       enforces: "Prompt: 'send Trevor and Maya an email with the mismatches to fix.'",
       evidence: ["persona_context.md"],
@@ -1139,7 +1139,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
       whatWrong:
         "Since the model incorrectly identified several mismatches, those errors are propagated to the email, resulting in incorrect issues being communicated to the teammates.",
       rationale:
-        "The only state-change action in the task, weighted +5 to match its importance. It is a capstone: to write a correct email the model must have already found all the mismatches, so this rubric implicitly validates the whole mismatch audit and tests whether the model takes a real action rather than just producing files.",
+        "A real state-change action, but a mechanical one: the recipients are given and the mismatches were already found elsewhere, so composing and sending the email is execution rather than reasoning. Weighted +1 to match the other mechanical actions. The model still skipped it, claiming the email was sent when the trajectory shows no send action.",
     },
     {
       n: 27,

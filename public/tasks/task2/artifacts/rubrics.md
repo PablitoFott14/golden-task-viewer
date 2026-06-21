@@ -30,7 +30,7 @@
 
 16. A calendar event is created for Monday, 8 June 2026, from `10:00 AM` to `10:15 AM`, with Carlton Davis (`c.davis.columbus@outlook.com`) for the presentation review. (+3) -> Task Completion - State change | Present
 
-17. An email is sent to `c.davis.columbus@outlook.com` with `asset_allocation.pptx` attached and asks Carlton to take a look and share any thoughts. (+3) -> Task Completion - State change | Present
+17. An email is sent to `c.davis.columbus@outlook.com` with `asset_allocation.pptx` attached and asks Carlton to take a look and share any thoughts. (+1) -> Task Completion - State change | Present
 
 18. The model includes across the `asset_allocation.pptx` source images that were expected to be used as reference material for creating the slide content (e.g., handwritten note covering investor profile present in `1000268298.jpg`). (-3) -> Agent Behavior - Final answer/artifact | Present
 
