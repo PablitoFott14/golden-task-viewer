@@ -24,6 +24,7 @@ import ImageGallery from "../components/ImageGallery";
 import ReferenceGallery from "../components/ReferenceGallery";
 import FolderTree from "../components/FolderTree";
 import DeckOutline from "../components/DeckOutline";
+import CalcTracks from "../components/CalcTracks";
 import RubricExplorer from "../components/RubricExplorer";
 import TrajectoryReport from "../components/TrajectoryReport";
 import RunComparison from "../components/RunComparison";
@@ -191,10 +192,12 @@ export default function TaskDetail() {
                 </div>
               ))}
             </div>
-            <ExpandableDoc
-              label="Read the full persona_context.md"
-              url={docUrl(task.assetRoot, "persona_context.md")}
-            />
+            {!nv.hidePersonaDoc && (
+              <ExpandableDoc
+                label="Read the full persona_context.md"
+                url={docUrl(task.assetRoot, "persona_context.md")}
+              />
+            )}
           </Section>
 
           {/* ===== Brainstorm ===== */}
@@ -321,20 +324,24 @@ export default function TaskDetail() {
               </div>
             </div>
 
-            {/* full gallery */}
-            <h3 className="mb-3 text-sm font-bold text-ink-900">
-              {nv.galleryTitle ?? "Every recovered asset, classified"}
-            </h3>
-            {nv.inputsVariant === "reference" ? (
-              <ReferenceGallery
-                assets={task.assets.filter((a) => a.role !== "ssot")}
-                assetRoot={task.assetRoot}
-              />
-            ) : (
-              <ImageGallery
-                assets={task.assets.filter((a) => a.role !== "ssot")}
-                assetRoot={task.assetRoot}
-              />
+            {/* full gallery (only when there are non-SSOT assets to classify) */}
+            {task.assets.some((a) => a.role !== "ssot") && (
+              <>
+                <h3 className="mb-3 text-sm font-bold text-ink-900">
+                  {nv.galleryTitle ?? "Every recovered asset, classified"}
+                </h3>
+                {nv.inputsVariant === "reference" ? (
+                  <ReferenceGallery
+                    assets={task.assets.filter((a) => a.role !== "ssot")}
+                    assetRoot={task.assetRoot}
+                  />
+                ) : (
+                  <ImageGallery
+                    assets={task.assets.filter((a) => a.role !== "ssot")}
+                    assetRoot={task.assetRoot}
+                  />
+                )}
+              </>
             )}
 
             {/* Raw caption file, exposed inline (task1) */}
@@ -452,9 +459,11 @@ export default function TaskDetail() {
             kicker="Step 7: GTFA"
             sub={nv.gtfaSub ?? "The one correct deliverable, built by hand before the prompt was written. This is the intended solution and the behavior a correct agent should produce."}
           >
-            <div className={task.gtfaView ? "space-y-8" : "grid gap-6 lg:grid-cols-[1.2fr_1fr]"}>
+            <div className={task.gtfaView || task.gtfaCalc ? "space-y-8" : "grid gap-6 lg:grid-cols-[1.2fr_1fr]"}>
               <div>
-                {task.gtfaView ? (
+                {task.gtfaCalc ? (
+                  <CalcTracks view={task.gtfaCalc} />
+                ) : task.gtfaView ? (
                   <DeckOutline view={task.gtfaView} />
                 ) : (
                   <>

@@ -122,6 +122,19 @@ export interface GtfaDeckView {
   stateChanges: { kind: "calendar" | "email"; title: string; detail: string }[];
 }
 
+/**
+ * A calculation-chain GTFA view: one or more dependent tracks of computed
+ * values. Natural for analysis tasks whose deliverable is a derived answer
+ * rather than a folder tree or a slide deck.
+ */
+export interface GtfaCalcView {
+  artifactName: string;
+  tracks: {
+    title: string;
+    steps: { label: string; expression?: string; value: string; note?: string; highlight?: boolean }[];
+  }[];
+}
+
 export interface RubricDesignNote {
   title: string;
   body: string;
@@ -180,8 +193,9 @@ export interface Task {
   prompt: string;
   promptAnnotations: { quote: string; meaning: string }[];
   deliverableTree: FolderNode;
-  /** Optional task-native GTFA visualization; when present it replaces the folder tree. */
+  /** Optional task-native GTFA visualizations; when present they replace the folder tree. */
   gtfaView?: GtfaDeckView;
+  gtfaCalc?: GtfaCalcView;
   memory: MemoryEntry[];
   removed: { item: string; why: string }[];
   email: { to: string[]; points: string[] };
@@ -214,6 +228,8 @@ export interface TaskNarrative {
   inputsVariant?: "audit" | "reference";
   /** Show the per-friction type chip (Missing/Mismatch/Remove/Notes). Off for tasks where those audit categories don't apply. */
   showFrictionTypes?: boolean;
+  /** Hide the "Read the full persona_context.md" link (e.g. when no faithful persona doc exists for the task). */
+  hidePersonaDoc?: boolean;
   ssotTitle?: string;
   ssotBlurb?: string;
   galleryTitle?: string;
