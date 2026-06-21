@@ -10,5 +10,7 @@ dist-ssr
 CLAUDE.md
 .claude/
 
-# Heavy raw source-of-truth artifacts (not loaded at runtime)
+# Heavy raw source-of-truth artifacts (not loaded at runtime).
+# Trajectories live in each task's root folder (sibling of viewer/), not here.
 public/model's behave/
+public/tasks/**/trajectory.json
