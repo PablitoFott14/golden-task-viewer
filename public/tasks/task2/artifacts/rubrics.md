@@ -1,4 +1,4 @@
-1. A PowerPoint file named `asset_allocation.pptx` exists. (+5) -> Task Completion - Final answer/artifact | Present
+1. A PowerPoint file named `asset_allocation.pptx` exists. (+1) -> Task Completion - Final answer/artifact | Present
 
 2. The model correctly applies the color formatting requirements defined in `presentation.md`, using a dark navy (`#0D1B2A`) background throughout the presentation, white (`#FFFFFF`) text for all body content, and gold/amber (`#F0A500`) for slide titles, table headers, and highlighted values. (+1) -> Instruction Following - Final answer/artifact | Present
 
@@ -6,7 +6,7 @@
 
 4. The model correctly rounds all monetary values and percentages appearing in `asset_allocation.pptx` to two decimal places (e.g., `13.40%`, ` $17,583.31`). (+1) -> Instruction Following - Final answer/artifact | Present
 
-5. The model correctly titles the slides in `asset_allocation.pptx` as follows: Slide 1 `Asset Allocation - The Long-Term Power of Diversification`, Slide 2 `Investor Profile`, Slide 3 `Portfolio & Risk Level`, Slide 4 `Long Term Projections`, Slide 5 `The Power of Consistency - When Everything Changes`, Slide 6 `Risk & Return Analysis`, and Slide 7 `Recommendation & Conclusion`. (+3) -> Instruction Following - Final answer/artifact | Present
+5. The model correctly titles the slides in `asset_allocation.pptx` as follows: Slide 1 `Asset Allocation - The Long-Term Power of Diversification`, Slide 2 `Investor Profile`, Slide 3 `Portfolio & Risk Level`, Slide 4 `Long Term Projections`, Slide 5 `The Power of Consistency - When Everything Changes`, Slide 6 `Risk & Return Analysis`, and Slide 7 `Recommendation & Conclusion`. (+1) -> Instruction Following - Final answer/artifact | Present
 
 6. `asset_allocation.pptx` contains a Slide 1 with the title `Asset Allocation - The Long-Term Power of Diversification` and a relevant image related to the covered topic. (+3) -> Instruction Following - Final answer/artifact | Not Present
 
@@ -16,15 +16,15 @@
 
 9. Slide 4 (`Long Term Projections`) includes the annual returns achieved by each asset class during the 2010s and 2020s decades: stocks (13.4%, 14.9%), gold (3.4%, 19.1%), bonds (4.1%, -0.6%), and housing (3.8%, 7.5%). (+3) -> Instruction Following - Final answer/artifact | Present
 
-10. Slide 4 (`Long Term Projections`) includes a compounded growth table showing final values of $70,518.14 for Stocks, $40,113.73 for Gold, $7,036.25 for Bonds, and $14,963.33 for Housing. The calculations are based solely on the initial investment amount and exclude any monthly contributions. (+3) -> Factuality and Hallucination - Final answer/artifact | Not Present
+10. Slide 4 (`Long Term Projections`) includes a compounded growth table showing final values of $70,518.14 for Stocks, $40,113.73 for Gold, $7,036.25 for Bonds, and $14,963.33 for Housing. The calculations are based solely on the initial investment amount and exclude any monthly contributions. (+5) -> Factuality and Hallucination - Final answer/artifact | Not Present
 
 11. Slide 5 (`The Power of Consistency - When Everything Changes`) begins with a disclaimer clarifying that the monthly contribution calculations assume all contributions are invested entirely in the corresponding asset class rather than being diversified across the portfolio. (+1) -> Instruction Following - Final answer/artifact | Present
 
-12. Slide 5 (`The Power of Consistency - When Everything Changes`) includes compounded growth table showing final values of $435,532.09 for Stocks, $382,237.75 for Gold, $83,632.72 for Bonds, and $157,407.59 for Housing. The calculations incorporate both the initial investment amount and the recurring monthly contributions. (+3) -> Factuality and Hallucination - Final answer/artifact | Not Present
+12. Slide 5 (`The Power of Consistency - When Everything Changes`) includes compounded growth table showing final values of $435,532.09 for Stocks, $382,237.75 for Gold, $83,632.72 for Bonds, and $157,407.59 for Housing. The calculations incorporate both the initial investment amount and the recurring monthly contributions. (+5) -> Factuality and Hallucination - Final answer/artifact | Not Present
 
 13. The compounded growth tables in Slides 4 (`Long Term Projections`) and 5 (`The Power of Consistency - When Everything Changes`) follow the expected format defined in `asset_classes.md`, consisting of three columns (`Asset`, `Growth of $5,000 (2010s)`, and `Growth of $5,000 (2020s)`) for each portfolio asset. (+1) -> Instruction Following - Final answer/artifact | Not Present
 
-14. Slide 6 is titled `Risk & Return Analysis` and contains no body content beyond the empty slide structure. (+3) -> Instruction Following - Final answer/artifact | Present
+14. Slide 6 is titled `Risk & Return Analysis` and contains no body content beyond the empty slide structure. (+1) -> Instruction Following - Final answer/artifact | Present
 
 15. Slide 7 contains a conclusion of 100 words or fewer that explains how a 25-year-old investor starting with `$5,000`, contributing `$300` per month, and staying invested for 20 years can reach different outcomes by asset choice, explicitly highlights long-term discipline and compounding, and states the final values `Stocks $435,532.09`, `Gold $382,237.75`, `Bonds $83,632.72`, and `Housing $157,407.59`. (+3) -> Instruction Following - Final answer/artifact | Not Present
 
