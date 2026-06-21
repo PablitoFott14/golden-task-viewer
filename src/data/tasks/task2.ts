@@ -313,9 +313,9 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
         "Every positive rubric maps back to a presentation.md rule or a prompt requirement, and checks one outcome: one slide, one value set, one state change. Nothing is graded that the spec or prompt did not ask for.",
     },
     {
-      title: "Weights follow verification difficulty",
+      title: "Weights track complexity, not importance",
       body:
-        "The heaviest weight goes to the two phase compounding, the one criterion that reconciles the screenshot returns, the 20-year horizon rule, and the chained balance methodology at once. A +3 covers single reasoning step requirements such as the contribution table, the conclusion values, the slide titles, and each state change. A +1 covers mechanical single source checks like color, font, and rounding.",
+        "Each weight reflects how much reasoning the criterion takes to get right, not how important it feels. The two +5 criteria are the compounding tables on Slides 4 and 5, since each one reconciles the screenshot returns, the continuous 20-year horizon, and a chained compounding methodology at once. A +3 covers one reasoning or reconciliation step, such as reading the profile from the messy note, reconciling the pie with the pyramid, selecting the right rows and columns, the conclusion synthesis, or each state change. A +1 covers mechanical single source checks such as the file existing, color, font, rounding, the exact slide titles, the disclaimer, the table column shape, and leaving Slide 6 empty. Criteria that call for the same reviewer action carry the same weight.",
     },
     {
       title: "Deterministic math is objectively gradable",
@@ -338,7 +338,7 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
     {
       n: 1,
       text: "A PowerPoint file named `asset_allocation.pptx` exists.",
-      points: 5,
+      points: 1,
       category: "Task Completion — Final answer/artifact",
       evalTarget: "Final answer/artifact",
       enforces: "Prompt: 'materializing all this ideas into a file called asset_allocation.pptx.'",
@@ -386,7 +386,7 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
     {
       n: 5,
       text: "The model correctly titles the slides in `asset_allocation.pptx` as follows: Slide 1 `Asset Allocation - The Long-Term Power of Diversification`, Slide 2 `Investor Profile`, Slide 3 `Portfolio & Risk Level`, Slide 4 `Long Term Projections`, Slide 5 `The Power of Consistency - When Everything Changes`, Slide 6 `Risk & Return Analysis`, and Slide 7 `Recommendation & Conclusion`.",
-      points: 3,
+      points: 1,
       category: "Instruction Following — Final answer/artifact",
       evalTarget: "Final answer/artifact",
       enforces: "presentation.md: 'Slide names are expected to be the exact ones provided here.'",
@@ -458,7 +458,7 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
     {
       n: 10,
       text: "Slide 4 (`Long Term Projections`) includes a compounded growth table showing final values of $70,518.14 for Stocks, $40,113.73 for Gold, $7,036.25 for Bonds, and $14,963.33 for Housing. The calculations are based solely on the initial investment amount and exclude any monthly contributions.",
-      points: 3,
+      points: 5,
       category: "Factuality and Hallucination — Final answer/artifact",
       evalTarget: "Final answer/artifact",
       enforces: "GTFA Table 1: two phase compounding of the $5,000 lump sum.",
@@ -488,7 +488,7 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
     {
       n: 12,
       text: "Slide 5 (`The Power of Consistency - When Everything Changes`) includes compounded growth table showing final values of $435,532.09 for Stocks, $382,237.75 for Gold, $83,632.72 for Bonds, and $157,407.59 for Housing. The calculations incorporate both the initial investment amount and the recurring monthly contributions.",
-      points: 3,
+      points: 5,
       category: "Factuality and Hallucination — Final answer/artifact",
       evalTarget: "Final answer/artifact",
       enforces: "GTFA Table 2: chained two phase compounding with $300/mo contributions.",
@@ -524,7 +524,7 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
     {
       n: 14,
       text: "Slide 6 is titled `Risk & Return Analysis` and contains no body content beyond the empty slide structure.",
-      points: 3,
+      points: 1,
       category: "Instruction Following — Final answer/artifact",
       evalTarget: "Final answer/artifact",
       enforces: "presentation.md Slide 6: 'Leave it empty.'",
@@ -938,7 +938,7 @@ def _workspace_state():
       ["State changes", "The Carlton review event (Mon 8 Jun, 10:00 to 10:15) and the email with the deck attached are confirmed."],
     ],
     testsSub:
-      "Reviewer only structural checks on the deck skeleton and the calendar and email state changes. Click any test to reveal its code.",
+      "Reviewer only structural checks on the deck skeleton and the calendar and email state changes. Each test is defined on its own; the shared scaffolding lives in the Template dropdown.",
     unitTestGroups: ["Presentation structure", "State changes"],
   },
 };

@@ -689,9 +689,9 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
         "Repeated leaf work is bundled only when it belongs to the same logical unit, such as the four valid carousel images or the two dinner images. Independent date folders and platform folders remain separate so partial failures stay visible in the score.",
     },
     {
-      title: "Weights Follow Verification Difficulty",
+      title: "Weights Track Complexity, Not Importance",
       body:
-        "+5 criteria cover high-impact cross-source or structural failures, +3 criteria cover focused reconciliation across a plan/date/asset or caption, and +1 criteria capture useful but lower-stakes behavior such as duplicate reporting.",
+        "Each weight reflects how much reasoning the criterion takes to get right and to verify, not how important it feels. The single +5 is the one criterion that needs cross-source reasoning over both handwritten pages to reconstruct the whole plan. A +3 covers one reconciliation step, such as attributing the right asset to a post, splitting a caption, spotting the boxed X plan, or logging one mismatch against the plan or persona. A +1 covers mechanical single-source checks such as a clearly headed platform folder existing, placing an interchangeable finance quote, or reporting the duplicate. Criteria that call for the same reviewer action carry the same weight.",
     },
     {
       title: "Negative Rubrics Stay Rare",
@@ -729,7 +729,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       n: 2,
       text: "The model produces a `Linkedin` folder as part of the output.",
-      points: 5,
+      points: 1,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 2 (LinkedIn).",
       status: "present",
@@ -742,7 +742,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       n: 3,
       text: "The model produces a `Instagram` folder as part of the output.",
-      points: 5,
+      points: 1,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 1 (Instagram).",
       status: "present",
@@ -755,7 +755,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       n: 4,
       text: "The model produces a `X` folder as part of the output.",
-      points: 5,
+      points: 3,
       category: "Task Completion — Final answer/artifact",
       enforces: "Prompt: 'organize everything by platform first.' / SSOT page 1 (boxed [X] section).",
       status: "not-present",
@@ -834,7 +834,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       n: 8,
       text: "The model includes any of `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` financial quote images in the `Instagram/06-05` folder.",
-      points: 3,
+      points: 1,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance-quote rule (06-05 is a Friday).",
       evidence: ["Screenshot_2026-05-29 091745.png", "quote_3.png", "IMG_33489034.png", "visual_3248329.png"],
@@ -893,7 +893,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       n: 11,
       text: "The model includes one of the remaining unused images from `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` alone in the `Instagram/06-12` folder.",
-      points: 3,
+      points: 1,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance quote (06-12).",
       status: "present",
@@ -906,7 +906,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       n: 12,
       text: "The model includes one of the remaining unused images from `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` alone in the `Instagram/06-19` folder.",
-      points: 3,
+      points: 1,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance quote (06-19).",
       status: "present",
@@ -919,7 +919,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       n: 13,
       text: "The model includes the remaining unused image from `Screenshot_2026-05-29 091745.png`, `quote_3.png`, `IMG_33489034.png`, or `visual_3248329.png` alone in the `Instagram/06-26` folder.",
-      points: 3,
+      points: 1,
       category: "Task Completion — Final answer/artifact",
       enforces: "SSOT: weekly Friday finance quote (06-26).",
       status: "present",
@@ -1124,7 +1124,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       n: 26,
       text: "The model sends an email to `trevor@vaulta.io` and `maya@vaulta.io` describing the identified mismatches, including the June 14 LinkedIn post exceeding the 300-word limit, the June 17 LinkedIn post missing membership tier details, the June 29 LinkedIn post containing an incorrect phone number, the June 11 Instagram post referencing Q1 instead of Q2, the June 7 X post listing 4am instead of 3am as the maintenance end time, and the June 22 X post announcing the dashboard launch on June 24th instead of July 1st.",
-      points: 5,
+      points: 3,
       category: "Task Completion — State change",
       enforces: "Prompt: 'send Trevor and Maya an email with the mismatches to fix.'",
       evidence: ["persona_context.md"],

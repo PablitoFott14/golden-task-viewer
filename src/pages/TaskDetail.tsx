@@ -578,8 +578,20 @@ export default function TaskDetail() {
             n={10}
             title="Unit Tests"
             kicker="Step 11: Unit tests (reviewers only)"
-            sub={nv.testsSub ?? "Reviewer-only checks for the platform folders and the date folders. Click any test to reveal its code."}
+            sub={nv.testsSub ?? "Reviewer-only checks for the platform folders and the date folders. Each test is defined on its own; the shared scaffolding lives in the Template dropdown."}
           >
+            {/* Shared template (helpers), once */}
+            <div className="mb-6">
+              <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">
+                <FlaskConical size={13} /> Shared template
+              </div>
+              <p className="mb-3 max-w-2xl text-sm text-ink-500">
+                The imports and helper functions every test builds on. Each test below uses these without
+                repeating them, so the test itself shows only the check it performs.
+              </p>
+              <CodeReveal label="Template" code={task.unitTestPreamble} />
+            </div>
+
             <div className="grid gap-6 sm:grid-cols-2">
               {unitGroups.map((group) => (
                 <div key={group}>
@@ -590,11 +602,7 @@ export default function TaskDetail() {
                     {task.unitTests
                       .filter((t) => t.group === group)
                       .map((t) => (
-                        <CodeReveal
-                          key={t.ref}
-                          label={t.ref}
-                          code={`${task.unitTestPreamble}\n\n\n${t.code}`}
-                        />
+                        <CodeReveal key={t.ref} label={t.ref} code={t.code} />
                       ))}
                   </div>
                 </div>
