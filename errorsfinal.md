@@ -1,0 +1,263 @@
+# Common Errors — Source Content
+
+This file is the single, human-editable source for everything shown in the
+**Common Errors** section of the viewer. It mirrors `viewer/src/data/commonErrors.ts`.
+Edit here to review or revise the wording, then keep the two in sync.
+
+For each error:
+
+- **What it is** — the underlying mistake in general terms (no examples).
+- **Why it happens** — the usual cause.
+- **How to avoid it** — the practical fix.
+- **Looks like** — a concrete instance so the mistake is recognizable in a real task.
+- **Do this instead** — the same case done right.
+- **ROOT** — marks errors that are downstream symptoms of insufficient scenario complexity.
+
+---
+
+## The one root cause to internalize
+
+Most of the errors below are **downstream symptoms of insufficient scenario complexity**.
+When the scenario isn't hard enough from the start, contributors end up forcing the task to
+meet the bar, and that produces artificial constraints, brittle rubrics, over-specific
+requirements, and unit tests that don't reflect the actual final state. Get the complexity
+right first and most of the rest stops happening. Errors carrying the **ROOT** tag trace
+straight back to it.
+
+---
+
+# Scenario Complexity
+
+Defects baked into the task itself, the prompt, the inputs, the tools, the deliverable,
+before a single rubric is written. The most expensive bugs to catch late, because they
+usually mean redoing the whole task.
+
+### 1. The scenario isn't complex enough to begin with — ROOT
+
+- **What it is:** The task falls below the complexity bar, with no genuine cross-modal reasoning a capable model could plausibly fail, yet it still ships.
+- **Why it happens:** This is the root cause behind most of the errors on this page. When the scenario is too simple there is no genuine, capability level failure to grade, so contributors force one later. Artificial constraints, brittle rubrics, and tests that don't match the real final state all follow from a scenario that was never hard enough.
+- **How to avoid it:** Build the difficulty into the scenario from the start: genuine cross-modal reconciliation that a capable model can plausibly miss. If you catch yourself tightening rubrics or rigging inputs to manufacture a failure, stop and make the scenario harder instead.
+- **Looks like:** The agent reads one clean value off a screenshot and writes it into a file. Nothing to reconcile, no conflicting sources, nothing a capable model would plausibly get wrong.
+- **Do this instead:** The answer only emerges from reconciling a handwritten note, an account balance, and a live price, so a wrong reading in any one place changes the result.
+
+### 2. Forcing the failure instead of earning it — ROOT
+
+- **What it is:** The model's failure is manufactured through rubric weights, contrived setup, or confusing inputs rather than arising from a real gap in capability.
+- **Why it happens:** When the scenario doesn't produce an honest failure, the failure gets manufactured. The customer reads forced friction as gaming the failure rate, not as measuring capability.
+- **How to avoid it:** Plant only friction a real user could plausibly have created. The failure should emerge from honest interpretation of a believable scenario, not from a trap built to defeat the model.
+- **Looks like:** Inputs written to be deliberately confusing, or weights stacked so the model trips the failure threshold on a technicality. One flagged trajectory failed in just 8 tool calls.
+- **Do this instead:** A rushed note or a mismatched caption a real user could have left, where the failure comes from an honest misreading of a believable situation.
+
+### 3. Illegible handwriting used as the failure mechanism — ROOT
+
+- **What it is:** The task leans on handwritten or visual inputs that aren't legible to a human, used as a shortcut to guarantee the model fails.
+- **Why it happens:** It is the easiest way to inflate difficulty without designing real complexity, so it gets over-used across a batch. If a human reviewer can't read the input, the model can't be fairly graded on it.
+- **How to avoid it:** Verify legibility before grading on it, and replace illegible artifacts or drop the dependent rubric. Vary the input strategy rather than leaning on handwriting; a few notes per batch is healthy, not most of them.
+- **Looks like:** A notebook photo so smudged that you, the contributor, cannot read the number the rubric grades against, yet the model is penalized for missing it.
+- **Do this instead:** Legible handwriting whose challenge is interpreting the content, not deciphering the strokes.
+
+### 4. Contrived or unrealistic inputs and prompts — ROOT
+
+- **What it is:** The inputs or scenario are something no real user would plausibly produce, so the task reads as staged rather than authentic.
+- **Why it happens:** When a believable scenario doesn't naturally create difficulty, contributors invent an unrealistic one. The seams show, and the customer flags it as contrived.
+- **How to avoid it:** Anchor the task in a realistic user intent and let the inputs serve that intent. The prompt should read like a request a person would actually send, not a spec sheet describing the attached files.
+- **Looks like:** A prompt that spends three paragraphs describing each attached file, or a seeded MEMORY.md no real workspace would ever contain.
+- **Do this instead:** A short prompt that states what the user wants and lets the attached files speak for themselves.
+
+### 5. Inputs don't contain the information the task needs
+
+- **What it is:** An input the task relies on doesn't actually hold enough information to satisfy the criteria that reference it.
+- **Why it happens:** The deliverable was designed before the inputs were verified, so the gap between what is asked and what is shown surfaces late.
+- **How to avoid it:** Before writing any criterion that depends on an input, open the file yourself and confirm it shows what the criterion checks. If you can't read the value or count the items, the model can't either.
+- **Looks like:** The prompt asks for a per-listing observation on six saved listings, but the folder holds six stock photos of random houses with no way to map them to the listings.
+- **Do this instead:** Write criteria only for the listings whose photos are actually present, or reshoot the assets so they depict the right entities.
+
+### 6. Image extension doesn't match the actual encoding
+
+- **What it is:** An input file's extension claims one format while its actual encoding is another.
+- **Why it happens:** An asset was renamed instead of re-encoded, often to make it look natural after exporting from a browser or screenshot tool.
+- **How to avoid it:** Before zipping inputs, run a format check so every reported type matches its extension. Re-save to the real format rather than renaming.
+- **Looks like:** A file named alergy.jpg that is actually an AVIF, so the image tool refuses to open it and even a correct model is blocked.
+- **Do this instead:** Re-encode the file to a real JPEG so the extension matches the bytes on disk.
+
+### 7. The environment is missing a tool the task needs
+
+- **What it is:** The task grades an action the agent has no provisioned tool, skill, or permission to perform.
+- **Why it happens:** The required action was assumed reachable without checking this task's tool manifest.
+- **How to avoid it:** List every action the task grades and confirm a corresponding tool exists here. When in doubt, prefer artifact-producing deliverables, since files are always reachable and external skills aren't.
+- **Looks like:** A criterion that grades posting a summary to a Slack channel, in a universe where Slack was never provisioned, so honest behavior fails and a false claim triggers a hallucination penalty.
+- **Do this instead:** Have the agent write the summary to a file in the workspace, which is always reachable.
+
+### 8. Deliverable filename or format drifts from the prompt
+
+- **What it is:** The deliverable's name or shape doesn't match what the prompt specifies, and the mismatch is checked mechanically.
+- **Why it happens:** The filename in the prompt and the one in the workspace were never reconciled, and the auditor compares them mechanically.
+- **How to avoid it:** Search the prompt for every filename and extension, then list the deliverable; they must match exactly. Normalize spaced filenames consistently in both the prompt and the workspace.
+- **Looks like:** The prompt asks for damage.csv but the deliverable lands as damages.csv, or asks for a zip archive and ships a plain folder.
+- **Do this instead:** Match every filename and extension to the prompt, character for character.
+
+### 9. The oracle deliverable leaks the answer
+
+- **What it is:** The shipped deliverable already contains values the agent was supposed to derive, turning the task into a copy exercise.
+- **Why it happens:** Working files, narration, or pre-filled derivable fields were left inside the deliverable instead of stripped out.
+- **How to avoid it:** Ship final files only, with no narration scripts, no helper scripts, and no pre-filled fields the agent was meant to compute.
+- **Looks like:** The final output already contains the totals and labels the agent was supposed to calculate, so a model can pass by copying rather than reasoning.
+- **Do this instead:** A clean deliverable with every derivable field left empty for the agent to fill in.
+
+### 10. The prompt is ambiguous or subjective
+
+- **What it is:** The prompt leaves so much open to interpretation that neither the intended outcome nor the grading bar is clear.
+- **Why it happens:** A messy prompt without a strong realistic intent gets written when the underlying scenario itself is underspecified.
+- **How to avoid it:** State one clear, realistic intent. A reader should be able to tell what a correct outcome looks like without guessing at the grading.
+- **Looks like:** A vague request where it is unclear whether a borderline result should pass, be edited, or be thrown out.
+- **Do this instead:** A prompt with one clear intent, where a correct outcome is obvious without guessing.
+
+### 11. No genuine model failure to grade
+
+- **What it is:** The task is scored even though the model never failed for a real reason, leaving nothing legitimate to grade.
+- **Why it happens:** A failure on the scoreboard is treated as enough to keep the task, without confirming the failure was a real capability gap.
+- **How to avoid it:** Before scoring, confirm the model failed for a genuine reason. No real failure means no scoring target, so reject or redo the task rather than keeping it.
+- **Looks like:** A task kept and scored even though the model never read the photos and failed only because it was blocked from opening them.
+- **Do this instead:** Confirm the failure came from a real reasoning gap, then score it; otherwise send the task back for a redo.
+
+---
+
+# Rubrics
+
+Defects in the criteria themselves: values the inputs don't support, specificity the prompt
+never set, contradictions, redundancy, and weights gamed to hit the failure threshold.
+
+### 1. Criterion isn't self-contained
+
+- **What it is:** The criterion can't be graded from the trajectory and output alone, forcing the grader to reopen and reinterpret an input.
+- **Why it happens:** The multimodal extraction was deferred to grading time. Phrases like grounded in, supported by, or matches the visual evidence in are the tell.
+- **How to avoid it:** Do the extraction once while drafting and pin the correct value in the criterion text. Reference the input by name only as a pointer. The rule of thumb: describe what the output file should contain based on the input.
+- **Looks like:** "Every sprout count in the log is grounded in observable photo evidence," which forces the grader to reopen the photo and recount.
+- **Do this instead:** "The row for 2026-05-14 records sprout_count = 7 and watering_marks = 2," with the value already pinned.
+
+### 2. Pinned value or claim the inputs don't support
+
+- **What it is:** The criterion asserts a value, label, or fact the inputs and tools can't actually produce or confirm.
+- **Why it happens:** Values were written from intuition or a single rollout rather than traced back to the actual source artifact.
+- **How to avoid it:** For every value, ask whether you can derive it exactly from only the inputs and tools the agent has. Verify it against the source at full zoom for images, recomputing for derived totals. If it isn't there, loosen or drop it.
+- **Looks like:** A criterion that demands flagging a $4,800 flooring line as missing, when that line never appears in the source document, or one that reads three burners on a stove that clearly has four.
+- **Do this instead:** Grade only values you can find verbatim in the source at full zoom, or recompute from the raw data.
+
+### 3. Overfitting on values or format the prompt never set — ROOT
+
+- **What it is:** The criterion demands a specific value, label, or format the prompt never established and the agent can't deterministically infer.
+- **Why it happens:** Criteria get reverse engineered from whatever one model produced, so private conventions and exact marketplace prices get enshrined as requirements.
+- **How to avoid it:** Search the prompt for every literal in the criterion. If it isn't there and isn't tool derivable, grade the shape of the value or the intent. Swap exact prices for tolerance bands or a check that the agent recorded a price.
+- **Looks like:** "The power supply row contains the price $129.99," when the prompt only said to find a price on Amazon and any current listing price is valid.
+- **Do this instead:** "The power supply row contains the price shown in the listing the agent selected," grading the behavior, not a frozen number.
+
+### 4. Criterion admits multiple interpretations
+
+- **What it is:** The criterion can be read in more than one defensible way, so the same answer scores differently across graders and rollouts.
+- **Why it happens:** Subjective adjectives like professional, appropriate, clear, or demonstrates understanding stand in for a countable property.
+- **How to avoid it:** Operationalize the judgment into verifiable, countable properties. Collapsing adjectives into concrete checks is also the single biggest stability win across rollouts.
+- **Looks like:** "The reply is professional in tone," which two graders will read differently and score differently.
+- **Do this instead:** "The reply opens with a greeting by name, contains no profanity, and ends with the agent's role identifier."
+
+### 5. Contradicts the prompt, universe data, or another criterion
+
+- **What it is:** The criterion conflicts with the prompt, the seeded universe state, or another criterion, making the points impossible to earn.
+- **Why it happens:** Criteria are drafted without walking the prompt sentence by sentence or cross-checking the seeded workspace, so a prompt-faithful agent does the right thing and is still penalized.
+- **How to avoid it:** Walk the prompt line by line and confirm each criterion agrees with it, then check every pair: can a single output satisfy both? Cross-check MEMORY.md, USER.md, and the inputs for values that conflict with any criterion.
+- **Looks like:** The prompt says find an open ticket, but the criterion requires citing three tickets that are actually closed, so a faithful agent that reports none open gets penalized.
+- **Do this instead:** Align the criterion with the prompt and the seeded data so the correct behavior earns the points.
+
+### 6. Redundant or rewards-and-penalizes pairs
+
+- **What it is:** The same observable property is graded by more than one criterion, sometimes once as a reward and once as a penalty.
+- **Why it happens:** Every instruction to avoid something gets mirrored with a negative, and similar checks get written twice, so the same pass or fail is counted more than once.
+- **How to avoid it:** For each criterion, ask whether another in the set checks the same fact; if so, consolidate and fold the weight into the survivor. Lead with positives so most polar pairs disappear.
+- **Looks like:** One criterion rewards excluding a $650 charge while a second penalizes including it, counting the same fact twice.
+- **Do this instead:** A single criterion for that fact, with the combined weight folded into it.
+
+### 7. Bundled, non-atomic criteria
+
+- **What it is:** A single criterion checks several independent facts at once, or a long list of items is graded one at a time instead of in aggregate.
+- **Why it happens:** Independent checks get stapled together, or every item in a list gets its own criterion, which distorts the score and makes results noisy.
+- **How to avoid it:** Keep one independent fact per criterion. For lists longer than five, use a single aggregate count plus three or fewer spot checks, and move exact measurements to a unit test where they belong.
+- **Looks like:** "The Corn Flakes row is 4.19 and the All-Bran row is 5.89" bundled into one criterion, so a half-right answer still earns full credit.
+- **Do this instead:** One criterion per row, or an aggregate count plus a few spot checks for a long list.
+
+### 8. Missing coverage of an explicit requirement
+
+- **What it is:** An explicit prompt requirement has no covering criterion or test, or the criteria are too broad to cover anything precisely.
+- **Why it happens:** The prompt's deliverable spec wasn't walked line by line, so requirements slip through uncovered.
+- **How to avoid it:** Read the deliverable spec line by line, covering filenames, field counts, section headers, and ordering, and confirm each has a covering criterion or test. If anything has no check, block submission.
+- **Looks like:** The prompt requires a specific section and ordering in the deliverable, but no criterion or test ever checks for it.
+- **Do this instead:** A covering check for every requirement in the deliverable spec, walked line by line.
+
+### 9. Weights or category gamed around the threshold — ROOT
+
+- **What it is:** Weights or categories are assigned to engineer the failure rate rather than to reflect the honest severity of each check.
+- **Why it happens:** Weights are tuned to hit the threshold rather than to reflect honest severity.
+- **How to avoid it:** Weight by impact: 5 for three or more dimensions, 3 for one or two, 1 for cosmetic. Never weight same-complexity actions differently by award status, and route hallucinated values to Factuality.
+- **Looks like:** Two actions of identical difficulty weighted 1 and 5 depending on whether the model happened to get them right, nudging the set to exactly 50%.
+- **Do this instead:** Weight by real impact and let the failure rate fall wherever it honestly lands.
+
+### 10. Missing Evaluation Target tag
+
+- **What it is:** A criterion is submitted without exactly one Evaluation Target tag.
+- **Why it happens:** The tagging step is skipped in the final pass before submission.
+- **How to avoid it:** Tag every criterion with exactly one Evaluation Target before submitting. Even one untagged criterion is a structural fail.
+- **Looks like:** A criterion shipped with no Evaluation Target at all, or with two of them.
+- **Do this instead:** Exactly one tag per criterion, chosen from State Change, User-Facing Message, Trajectory, or Final Answer Artifact.
+
+### 11. Missing or poorly grounded justifications
+
+- **What it is:** Criterion states are left unexplained, or their justifications cite the wrong evidence.
+- **Why it happens:** Justifications are treated as optional paperwork rather than part of the rubric, and silent edits leave states unexplained.
+- **How to avoid it:** Justify every non-trivial criterion state, citing the source, the rule, and a concrete fix. Pair every material edit with actionable feedback, because silent fixes don't teach the attempter.
+- **Looks like:** A failed criterion marked not met with no explanation, or a justification that points at the wrong piece of evidence.
+- **Do this instead:** A justification naming the source, the rule it breaks, and the concrete fix.
+
+---
+
+# Unit Tests _(reviewers only)_
+
+Defects in verifier.py: coverage gaps, checks too loose to mean anything, and tests quietly
+doing a rubric's job. This stage applies to reviewers only.
+
+### 1. Coverage gaps in verifier.py
+
+- **What it is:** A mechanically verifiable requirement has no test, or only its existence is checked while its structure and order go unverified.
+- **Why it happens:** Tests are written for the obvious files, and the deliverable spec isn't ticked off requirement by requirement.
+- **How to avoid it:** Walk the deliverable spec and give every mechanically verifiable requirement its own assertion. Order, count, and structure rules each need their own test; existence alone is not enough.
+- **Looks like:** A suite that checks a file exists but never verifies the required section headings or the order they must appear in.
+- **Do this instead:** A separate assertion for each rule: names, sections, counts, and ordering.
+
+### 2. Underfitted tests that pass on garbage
+
+- **What it is:** A test is loose enough to pass without the required behavior ever being performed.
+- **Why it happens:** A loose membership check is quick to write but passes on a lone keyword, which makes it a false-positive generator rather than a test.
+- **How to avoid it:** Parse the output structure, then assert the specific value or relation it must contain. A test that can't fail on a wrong answer isn't testing anything.
+- **Looks like:** A check that passes whenever the report contains the word card or the word zillow once, with no reconciliation actually verified.
+- **Do this instead:** Parse the report, then assert the exact value or relation the output must contain.
+
+### 3. Tests doing a rubric's job
+
+- **What it is:** Unit tests attempt to grade reasoning or qualitative behavior instead of mechanically verifiable facts.
+- **Why it happens:** The line between the two stages is blurred, so judgment-based checks leak into verifier.py where they can't be deterministically evaluated.
+- **How to avoid it:** Keep unit tests to structural, deterministic facts such as folders existing, schema being right, and names matching. Leave reasoning and content judgments to the rubric, and trim any rubric a test already enforces.
+- **Looks like:** A test that tries to judge whether the agent's reasoning was sound, or that grades the absence of fabricated content.
+- **Do this instead:** Tests confined to deterministic facts, with all judgment left to the rubric.
+
+### 4. Existence-only or over-bundled tests
+
+- **What it is:** Tests confirm only that files exist, or pack many independent checks into a single test.
+- **Why it happens:** One broad test feels like enough coverage, but it can't isolate which requirement actually failed.
+- **How to avoid it:** Split file checks into separate, targeted assertions, and verify content and structure rather than just presence.
+- **Looks like:** A single test that asserts every output file exists at once, so you can't tell which requirement failed.
+- **Do this instead:** One targeted test per file, checking content and structure, not just presence.
+
+### 5. Redundant tests or test-to-rubric imbalance
+
+- **What it is:** Tests overlap with each other, or their number is badly out of balance with the rubric set.
+- **Why it happens:** Coverage is padded with overlapping tests instead of balanced against the rubric set.
+- **How to avoid it:** Remove redundant tests and keep the balance between tests and rubrics sensible. The two should complement each other, not compete for the same coverage.
+- **Looks like:** Twelve unit tests against five rubrics, several of them checking the same thing.
+- **Do this instead:** A trimmed set with duplicates removed and tests balanced against the rubrics.
