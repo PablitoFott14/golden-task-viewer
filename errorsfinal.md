@@ -32,23 +32,16 @@ Defects baked into the task itself, the prompt, the inputs, the tools, the deliv
 before a single rubric is written. The most expensive bugs to catch late, because they
 usually mean redoing the whole task.
 
-### 1. The scenario isn't complex enough to begin with — ROOT
-
+### 1. The scenario isn't complex enough to begin with 
 - **What it is:** The task falls below the complexity bar, with no genuine cross-modal reasoning a capable model could plausibly fail, yet it still ships.
-- **Why it happens:** This is the root cause behind most of the errors on this page. When the scenario is too simple there is no genuine, capability level failure to grade, so contributors force one later. Artificial constraints, brittle rubrics, and tests that don't match the real final state all follow from a scenario that was never hard enough.
-- **How to avoid it:** Build the difficulty into the scenario from the start: genuine cross-modal reconciliation that a capable model can plausibly miss. If you catch yourself tightening rubrics or rigging inputs to manufacture a failure, stop and make the scenario harder instead.
+- **Why it happens:** This is the root cause behind most of the errors on this page. When the scenario is too simple, there is no genuine capability-level failure to evaluate, so contributors often end up forcing one. That usually leads to artificial constraints, brittle rubrics, and, for reviewers, unit tests that no longer reflect the true final state.
+- **How to avoid it:** Build the complexity into the scenario from the start. Genuine difficulty comes from long-horizon workflows that require multiple cross-modal reasoning steps, not from contrived constraints or shortcuts. If you find yourself tightening rubrics or manipulating the inputs just to make the model fail, stop and redesign the scenario to make it genuinely more challenging instead.
 - **Looks like:** The agent reads one clean value off a screenshot and writes it into a file. Nothing to reconcile, no conflicting sources, nothing a capable model would plausibly get wrong.
-- **Do this instead:** The answer only emerges from reconciling a handwritten note, an account balance, and a live price, so a wrong reading in any one place changes the result.
+- **Do this instead:** Do not use shortcuts. Genuine complexity comes from combining multiple cross-modal reasoning steps within long-horizon scenarios, not from getting from point A to point B as quickly as possible by creating contrived scenarios.
 
-### 2. Forcing the failure instead of earning it — ROOT
+### 2. Illegible handwriting used as the failure mechanism 
 
-- **What it is:** The model's failure is manufactured through rubric weights, contrived setup, or confusing inputs rather than arising from a real gap in capability.
-- **Why it happens:** When the scenario doesn't produce an honest failure, the failure gets manufactured. The customer reads forced friction as gaming the failure rate, not as measuring capability.
-- **How to avoid it:** Plant only friction a real user could plausibly have created. The failure should emerge from honest interpretation of a believable scenario, not from a trap built to defeat the model.
-- **Looks like:** Inputs written to be deliberately confusing, or weights stacked so the model trips the failure threshold on a technicality. One flagged trajectory failed in just 8 tool calls.
-- **Do this instead:** A rushed note or a mismatched caption a real user could have left, where the failure comes from an honest misreading of a believable situation.
-
-### 3. Illegible handwriting used as the failure mechanism — ROOT
+STOP CREATING SCENARIOS SOLELY RELYING IN HANDWRITTEN NOTES!!!
 
 - **What it is:** The task leans on handwritten or visual inputs that aren't legible to a human, used as a shortcut to guarantee the model fails.
 - **Why it happens:** It is the easiest way to inflate difficulty without designing real complexity, so it gets over-used across a batch. If a human reviewer can't read the input, the model can't be fairly graded on it.
@@ -56,13 +49,13 @@ usually mean redoing the whole task.
 - **Looks like:** A notebook photo so smudged that you, the contributor, cannot read the number the rubric grades against, yet the model is penalized for missing it.
 - **Do this instead:** Legible handwriting whose challenge is interpreting the content, not deciphering the strokes.
 
-### 4. Contrived or unrealistic inputs and prompts — ROOT
+### 4. Contrived or unrealistic inputs and prompts 
 
 - **What it is:** The inputs or scenario are something no real user would plausibly produce, so the task reads as staged rather than authentic.
-- **Why it happens:** When a believable scenario doesn't naturally create difficulty, contributors invent an unrealistic one. The seams show, and the customer flags it as contrived.
+- **Why it happens:** When a believable scenario doesn't naturally create difficulty, we can't invent an unrealistic one. The seams show, and the customer flags it as contrived.
 - **How to avoid it:** Anchor the task in a realistic user intent and let the inputs serve that intent. The prompt should read like a request a person would actually send, not a spec sheet describing the attached files.
 - **Looks like:** A prompt that spends three paragraphs describing each attached file, or a seeded MEMORY.md no real workspace would ever contain.
-- **Do this instead:** A short prompt that states what the user wants and lets the attached files speak for themselves.
+- **Do this instead:** A realistic prompt that is grounded in the persona's universe through natural database queries and AI agent interactions, while remaining original and realistic.
 
 ### 5. Inputs don't contain the information the task needs
 

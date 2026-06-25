@@ -192,6 +192,15 @@ function ErrorCard({ error, n, t }: { error: CommonError; n: number; t: Theme })
         )}
       </div>
 
+      {error.callout && (
+        <div className="flex items-center gap-2.5 border-b border-rose-200 bg-rose-100/70 px-4 py-3 dark:border-rose-500/30 dark:bg-rose-500/15">
+          <AlertTriangle size={16} className="shrink-0 text-rose-600 dark:text-rose-400" />
+          <p className="text-[13px] font-extrabold uppercase tracking-wide text-rose-700 dark:text-rose-300">
+            {error.callout}
+          </p>
+        </div>
+      )}
+
       <div className="grid gap-px bg-ink-100 sm:grid-cols-3">
         <Block icon={FileSearch} label="What it is" tone="text-ink-500">
           {error.what}

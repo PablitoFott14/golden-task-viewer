@@ -27,6 +27,8 @@ export interface CommonError {
   looksLike: string;
   /** The same case done right. */
   instead?: string;
+  /** An emphatic, attention-grabbing warning shown above the error body. */
+  callout?: string;
   /** True when the error is a downstream symptom of insufficient scenario complexity. */
   rootedInComplexity?: boolean;
 }
@@ -67,31 +69,17 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
       what:
         "The task falls below the complexity bar, with no genuine cross-modal reasoning a capable model could plausibly fail, yet it still ships.",
       why:
-        "This is the root cause behind most of the errors on this page. When the scenario is too simple there is no genuine, capability level failure to grade, so contributors force one later. Artificial constraints, brittle rubrics, and tests that don't match the real final state all follow from a scenario that was never hard enough.",
+        "This is the root cause behind most of the errors on this page. When the scenario is too simple, there is no genuine capability-level failure to evaluate, so contributors often end up forcing one. That usually leads to artificial constraints, brittle rubrics, and, for reviewers, unit tests that no longer reflect the true final state.",
       fix:
-        "Build the difficulty into the scenario from the start: genuine cross-modal reconciliation that a capable model can plausibly miss. If you catch yourself tightening rubrics or rigging inputs to manufacture a failure, stop and make the scenario harder instead.",
+        "Build the complexity into the scenario from the start. Genuine difficulty comes from long-horizon workflows that require multiple cross-modal reasoning steps, not from contrived constraints or shortcuts. If you find yourself tightening rubrics or manipulating the inputs just to make the model fail, stop and redesign the scenario to make it genuinely more challenging instead.",
       looksLike:
         "The agent reads one clean value off a screenshot and writes it into a file. Nothing to reconcile, no conflicting sources, nothing a capable model would plausibly get wrong.",
       instead:
-        "The answer only emerges from reconciling a handwritten note, an account balance, and a live price, so a wrong reading in any one place changes the result.",
-      rootedInComplexity: true,
-    },
-    {
-      title: "Forcing the failure instead of earning it",
-      what:
-        "The model's failure is manufactured through rubric weights, contrived setup, or confusing inputs rather than arising from a real gap in capability.",
-      why:
-        "When the scenario doesn't produce an honest failure, the failure gets manufactured. The customer reads forced friction as gaming the failure rate, not as measuring capability.",
-      fix:
-        "Plant only friction a real user could plausibly have created. The failure should emerge from honest interpretation of a believable scenario, not from a trap built to defeat the model.",
-      looksLike:
-        "Inputs written to be deliberately confusing, or weights stacked so the model trips the failure threshold on a technicality. One flagged trajectory failed in just 8 tool calls.",
-      instead:
-        "A rushed note or a mismatched caption a real user could have left, where the failure comes from an honest misreading of a believable situation.",
-      rootedInComplexity: true,
+        "Do not use shortcuts. Genuine complexity comes from combining multiple cross-modal reasoning steps within long-horizon scenarios, not from getting from point A to point B as quickly as possible by creating contrived scenarios.",
     },
     {
       title: "Illegible handwriting used as the failure mechanism",
+      callout: "STOP CREATING SCENARIOS SOLELY RELYING IN HANDWRITTEN NOTES!!!",
       what:
         "The task leans on handwritten or visual inputs that aren't legible to a human, used as a shortcut to guarantee the model fails.",
       why:
@@ -102,21 +90,19 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
         "A notebook photo so smudged that you, the contributor, cannot read the number the rubric grades against, yet the model is penalized for missing it.",
       instead:
         "Legible handwriting whose challenge is interpreting the content, not deciphering the strokes.",
-      rootedInComplexity: true,
     },
     {
       title: "Contrived or unrealistic inputs and prompts",
       what:
         "The inputs or scenario are something no real user would plausibly produce, so the task reads as staged rather than authentic.",
       why:
-        "When a believable scenario doesn't naturally create difficulty, contributors invent an unrealistic one. The seams show, and the customer flags it as contrived.",
+        "When a believable scenario doesn't naturally create difficulty, we can't invent an unrealistic one. The seams show, and the customer flags it as contrived.",
       fix:
         "Anchor the task in a realistic user intent and let the inputs serve that intent. The prompt should read like a request a person would actually send, not a spec sheet describing the attached files.",
       looksLike:
         "A prompt that spends three paragraphs describing each attached file, or a seeded MEMORY.md no real workspace would ever contain.",
       instead:
-        "A short prompt that states what the user wants and lets the attached files speak for themselves.",
-      rootedInComplexity: true,
+        "A realistic prompt that is grounded in the persona's universe through natural database queries and AI agent interactions, while remaining original and realistic.",
     },
     {
       title: "Inputs don't contain the information the task needs",
