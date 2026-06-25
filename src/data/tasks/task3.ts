@@ -5,9 +5,9 @@ const task3: Task = {
     id: "task3",
     serviceId: "6a076b30fb7ee59da499fd30",
     title: "Smart Bottle Launch Budget",
-    category: "Data Analysis & Research",
-    subcategory: "Financial Decision Support",
-    universe: "brandon",
+    category: "Commerce & Product",
+    subcategory: "Brand/Packaging Audit",
+    universe: "brandon_jackson",
     personaName: "Brandon",
     oneLiner:
       "Decide which investment positions Brandon should liquidate to fund a $25,000 hydration bottle launch without overselling, then size production from live competitor pricing.",

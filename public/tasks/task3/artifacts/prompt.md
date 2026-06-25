@@ -1,3 +1,18 @@
+
+### Category
+**Commerce & Product**
+
+**Description:**
+Shopper, online seller, or brand owner working with product or marketplace imagery. Agent visually matches items across listings, audits listing/photo quality, or checks brand/packaging against competitors and compliance rules.
+
+### Subcategory
+**Brand/Packaging Audit**
+
+### Universe
+**brandon_jackson**
+
+
+
 Hey, Brandon here. Lately I’ve been feeling pretty burned out with corporate life, so I’ve been thinking seriously about finally giving a real shot to an idea I’ve had for a while: building a premium smart hydration bottle brand.
 
 Currently, this is still at a very early stage, and I need to figure out a few things before moving forward seriously, especially around what my budget can realistically support and getting a better understanding of the competitors already operating in this space.
