@@ -324,6 +324,11 @@ I've also included a final_artifact_format.md file that defines the exact struct
         "Each weight reflects how much reasoning a check takes to get right, not how important it feels. +5 marks the subset-sum that reconciles the note values, the retrieved liquidity, and the closest-over constraint at once; +3 a single reasoning or retrieval step; +1 a mechanical check.",
     },
     {
+      title: "Live search results stay behavior-graded, not price-pinned",
+      body:
+        "The Stanley Quencher price comes from a live web search, so it can legitimately differ run to run. The rubric grades whether the model picks the cheapest eligible model and carries that value correctly through the calculations, not whether it matches a specific dollar figure frozen at draft time.",
+    },
+    {
       title: "One root cause, graded where it surfaces",
       body:
         "The whole capital track depends on retrieving the liquidity. Rather than collapse the failure into one rubric, it is graded where it surfaces: in the trajectory (the account was never consulted) and in each artifact value it corrupted. This keeps every criterion measuring exactly one thing while still reflecting the cascade.",
