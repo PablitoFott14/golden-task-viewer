@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useState, type ReactNode } from "react";
+import { motion } from "framer-motion";
 import {
   ClipboardCheck,
   ChevronDown,
@@ -9,6 +9,14 @@ import {
   Scale,
   ListChecks,
   Info,
+  FileText,
+  Image as ImageIcon,
+  ShieldCheck,
+  GitBranch,
+  Network,
+  ScrollText,
+  FlaskConical,
+  Gavel,
 } from "lucide-react";
 import {
   specGroups,
@@ -21,6 +29,39 @@ import {
 } from "../data/specDoc";
 import { Reveal, SectionHeading } from "../components/ui";
 import { cx } from "../lib/assets";
+
+/* ---- section registry: one entry per nav target ---- */
+
+const groupIcons: Record<string, typeof ClipboardCheck> = {
+  Prompt: FileText,
+  "Input Artifacts": ImageIcon,
+  Verifiers: ShieldCheck,
+  "Silver Trajectory": GitBranch,
+  Trajectory: Network,
+  "Rubric Criteria": ScrollText,
+  Tests: FlaskConical,
+  "Failed Rubric/Unit Test": Gavel,
+};
+
+const slug = (s: string) => s.replace(/[^a-z0-9]/gi, "-").toLowerCase();
+
+interface NavItem {
+  id: string;
+  label: string;
+  icon: typeof ClipboardCheck;
+  count?: number;
+}
+
+const navItems: NavItem[] = [
+  ...specGroups.map((g) => ({
+    id: slug(g.group),
+    label: g.group,
+    icon: groupIcons[g.group] ?? ClipboardCheck,
+    count: g.dimensions.length,
+  })),
+  { id: "weights", label: "Weight Definitions", icon: Scale, count: weightBuckets.length },
+  { id: "rubric-quality", label: "Rubric Quality", icon: ListChecks, count: rubricQualityIssues.length },
+];
 
 /* score -> visual treatment for an answer option */
 function scoreStyle(score: number) {
@@ -47,105 +88,126 @@ function scoreStyle(score: number) {
 }
 
 export default function SpecDoc() {
+  const [active, setActive] = useState<string>(navItems[0].id);
   const dimensionCount = specGroups.reduce((n, g) => n + g.dimensions.length, 0);
+  const activeGroup = specGroups.find((g) => slug(g.group) === active);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
       <Reveal>
         <SectionHeading
           eyebrow="Scoring Spec"
           title="How every task gets scored"
-          sub={`The L0 review QC rubric, the exact standard a task is graded against across ${dimensionCount} dimensions. Each dimension lists its failing and non-failing error categories and every scored option, plus the weight and rubric-quality appendices.`}
+          sub={`The L0 review QC rubric, the exact standard a task is graded against across ${dimensionCount} dimensions. Pick a section to jump straight to it.`}
         />
       </Reveal>
 
-      {/* Legend */}
-      <Reveal>
-        <div className="mt-8 grid gap-3 sm:grid-cols-3">
-          <LegendCard
-            tone="bg-rose-50/70 border-rose-200 dark:border-rose-500/40 dark:bg-rose-500/10"
-            icon={XCircle}
-            iconTone="text-rose-600 dark:text-rose-400"
-            score="2"
-            label="Fail"
-            note="A failing error category. Crosses a scoring threshold."
-          />
-          <LegendCard
-            tone="bg-amber-50/70 border-amber-200 dark:border-amber-500/40 dark:bg-amber-500/10"
-            icon={CircleSlash}
-            iconTone="text-amber-600 dark:text-amber-400"
-            score="3"
-            label="Non-Fail"
-            note="A non-failing issue. Logged, but does not fail the task."
-          />
-          <LegendCard
-            tone="bg-emerald-50/70 border-emerald-200 dark:border-emerald-500/40 dark:bg-emerald-500/10"
-            icon={CircleCheck}
-            iconTone="text-emerald-600 dark:text-emerald-400"
-            score="5"
-            label="Pass"
-            note="Meets the bar for the dimension. No error category applied."
-          />
-        </div>
-      </Reveal>
+      <div className="mt-8 lg:grid lg:grid-cols-[236px_1fr] lg:gap-8">
+        {/* Sidebar nav */}
+        <nav className="mb-6 lg:mb-0 lg:sticky lg:top-20 lg:self-start">
+          <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const on = active === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActive(item.id)}
+                  className={cx(
+                    "group flex shrink-0 items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition lg:w-full",
+                    on
+                      ? "bg-brand-600 text-white shadow-glow"
+                      : "text-ink-600 hover:bg-ink-100 dark:hover:bg-ink-200/50"
+                  )}
+                >
+                  <Icon size={16} className={cx("shrink-0", on ? "text-white" : "text-ink-400")} />
+                  <span className="whitespace-nowrap lg:whitespace-normal">{item.label}</span>
+                  {item.count != null && (
+                    <span
+                      className={cx(
+                        "ml-auto hidden rounded-full px-1.5 text-[11px] font-bold lg:inline",
+                        on ? "bg-white/25 text-white" : "bg-ink-100 text-ink-500 dark:bg-ink-200/60"
+                      )}
+                    >
+                      {item.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
 
-      {/* Dimensions */}
-      <div className="mt-12 space-y-12">
-        {specGroups.map((group) => (
-          <section key={group.group} id={group.group.replace(/[^a-z]/gi, "").toLowerCase()} className="scroll-mt-24">
-            <Reveal>
-              <div className="mb-5 flex items-center gap-2.5 border-b border-ink-200/70 pb-3">
-                <ClipboardCheck size={20} className="text-brand-600 dark:text-brand-400" />
-                <h2 className="text-xl font-extrabold tracking-tight text-ink-900">{group.group}</h2>
-                <span className="chip bg-ink-100 text-ink-600 dark:bg-ink-200/60">
-                  {group.dimensions.length}
-                </span>
-              </div>
-            </Reveal>
-            <div className="space-y-5">
-              {group.dimensions.map((dim, i) => (
-                <Reveal key={dim.name} delay={i * 0.03}>
-                  <DimensionCard dim={dim} />
-                </Reveal>
-              ))}
-            </div>
-          </section>
-        ))}
+        {/* Active section */}
+        <motion.div
+          key={active}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="min-w-0"
+        >
+          {activeGroup && <GroupSection group={activeGroup} />}
+          {active === "weights" && <WeightSection />}
+          {active === "rubric-quality" && <RubricQualitySection />}
+        </motion.div>
       </div>
-
-      {/* Appendix: weight buckets */}
-      <WeightAppendix />
-
-      {/* Appendix: rubric quality definitions */}
-      <RubricQualityAppendix />
     </div>
   );
 }
 
-function LegendCard({
-  tone,
-  icon: Icon,
-  iconTone,
-  score,
-  label,
-  note,
-}: {
-  tone: string;
-  icon: typeof XCircle;
-  iconTone: string;
-  score: string;
-  label: string;
-  note: string;
-}) {
+function SectionHeader({ icon: Icon, title, note }: { icon: typeof ClipboardCheck; title: string; note?: string }) {
   return (
-    <div className={cx("rounded-2xl border p-4", tone)}>
-      <div className="flex items-center gap-2">
-        <Icon size={18} className={iconTone} />
-        <span className="text-sm font-extrabold text-ink-900">{label}</span>
-        <span className="ml-auto text-xs font-bold text-ink-400">score {score}</span>
+    <div className="mb-5 flex items-start gap-3 border-b border-ink-200/70 pb-4">
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+        <Icon size={20} />
+      </span>
+      <div>
+        <h2 className="text-xl font-extrabold tracking-tight text-ink-900">{title}</h2>
+        {note && <p className="mt-0.5 text-[13px] text-ink-500">{note}</p>}
       </div>
-      <p className="mt-1.5 text-[12px] leading-relaxed text-ink-600">{note}</p>
     </div>
+  );
+}
+
+/* compact score legend, shown atop every dimension group */
+function Legend() {
+  const items = [
+    { icon: XCircle, label: "Fail", score: 2, tone: "text-rose-600 dark:text-rose-400" },
+    { icon: CircleSlash, label: "Non-Fail", score: 3, tone: "text-amber-600 dark:text-amber-400" },
+    { icon: CircleCheck, label: "Pass", score: 5, tone: "text-emerald-600 dark:text-emerald-400" },
+  ];
+  return (
+    <div className="mb-5 flex flex-wrap gap-x-5 gap-y-2 rounded-xl border border-ink-200/70 bg-ink-50/50 px-4 py-2.5">
+      {items.map((it) => {
+        const Icon = it.icon;
+        return (
+          <span key={it.label} className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-ink-600">
+            <Icon size={14} className={it.tone} />
+            {it.label}
+            <span className="text-ink-400">· {it.score}</span>
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+function GroupSection({ group }: { group: { group: string; dimensions: SpecDimension[] } }) {
+  const Icon = groupIcons[group.group] ?? ClipboardCheck;
+  return (
+    <section>
+      <SectionHeader
+        icon={Icon}
+        title={group.group}
+        note={`${group.dimensions.length} dimension${group.dimensions.length > 1 ? "s" : ""}`}
+      />
+      <Legend />
+      <div className="space-y-5">
+        {group.dimensions.map((dim) => (
+          <DimensionCard key={dim.name} dim={dim} />
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -216,108 +278,67 @@ function OptionRow({ opt }: { opt: SpecOption }) {
   );
 }
 
-function WeightAppendix() {
-  const [open, setOpen] = useState(false);
+function WeightSection() {
   return (
-    <section id="weights" className="mt-16 scroll-mt-24">
-      <Reveal>
-        <div className="card overflow-hidden">
-          <button
-            onClick={() => setOpen((o) => !o)}
-            aria-expanded={open}
-            className="flex w-full items-center gap-4 p-5 text-left"
-          >
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
-              <Scale size={22} />
-            </span>
-            <div className="min-w-0 flex-1">
-              <h2 className="text-lg font-extrabold tracking-tight text-ink-900">Criteria Weight Definitions</h2>
-              <p className="mt-0.5 text-[13px] text-ink-500">
-                Appendix · Update 06/10 · the {weightBuckets.length} weight buckets and the four difficulty dimensions
-              </p>
+    <section>
+      <SectionHeader
+        icon={Scale}
+        title="Criteria Weight Definitions"
+        note={`Update 06/10 · ${weightBuckets.length} weight buckets and the four difficulty dimensions`}
+      />
+
+      <Card>
+        <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-brand-600">4 Difficulty Dimensions</div>
+        <ul className="space-y-1.5">
+          {difficultyDimensions.map((d) => (
+            <li key={d} className="flex gap-2 text-[13px] leading-relaxed text-ink-700">
+              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brand-500" />
+              {d}
+            </li>
+          ))}
+        </ul>
+      </Card>
+
+      <div className="mt-4 space-y-3">
+        {weightBuckets.map((b) => {
+          const positive = b.score > 0;
+          return (
+            <div
+              key={b.level}
+              className={cx(
+                "card border-l-4 p-4",
+                positive ? "border-l-brand-400 dark:border-l-brand-500/60" : "border-l-rose-400 dark:border-l-rose-500/60"
+              )}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={cx(
+                    "grid h-8 w-10 shrink-0 place-items-center rounded-lg text-sm font-extrabold",
+                    positive
+                      ? "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-200"
+                      : "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200"
+                  )}
+                >
+                  {b.score > 0 ? `+${b.score}` : b.score}
+                </span>
+                <h3 className="text-[15px] font-bold text-ink-900">{b.level}</h3>
+              </div>
+              <p className="mt-2.5 whitespace-pre-line text-[13px] leading-relaxed text-ink-600">{b.definition}</p>
+              <div className="mt-3 rounded-lg bg-ink-50/70 p-3 dark:bg-ink-100/40">
+                <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-ink-400">Typical examples</div>
+                <ul className="space-y-1">
+                  {b.examples.map((ex) => (
+                    <li key={ex} className="flex gap-2 text-[12px] leading-relaxed text-ink-600">
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-ink-300" />
+                      {ex}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <ChevronDown
-              size={22}
-              className={cx("shrink-0 text-ink-400 transition-transform duration-300", open && "rotate-180")}
-            />
-          </button>
-
-          <AnimatePresence initial={false}>
-            {open && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="overflow-hidden"
-              >
-                <div className="border-t border-ink-100 bg-ink-50/40 p-4 sm:p-5">
-                  <div className="rounded-xl border border-ink-200/70 bg-surface p-4">
-                    <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-brand-600">
-                      4 Difficulty Dimensions
-                    </div>
-                    <ul className="space-y-1.5">
-                      {difficultyDimensions.map((d) => (
-                        <li key={d} className="flex gap-2 text-[13px] leading-relaxed text-ink-700">
-                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brand-500" />
-                          {d}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="mt-4 space-y-3">
-                    {weightBuckets.map((b) => {
-                      const positive = b.score > 0;
-                      return (
-                        <div
-                          key={b.level}
-                          className={cx(
-                            "card border-l-4 p-4",
-                            positive
-                              ? "border-l-brand-400 dark:border-l-brand-500/60"
-                              : "border-l-rose-400 dark:border-l-rose-500/60"
-                          )}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={cx(
-                                "grid h-8 w-10 shrink-0 place-items-center rounded-lg text-sm font-extrabold",
-                                positive
-                                  ? "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-200"
-                                  : "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200"
-                              )}
-                            >
-                              {b.score > 0 ? `+${b.score}` : b.score}
-                            </span>
-                            <h3 className="text-[15px] font-bold text-ink-900">{b.level}</h3>
-                          </div>
-                          <p className="mt-2.5 whitespace-pre-line text-[13px] leading-relaxed text-ink-600">
-                            {b.definition}
-                          </p>
-                          <div className="mt-3 rounded-lg bg-ink-50/70 p-3 dark:bg-ink-100/40">
-                            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-ink-400">
-                              Typical examples
-                            </div>
-                            <ul className="space-y-1">
-                              {b.examples.map((ex) => (
-                                <li key={ex} className="flex gap-2 text-[12px] leading-relaxed text-ink-600">
-                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-ink-300" />
-                                  {ex}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </Reveal>
+          );
+        })}
+      </div>
     </section>
   );
 }
@@ -334,70 +355,40 @@ const severityBorder: Record<IssueSeverity, string> = {
   Minor: "border-l-sky-400 dark:border-l-sky-500/60",
 };
 
-function RubricQualityAppendix() {
-  const [open, setOpen] = useState(false);
+function RubricQualitySection() {
   const severities: IssueSeverity[] = ["Major", "Moderate", "Minor"];
   return (
-    <section id="rubricquality" className="mt-6 scroll-mt-24">
-      <Reveal>
-        <div className="card overflow-hidden">
-          <button
-            onClick={() => setOpen((o) => !o)}
-            aria-expanded={open}
-            className="flex w-full items-center gap-4 p-5 text-left"
-          >
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
-              <ListChecks size={22} />
-            </span>
-            <div className="min-w-0 flex-1">
-              <h2 className="text-lg font-extrabold tracking-tight text-ink-900">Rubric Quality Definitions</h2>
-              <p className="mt-0.5 text-[13px] text-ink-500">
-                Appendix · the {rubricQualityIssues.length} criterion error types, by severity
-              </p>
+    <section>
+      <SectionHeader
+        icon={ListChecks}
+        title="Rubric Quality Definitions"
+        note={`${rubricQualityIssues.length} criterion error types, by severity`}
+      />
+      <div className="space-y-6">
+        {severities.map((sev) => {
+          const issues = rubricQualityIssues.filter((iss) => iss.severity === sev);
+          return (
+            <div key={sev}>
+              <div className="mb-3 flex items-center gap-2">
+                <span className={cx("chip", severityTone[sev])}>{sev} Issues</span>
+                <span className="text-xs font-semibold text-ink-400">{issues.length}</span>
+              </div>
+              <div className="space-y-3">
+                {issues.map((iss) => (
+                  <div key={iss.name} className={cx("card border-l-4 p-4", severityBorder[sev])}>
+                    <h3 className="text-[15px] font-bold text-ink-900">{iss.name}</h3>
+                    <p className="mt-2 whitespace-pre-line text-[13px] leading-relaxed text-ink-600">{iss.definition}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <ChevronDown
-              size={22}
-              className={cx("shrink-0 text-ink-400 transition-transform duration-300", open && "rotate-180")}
-            />
-          </button>
-
-          <AnimatePresence initial={false}>
-            {open && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="overflow-hidden"
-              >
-                <div className="space-y-6 border-t border-ink-100 bg-ink-50/40 p-4 sm:p-5">
-                  {severities.map((sev) => {
-                    const issues = rubricQualityIssues.filter((iss) => iss.severity === sev);
-                    return (
-                      <div key={sev}>
-                        <div className="mb-3 flex items-center gap-2">
-                          <span className={cx("chip", severityTone[sev])}>{sev} Issues</span>
-                          <span className="text-xs font-semibold text-ink-400">{issues.length}</span>
-                        </div>
-                        <div className="space-y-3">
-                          {issues.map((iss) => (
-                            <div key={iss.name} className={cx("card border-l-4 p-4", severityBorder[sev])}>
-                              <h3 className="text-[15px] font-bold text-ink-900">{iss.name}</h3>
-                              <p className="mt-2 whitespace-pre-line text-[13px] leading-relaxed text-ink-600">
-                                {iss.definition}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </Reveal>
+          );
+        })}
+      </div>
     </section>
   );
+}
+
+function Card({ children }: { children: ReactNode }) {
+  return <div className="rounded-xl border border-ink-200/70 bg-surface p-4">{children}</div>;
 }
