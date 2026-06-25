@@ -103,43 +103,48 @@ export default function Home() {
       </section>
 
       {/* Three principles strip */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <Reveal>
-          <SectionHeading
-            eyebrow="The mindset"
-            title="Three principles drive every task"
-            sub="Before the steps, internalize the philosophy that shapes the whole methodology. Everything downstream is an expression of these."
-          />
-        </Reveal>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {[
-            {
-              icon: <Target />,
-              title: "Stepping into the user's shoes",
-              body: "Create realistic, believable scenarios that resemble real-world situations rather than artificial benchmark-style tasks.",
-            },
-            {
-              icon: <Lightbulb />,
-              title: "Originality",
-              body: "Go beyond common, overused scenarios and develop unique situations that naturally require complex reasoning.",
-            },
-            {
-              icon: <GitBranch />,
-              title: "Planning before execution",
-              body: "Design the task before building it. Stay in control of the requirements instead of improvising midway and discovering critical issues later. Don't jump into the pool before checking whether there's water in it.",
-            },
-          ].map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.08}>
-              <div className="card h-full p-6">
-                <div className="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
-                  {p.icon}
+          <div className="card p-5 sm:p-6">
+            <div className="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-600">
+                The mindset
+              </span>
+              <h2 className="text-lg font-extrabold tracking-tight text-ink-900">
+                Three principles drive every task
+              </h2>
+            </div>
+            <div className="grid gap-5 md:grid-cols-3 md:gap-0 md:divide-x md:divide-ink-200/60">
+              {[
+                {
+                  icon: <Target size={18} />,
+                  title: "Stepping into the user's shoes",
+                  body: "Create realistic, believable scenarios that resemble real-world situations rather than artificial benchmark-style tasks.",
+                },
+                {
+                  icon: <Lightbulb size={18} />,
+                  title: "Originality",
+                  body: "Go beyond common, overused scenarios and develop unique situations that naturally require complex reasoning.",
+                },
+                {
+                  icon: <GitBranch size={18} />,
+                  title: "Planning before execution",
+                  body: "Design the task before building it. Stay in control of the requirements instead of improvising midway and discovering issues later.",
+                },
+              ].map((p, i) => (
+                <div key={p.title} className={cx("flex gap-3", i > 0 && "md:pl-5")}>
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+                    {p.icon}
+                  </span>
+                  <div>
+                    <h3 className="text-sm font-bold text-ink-900">{p.title}</h3>
+                    <p className="mt-1 text-[13px] leading-relaxed text-ink-500">{p.body}</p>
+                  </div>
                 </div>
-                <h3 className="mt-4 text-base font-bold text-ink-900">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-500">{p.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* Interactive method */}
