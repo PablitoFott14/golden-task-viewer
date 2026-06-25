@@ -4,9 +4,10 @@
  * cause, a scenario that was never complex enough, tracked via
  * `rootedInComplexity`.
  *
- * `what` describes the underlying mistake in general terms. The concrete,
- * recognizable instances live in `looksLike` (and the fix in `instead`), so the
- * explanation stays high level and the examples stay in the examples area.
+ * `why` states what the mistake is and the root cause behind it in one place.
+ * The concrete, recognizable instances live in `looksLike` (and the fix in
+ * `instead`), so the explanation stays high level and the examples stay in the
+ * examples area.
  *
  * The full content of this section is mirrored in `viewer/errorsfinal.md` for
  * easy human review and editing; keep the two in sync.
@@ -17,9 +18,7 @@ export type ErrorCategory = "scenario" | "rubrics" | "tests";
 export interface CommonError {
   /** Short, memorable name for the mistake. */
   title: string;
-  /** The underlying mistake, described in general terms (no examples). */
-  what: string;
-  /** Why it usually happens. */
+  /** What the mistake is and the root cause behind it, in one place. */
   why: string;
   /** How to avoid it in practice. */
   fix: string;
@@ -66,10 +65,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
   scenario: [
     {
       title: "The scenario isn't complex enough to begin with",
-      what:
-        "The task falls below the complexity bar, with no genuine cross-modal reasoning a capable model could plausibly fail, yet it still ships.",
       why:
-        "This is the root cause behind most of the errors on this page. When the scenario is too simple, there is no genuine capability-level failure to evaluate, so contributors often end up forcing one. That usually leads to artificial constraints, brittle rubrics, and, for reviewers, unit tests that no longer reflect the true final state.",
+        "The task falls below the complexity bar, with no genuine cross-modal reasoning a capable model could plausibly fail. This is the root cause behind most of the errors on this page: when the scenario is too simple there is no real capability-level failure to evaluate, so contributors force one, which breeds artificial constraints, brittle rubrics, and tests that no longer reflect the true final state.",
       fix:
         "Build the complexity into the scenario from the start. Genuine difficulty comes from long-horizon workflows that require multiple cross-modal reasoning steps, not from contrived constraints or shortcuts. If you find yourself tightening rubrics or manipulating the inputs just to make the model fail, stop and redesign the scenario to make it genuinely more challenging instead.",
       looksLike:
@@ -80,10 +77,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     {
       title: "Illegible handwriting used as the failure mechanism",
       callout: "STOP CREATING SCENARIOS SOLELY RELYING IN HANDWRITTEN NOTES!!!",
-      what:
-        "The task leans on handwritten or visual inputs that aren't legible to a human, used as a shortcut to guarantee the model fails.",
       why:
-        "It is the easiest way to inflate difficulty without designing real complexity, so it gets over-used across a batch. If a human reviewer can't read the input, the model can't be fairly graded on it.",
+        "The task leans on handwritten or visual inputs that aren't legible to a human, the easiest way to inflate difficulty without designing real complexity, so it gets over-used across a batch. If a human reviewer can't read the input, the model can't be fairly graded on it.",
       fix:
         "Verify legibility before grading on it, and replace illegible artifacts or drop the dependent rubric. Vary the input strategy rather than leaning on handwriting; a few notes per batch is healthy, not most of them.",
       looksLike:
@@ -93,10 +88,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Contrived or unrealistic inputs and prompts",
-      what:
-        "The inputs or scenario are something no real user would plausibly produce, so the task reads as staged rather than authentic.",
       why:
-        "When a believable scenario doesn't naturally create difficulty, we can't invent an unrealistic one. The seams show, and the customer flags it as contrived.",
+        "The inputs or scenario are something no real user would plausibly produce, so the task reads as staged. It happens when a believable scenario doesn't naturally create difficulty and an unrealistic one gets invented instead; the seams show, and the customer flags it as contrived.",
       fix:
         "Anchor the task in a realistic user intent and let the inputs serve that intent. The prompt should read like a request a person would actually send, not a spec sheet describing the attached files.",
       looksLike:
@@ -106,10 +99,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Inputs don't contain the information the task needs",
-      what:
-        "An input the task relies on doesn't actually hold enough information to satisfy the criteria that reference it.",
       why:
-        "The deliverable was designed before the inputs were verified, so the gap between what is asked and what is shown surfaces late.",
+        "An input the task relies on doesn't actually hold enough information to satisfy the criteria that reference it, usually because the deliverable was designed before the inputs were verified, so the gap surfaces late.",
       fix:
         "Before writing any criterion that depends on an input, open the file yourself and confirm it shows what the criterion checks. If you can't read the value or count the items, the model can't either.",
       looksLike:
@@ -119,10 +110,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Image extension doesn't match the actual encoding",
-      what:
-        "An input file's extension claims one format while its actual encoding is another.",
       why:
-        "An asset was renamed instead of re-encoded, often to make it look natural after exporting from a browser or screenshot tool.",
+        "An input file's extension claims one format while its actual encoding is another, because an asset was renamed instead of re-encoded, often to make it look natural after exporting from a browser or screenshot tool.",
       fix:
         "Before zipping inputs, run a format check so every reported type matches its extension. Re-save to the real format rather than renaming.",
       looksLike:
@@ -132,10 +121,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "The environment is missing a tool the task needs",
-      what:
-        "The task grades an action the agent has no provisioned tool, skill, or permission to perform.",
       why:
-        "The required action was assumed reachable without checking this task's tool manifest.",
+        "The task grades an action the agent has no provisioned tool, skill, or permission to perform, because the required action was assumed reachable without checking this task's tool manifest.",
       fix:
         "List every action the task grades and confirm a corresponding tool exists here. When in doubt, prefer artifact-producing deliverables, since files are always reachable and external skills aren't.",
       looksLike:
@@ -145,10 +132,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Deliverable filename or format drifts from the prompt",
-      what:
-        "The deliverable's name or shape doesn't match what the prompt specifies, and the mismatch is checked mechanically.",
       why:
-        "The filename in the prompt and the one in the workspace were never reconciled, and the auditor compares them mechanically.",
+        "The deliverable's name or shape doesn't match what the prompt specifies. The filename in the prompt and the one in the workspace were never reconciled, and the auditor compares them mechanically, so any drift fails.",
       fix:
         "Search the prompt for every filename and extension, then list the deliverable; they must match exactly. Normalize spaced filenames consistently in both the prompt and the workspace.",
       looksLike:
@@ -158,10 +143,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "The oracle deliverable leaks the answer",
-      what:
-        "The shipped deliverable already contains values the agent was supposed to derive, turning the task into a copy exercise.",
       why:
-        "Working files, narration, or pre-filled derivable fields were left inside the deliverable instead of stripped out.",
+        "The shipped deliverable already contains values the agent was supposed to derive, turning the task into a copy exercise, because working files, narration, or pre-filled derivable fields were left inside instead of stripped out.",
       fix:
         "Ship final files only, with no narration scripts, no helper scripts, and no pre-filled fields the agent was meant to compute.",
       looksLike:
@@ -171,10 +154,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "The prompt is ambiguous or subjective",
-      what:
-        "The prompt leaves so much open to interpretation that neither the intended outcome nor the grading bar is clear.",
       why:
-        "A messy prompt without a strong realistic intent gets written when the underlying scenario itself is underspecified.",
+        "The prompt leaves so much open to interpretation that neither the intended outcome nor the grading bar is clear, which happens when the underlying scenario itself is underspecified.",
       fix:
         "State one clear, realistic intent. A reader should be able to tell what a correct outcome looks like without guessing at the grading.",
       looksLike:
@@ -184,10 +165,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "No genuine model failure to grade",
-      what:
-        "The task is scored even though the model never failed for a real reason, leaving nothing legitimate to grade.",
       why:
-        "A failure on the scoreboard is treated as enough to keep the task, without confirming the failure was a real capability gap.",
+        "The task is scored even though the model never failed for a real reason, because a failure on the scoreboard is treated as enough to keep the task without confirming it was a real capability gap.",
       fix:
         "Before scoring, confirm the model failed for a genuine reason. No real failure means no scoring target, so reject or redo the task rather than keeping it.",
       looksLike:
@@ -199,10 +178,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
   rubrics: [
     {
       title: "Criterion isn't self-contained",
-      what:
-        "The criterion can't be graded from the trajectory and output alone, forcing the grader to reopen and reinterpret an input.",
       why:
-        "The multimodal extraction was deferred to grading time. Phrases like grounded in, supported by, or matches the visual evidence in are the tell.",
+        "The criterion can't be graded from the trajectory and output alone, forcing the grader to reopen and reinterpret an input. The multimodal extraction was deferred to grading time; phrases like grounded in, supported by, or matches the visual evidence in are the tell.",
       fix:
         "Do the extraction once while drafting and pin the correct value in the criterion text. Reference the input by name only as a pointer. The rule of thumb: describe what the output file should contain based on the input.",
       looksLike:
@@ -212,10 +189,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Pinned value or claim the inputs don't support",
-      what:
-        "The criterion asserts a value, label, or fact the inputs and tools can't actually produce or confirm.",
       why:
-        "Values were written from intuition or a single rollout rather than traced back to the actual source artifact.",
+        "The criterion asserts a value, label, or fact the inputs and tools can't actually produce or confirm, because values were written from intuition or a single rollout rather than traced back to the actual source artifact.",
       fix:
         "For every value, ask whether you can derive it exactly from only the inputs and tools the agent has. Verify it against the source at full zoom for images, recomputing for derived totals. If it isn't there, loosen or drop it.",
       looksLike:
@@ -225,10 +200,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Overfitting on values or format the prompt never set",
-      what:
-        "The criterion demands a specific value, label, or format the prompt never established and the agent can't deterministically infer.",
       why:
-        "Criteria get reverse engineered from whatever one model produced, so private conventions and exact marketplace prices get enshrined as requirements.",
+        "The criterion demands a specific value, label, or format the prompt never established and the agent can't deterministically infer. It happens when criteria are reverse engineered from whatever one model produced, so private conventions and exact marketplace prices get enshrined as requirements.",
       fix:
         "Search the prompt for every literal in the criterion. If it isn't there and isn't tool derivable, grade the shape of the value or the intent. Swap exact prices for tolerance bands or a check that the agent recorded a price.",
       looksLike:
@@ -239,10 +212,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Criterion admits multiple interpretations",
-      what:
-        "The criterion can be read in more than one defensible way, so the same answer scores differently across graders and rollouts.",
       why:
-        "Subjective adjectives like professional, appropriate, clear, or demonstrates understanding stand in for a countable property.",
+        "The criterion can be read in more than one defensible way, so the same answer scores differently across graders and rollouts, usually because subjective adjectives like professional, appropriate, or demonstrates understanding stand in for a countable property.",
       fix:
         "Operationalize the judgment into verifiable, countable properties. Collapsing adjectives into concrete checks is also the single biggest stability win across rollouts.",
       looksLike:
@@ -252,10 +223,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Contradicts the prompt, universe data, or another criterion",
-      what:
-        "The criterion conflicts with the prompt, the seeded universe state, or another criterion, making the points impossible to earn.",
       why:
-        "Criteria are drafted without walking the prompt sentence by sentence or cross-checking the seeded workspace, so a prompt-faithful agent does the right thing and is still penalized.",
+        "The criterion conflicts with the prompt, the seeded universe state, or another criterion, making the points impossible to earn. It comes from drafting without walking the prompt sentence by sentence or cross-checking the seeded workspace, so a prompt-faithful agent does the right thing and is still penalized.",
       fix:
         "Walk the prompt line by line and confirm each criterion agrees with it, then check every pair: can a single output satisfy both? Cross-check MEMORY.md, USER.md, and the inputs for values that conflict with any criterion.",
       looksLike:
@@ -265,10 +234,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Redundant or rewards-and-penalizes pairs",
-      what:
-        "The same observable property is graded by more than one criterion, sometimes once as a reward and once as a penalty.",
       why:
-        "Every instruction to avoid something gets mirrored with a negative, and similar checks get written twice, so the same pass or fail is counted more than once.",
+        "The same observable property is graded by more than one criterion, sometimes once as a reward and once as a penalty. Every instruction to avoid something gets mirrored with a negative, and similar checks get written twice, so the same pass or fail is counted more than once.",
       fix:
         "For each criterion, ask whether another in the set checks the same fact; if so, consolidate and fold the weight into the survivor. Lead with positives so most polar pairs disappear.",
       looksLike:
@@ -278,10 +245,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Bundled, non-atomic criteria",
-      what:
-        "A single criterion checks several independent facts at once, or a long list of items is graded one at a time instead of in aggregate.",
       why:
-        "Independent checks get stapled together, or every item in a list gets its own criterion, which distorts the score and makes results noisy.",
+        "A single criterion checks several independent facts at once, or a long list of items is graded one at a time instead of in aggregate. Stapling independent checks together, or giving every list item its own criterion, distorts the score and makes results noisy.",
       fix:
         "Keep one independent fact per criterion. For lists longer than five, use a single aggregate count plus three or fewer spot checks, and move exact measurements to a unit test where they belong.",
       looksLike:
@@ -291,10 +256,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Missing coverage of an explicit requirement",
-      what:
-        "An explicit prompt requirement has no covering criterion or test, or the criteria are too broad to cover anything precisely.",
       why:
-        "The prompt's deliverable spec wasn't walked line by line, so requirements slip through uncovered.",
+        "An explicit prompt requirement has no covering criterion or test, or the criteria are too broad to cover anything precisely, because the deliverable spec wasn't walked line by line and requirements slipped through uncovered.",
       fix:
         "Read the deliverable spec line by line, covering filenames, field counts, section headers, and ordering, and confirm each has a covering criterion or test. If anything has no check, block submission.",
       looksLike:
@@ -304,10 +267,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Weights or category gamed around the threshold",
-      what:
-        "Weights or categories are assigned to engineer the failure rate rather than to reflect the honest severity of each check.",
       why:
-        "Weights are tuned to hit the threshold rather than to reflect honest severity.",
+        "Weights or categories are assigned to engineer the failure rate rather than to reflect the honest severity of each check, tuned to hit the threshold instead of the real impact.",
       fix:
         "Weight by impact: 5 for three or more dimensions, 3 for one or two, 1 for cosmetic. Never weight same-complexity actions differently by award status, and route hallucinated values to Factuality.",
       looksLike:
@@ -318,10 +279,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Missing Evaluation Target tag",
-      what:
-        "A criterion is submitted without exactly one Evaluation Target tag.",
       why:
-        "The tagging step is skipped in the final pass before submission.",
+        "A criterion is submitted without exactly one Evaluation Target tag, because the tagging step is skipped in the final pass before submission.",
       fix:
         "Tag every criterion with exactly one Evaluation Target before submitting. Even one untagged criterion is a structural fail.",
       looksLike:
@@ -331,10 +290,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Missing or poorly grounded justifications",
-      what:
-        "Criterion states are left unexplained, or their justifications cite the wrong evidence.",
       why:
-        "Justifications are treated as optional paperwork rather than part of the rubric, and silent edits leave states unexplained.",
+        "Criterion states are left unexplained, or their justifications cite the wrong evidence, because justifications are treated as optional paperwork rather than part of the rubric and silent edits leave states unexplained.",
       fix:
         "Justify every non-trivial criterion state, citing the source, the rule, and a concrete fix. Pair every material edit with actionable feedback, because silent fixes don't teach the attempter.",
       looksLike:
@@ -346,10 +303,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
   tests: [
     {
       title: "Coverage gaps in verifier.py",
-      what:
-        "A mechanically verifiable requirement has no test, or only its existence is checked while its structure and order go unverified.",
       why:
-        "Tests are written for the obvious files, and the deliverable spec isn't ticked off requirement by requirement.",
+        "A mechanically verifiable requirement has no test, or only its existence is checked while structure and order go unverified, because tests are written for the obvious files and the deliverable spec isn't ticked off requirement by requirement.",
       fix:
         "Walk the deliverable spec and give every mechanically verifiable requirement its own assertion. Order, count, and structure rules each need their own test; existence alone is not enough.",
       looksLike:
@@ -359,10 +314,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Underfitted tests that pass on garbage",
-      what:
-        "A test is loose enough to pass without the required behavior ever being performed.",
       why:
-        "A loose membership check is quick to write but passes on a lone keyword, which makes it a false-positive generator rather than a test.",
+        "A test is loose enough to pass without the required behavior ever being performed. A loose membership check is quick to write but passes on a lone keyword, making it a false-positive generator rather than a test.",
       fix:
         "Parse the output structure, then assert the specific value or relation it must contain. A test that can't fail on a wrong answer isn't testing anything.",
       looksLike:
@@ -372,10 +325,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Tests doing a rubric's job",
-      what:
-        "Unit tests attempt to grade reasoning or qualitative behavior instead of mechanically verifiable facts.",
       why:
-        "The line between the two stages is blurred, so judgment-based checks leak into verifier.py where they can't be deterministically evaluated.",
+        "Unit tests attempt to grade reasoning or qualitative behavior instead of mechanically verifiable facts. The line between the two stages gets blurred, so judgment-based checks leak into verifier.py where they can't be deterministically evaluated.",
       fix:
         "Keep unit tests to structural, deterministic facts such as folders existing, schema being right, and names matching. Leave reasoning and content judgments to the rubric, and trim any rubric a test already enforces.",
       looksLike:
@@ -385,10 +336,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Existence-only or over-bundled tests",
-      what:
-        "Tests confirm only that files exist, or pack many independent checks into a single test.",
       why:
-        "One broad test feels like enough coverage, but it can't isolate which requirement actually failed.",
+        "Tests confirm only that files exist, or pack many independent checks into a single test. One broad test feels like enough coverage, but it can't isolate which requirement actually failed.",
       fix:
         "Split file checks into separate, targeted assertions, and verify content and structure rather than just presence.",
       looksLike:
@@ -398,10 +347,8 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
     },
     {
       title: "Redundant tests or test-to-rubric imbalance",
-      what:
-        "Tests overlap with each other, or their number is badly out of balance with the rubric set.",
       why:
-        "Coverage is padded with overlapping tests instead of balanced against the rubric set.",
+        "Tests overlap with each other, or their number is badly out of balance with the rubric set, because coverage is padded with overlapping tests instead of balanced against the rubric set.",
       fix:
         "Remove redundant tests and keep the balance between tests and rubrics sensible. The two should complement each other, not compete for the same coverage.",
       looksLike:

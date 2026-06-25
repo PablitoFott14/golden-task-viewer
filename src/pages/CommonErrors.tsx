@@ -6,7 +6,6 @@ import {
   CheckCircle2,
   HelpCircle,
   Wrench,
-  FileSearch,
   ScrollText,
   FlaskConical,
   Layers,
@@ -201,10 +200,7 @@ function ErrorCard({ error, n, t }: { error: CommonError; n: number; t: Theme })
         </div>
       )}
 
-      <div className="grid gap-px bg-ink-100 sm:grid-cols-3">
-        <Block icon={FileSearch} label="What it is" tone="text-ink-500">
-          {error.what}
-        </Block>
+      <div className="grid gap-px bg-ink-100 sm:grid-cols-2">
         <Block icon={HelpCircle} label="Why it happens" tone="text-amber-600 dark:text-amber-400">
           {error.why}
         </Block>
@@ -265,7 +261,7 @@ function Block({
   tone,
   children,
 }: {
-  icon: typeof FileSearch;
+  icon: typeof HelpCircle;
   label: string;
   tone: string;
   children: ReactNode;
