@@ -691,7 +691,7 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     {
       title: "Weights Track Complexity, Not Importance",
       body:
-        "Each weight reflects how much reasoning the criterion takes to get right and to verify, not how important it feels. The single +5 is the one criterion that needs cross-source reasoning over both handwritten pages to reconstruct the whole plan. A +3 covers one reconciliation step, such as attributing the right asset to a post, splitting a caption, spotting the boxed X plan, or logging one mismatch against the plan or persona. A +1 covers mechanical single-source checks such as a clearly headed platform folder existing, placing an interchangeable finance quote, reporting the duplicate, or sending the team email (a mechanical state change once the recipients and the mismatches are known). Criteria that call for the same reviewer action carry the same weight.",
+        "Each weight reflects how much reasoning a check takes to get right and verify, not how important it feels. +5 marks the one criterion needing cross-source reasoning over both handwritten pages; +3 a single reconciliation step; +1 a mechanical single-source check.",
     },
     {
       title: "Negative Rubrics Stay Rare",
@@ -1414,7 +1414,21 @@ Finally, to keep the whole team looped send Trevor and Maya an email with the mi
     ],
   },
 
-  unitTestPreamble: `from pathlib import Path
+  unitTestPreamble: `#!/usr/bin/env python3
+import sys
+import subprocess
+import importlib
+from pathlib import Path
+
+# --- pytest auto-install ---
+try:
+    import pytest
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "pytest"])
+    pytest = importlib.import_module("pytest")
+
+# --- directory config ---
+TASK_DIR = Path(__file__).resolve().parent
 
 
 def _search_bases():
@@ -1432,7 +1446,10 @@ def _platform_dir(name):
         candidate = base / name
         if candidate.is_dir():
             return candidate
-    return None`,
+    return None
+
+
+# --- tests go here ---`,
 
   artifactDocs: [
     { label: "Persona context", file: "persona_context.md", description: "Full persona profile the contributor built from the universe." },

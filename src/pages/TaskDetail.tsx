@@ -595,8 +595,7 @@ export default function TaskDetail() {
                 <FlaskConical size={13} /> Shared template
               </div>
               <p className="mb-3 max-w-2xl text-sm text-ink-500">
-                The imports and helper functions every test builds on. Each test below uses these without
-                repeating them, so the test itself shows only the check it performs.
+                The imports and helper functions every test builds on.
               </p>
               <CodeReveal label="Template" code={task.unitTestPreamble} />
             </div>
@@ -616,6 +615,15 @@ export default function TaskDetail() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-6 flex gap-3 rounded-xl border border-amber-300 bg-amber-50/70 p-4 dark:border-amber-500/40 dark:bg-amber-500/10">
+              <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
+              <p className="text-[13px] leading-relaxed text-ink-700">
+                <strong className="text-ink-900">If this task is being reviewed,</strong> the rubric set
+                below must be modified so that no criterion overlaps with these unit tests. Anything already
+                enforced structurally by a unit test should not also be graded by a rubric.
+              </p>
             </div>
           </Section>
 

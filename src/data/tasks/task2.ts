@@ -315,7 +315,7 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
     {
       title: "Weights track complexity, not importance",
       body:
-        "Each weight reflects how much reasoning the criterion takes to get right, not how important it feels. The two +5 criteria are the compounding tables on Slides 4 and 5, since each one reconciles the screenshot returns, the continuous 20-year horizon, and a chained compounding methodology at once. A +3 covers one reasoning or reconciliation step, such as reading the profile from the messy note, reconciling the pie with the pyramid, selecting the right rows and columns, the conclusion synthesis, or scheduling the mentor review (which needs the meeting time inferred from the calendar pattern). A +1 covers mechanical single source checks such as the file existing, color, font, rounding, the exact slide titles, the disclaimer, the table column shape, leaving Slide 6 empty, and emailing the deck (a mechanical send once the recipient and attachment are known). The two state changes carry different weights for that reason: inferring the review time is reasoning, sending the email is not.",
+        "Each weight reflects how much reasoning a check takes to get right, not how important it feels. +5 marks cross-source reconciliation (the two compounding tables); +3 a single reasoning step; +1 a mechanical single-source check.",
     },
     {
       title: "Deterministic math is objectively gradable",
@@ -835,7 +835,8 @@ When you are done with the presentation, I'd like Carlton to take a quick look a
     ],
   },
 
-  unitTestPreamble: `import sys
+  unitTestPreamble: `#!/usr/bin/env python3
+import sys
 import subprocess
 import importlib
 import json
@@ -892,7 +893,8 @@ def _workspace_state():
             return json.loads(candidate.read_text())
     return {}
 
-# --- tests ---`,
+
+# --- tests go here ---`,
 
   artifactDocs: [
     { label: "Persona context", file: "persona_context.md", description: "Full persona profile the contributor built from the universe." },

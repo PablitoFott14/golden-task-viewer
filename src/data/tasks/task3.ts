@@ -321,7 +321,7 @@ I've also included a final_artifact_format.md file that defines the exact struct
     {
       title: "Weights track complexity, not importance",
       body:
-        "Each weight reflects how much reasoning the criterion takes to get right, not how critical it feels. The single +5 is the subset-sum correctness, carried by the estimated funds generated figure, since reaching it reconciles the note values, the retrieved liquidity, and the closest-over constraint at once. A +3 covers the other genuine reasoning and retrieval steps: consulting the accounts, extracting the five positions, computing the remaining target, validating the closest-over total, and choosing retail over the sale price. A +1 covers mechanical work that only restates a known value or checks a single condition: the per-position bullets are presence checks (the selection reasoning behind them is credited once, in the funds figure), and so are the manufacturing arithmetic and the file existing.",
+        "Each weight reflects how much reasoning a check takes to get right, not how important it feels. +5 marks the subset-sum that reconciles the note values, the retrieved liquidity, and the closest-over constraint at once; +3 a single reasoning or retrieval step; +1 a mechanical check.",
     },
     {
       title: "One root cause, graded where it surfaces",
@@ -466,7 +466,7 @@ I've also included a final_artifact_format.md file that defines the exact struct
     },
     {
       n: 11,
-      text: "The model correctly selects the regular retail price (`$25.00`) over the current sale price (`$18.75`) as the reference for production cost calculations, consistent with the user's retail price intent.",
+      text: "The model correctly uses the regular retail price rather than the sale price (e.g., `$25.00` instead of `$18.75` for the `Stanley Quencher H2.0 FlowState Tumbler, 14 oz`) as the basis for calculating the production cost based on the cheapest Stanley Quencher model.",
       points: 3,
       category: "Agent Behavior — Trajectory",
       evalTarget: "Trajectory",
@@ -477,7 +477,7 @@ I've also included a final_artifact_format.md file that defines the exact struct
     },
     {
       n: 12,
-      text: "The `#### 4a. Stanley Quencher Pricing` section of `final_insights.md` states the Stanley Quencher price as `$25.00`.",
+      text: "The `#### 4a. Stanley Quencher Pricing` section of `final_insights.md` states the cheapest Stanley Quencher model price (e.g., `$25.00`).",
       points: 1,
       category: "Task Completion — Final answer/artifact",
       evalTarget: "Final answer/artifact",
@@ -488,7 +488,7 @@ I've also included a final_artifact_format.md file that defines the exact struct
     },
     {
       n: 13,
-      text: "The `#### 4b. Estimated Manufacturing Capacity` section of `final_insights.md` states the production budget as `$20,000.00`.",
+      text: "The `#### 4b. Estimated Manufacturing Capacity` section of `final_insights.md` states the production budget as `$20,000.00`, which corresponds to 80% of the total `$25,000.00` budget.",
       points: 1,
       category: "Task Completion — Final answer/artifact",
       evalTarget: "Final answer/artifact",
@@ -499,25 +499,25 @@ I've also included a final_artifact_format.md file that defines the exact struct
     },
     {
       n: 14,
-      text: "The `#### 4b. Estimated Manufacturing Capacity` section of `final_insights.md` states the `**Production Cost per Unit:**` as `$23.75`.",
-      points: 1,
+      text: "The `#### 4b. Estimated Manufacturing Capacity` section of `final_insights.md` states the `**Production Cost per Unit:**` as 5% lower than the regular retail price of the cheapest Stanley Quencher model found (e.g., `$23.75` based on a retail price of `$25.00`).",
+      points: 3,
       category: "Task Completion — Final answer/artifact",
       evalTarget: "Final answer/artifact",
       enforces: "Prompt: 5% below the retail price.",
       status: "present",
       observed: "The artifact states the production cost per unit as $23.75, referencing the 14oz Tumbler retail price of $25.00.",
-      rationale: "A single mechanical computation (95% of retail), weighted +1.",
+      rationale: "Deriving the per-unit cost as 5% below the retail price of the cheapest model ties the price choice to a computation, so it carries a +3.",
     },
     {
       n: 15,
-      text: "In the `#### 4b. Estimated Manufacturing Capacity` section of the `final_insights.md`, the estimated units manufacturable are correctly stated as `842 units`.",
-      points: 1,
+      text: "The `#### 4b. Estimated Manufacturing Capacity` section of `final_insights.md` correctly states the estimated number of units manufacturable as the total production budget (`$20,000.00`) divided by the calculated production cost per unit (e.g., `842 units` based on a production cost of `$23.75` per unit).",
+      points: 3,
       category: "Task Completion — Final answer/artifact",
       evalTarget: "Final answer/artifact",
       enforces: "Prompt: units = production budget / cost per unit.",
       status: "present",
       observed: "The artifact states the estimated units manufacturable as 842 units.",
-      rationale: "A single mechanical division floored to a whole number, weighted +1.",
+      rationale: "Deriving the manufacturable units reconciles the production budget with the per-unit cost, so it carries a +3.",
     },
     {
       n: 16,
@@ -656,7 +656,8 @@ I've also included a final_artifact_format.md file that defines the exact struct
     ],
   },
 
-  unitTestPreamble: `import sys
+  unitTestPreamble: `#!/usr/bin/env python3
+import sys
 import subprocess
 import importlib
 import re
@@ -717,13 +718,12 @@ def _parse_section_3a_bullets(content: str):
             results.append((m.group(1).strip().lower(), float(m.group(2).replace(",", ""))))
     return results
 
-# --- tests ---`,
+
+# --- tests go here ---`,
 
   artifactDocs: [
-    { label: "Rationale", file: "rationale.md", description: "The step-by-step reasoning behind how this task was built." },
     { label: "Prompt", file: "prompt.md", description: "The final user-facing prompt." },
     { label: "GTFA", file: "GTFA.md", description: "The Ground Truth Final Answer, both tracks with exact values." },
-    { label: "Format spec", file: "final_artifact_format.md", description: "The required structure for final_insights.md." },
     { label: "Rubrics", file: "rubrics.md", description: "The raw 17-criterion rubric set." },
     { label: "Draft history", file: "draft_history.md", description: "Agent objective, core functionalities, and desired outcome notes." },
   ],

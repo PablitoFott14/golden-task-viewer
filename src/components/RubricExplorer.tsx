@@ -127,8 +127,7 @@ export default function RubricExplorer({
             <ClipboardCheck size={16} /> Rubric Design Logic
           </div>
           <p className="mb-3 text-[12px] leading-relaxed text-ink-500">
-            Before reading individual criteria, internalize the five rules that shaped this whole set.
-            This is the reasoning a contributor should be able to reproduce.
+            Before reading individual criteria, internalize the rules that shaped this whole set.
           </p>
           <div className="grid gap-3 lg:grid-cols-2">
             {designNotes.map((note) => (

@@ -17,7 +17,7 @@ export default function Tasks() {
         <SectionHeading
           eyebrow="The library"
           title="Golden Tasks"
-          sub="Each task is a complete, reconstructed example. Browse the reasoning, the multimodal inputs, the Ground Truth answer, and the full rubric set. More tasks will appear here over time."
+          sub="Each task is a complete, reconstructed example. Browse the reasoning, the multimodal inputs, the Ground Truth answer, and the full rubric set."
         />
       </Reveal>
 
@@ -31,14 +31,14 @@ export default function Tasks() {
             <Reveal key={t.meta.id} delay={i * 0.06}>
               <Link
                 to={`/tasks/${t.meta.id}`}
-                className="group block overflow-hidden rounded-2xl border border-ink-200/70 bg-surface shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink-200/70 bg-surface shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
               >
                 <div
                   className="grid gap-px bg-ink-100"
                   style={{ gridTemplateColumns: `repeat(${Math.min(previews.length, 4)}, minmax(0, 1fr))` }}
                 >
                   {previews.map((p) => (
-                    <div key={p.filename} className="aspect-square overflow-hidden bg-ink-100">
+                    <div key={p.filename} className="h-44 overflow-hidden bg-ink-100">
                       <img
                         src={assetUrl(t.assetRoot, p.src)}
                         alt=""
@@ -48,7 +48,7 @@ export default function Tasks() {
                     </div>
                   ))}
                 </div>
-                <div className="p-6">
+                <div className="flex flex-1 flex-col p-6">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className={cx("chip", difficultyChip[t.meta.difficulty] ?? "bg-ink-100 text-ink-600")}>
                       <Gauge size={12} /> {t.meta.difficulty}
@@ -74,7 +74,7 @@ export default function Tasks() {
                     </span>
                   </div>
 
-                  <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
+                  <div className="mt-auto pt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
                     View task walkthrough
                     <ArrowRight
                       size={16}
@@ -86,19 +86,6 @@ export default function Tasks() {
             </Reveal>
           );
         })}
-
-        <div className="flex items-center justify-center rounded-2xl border-2 border-dashed border-ink-200 p-10 text-center">
-          <div>
-            <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-ink-100 text-ink-400">
-              <Layers size={22} />
-            </div>
-            <p className="mt-3 text-sm font-semibold text-ink-600">More tasks coming</p>
-            <p className="mt-1 text-xs text-ink-400">
-              The platform is built to scale. Drop a new task into the data layer and it
-              appears here.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );
