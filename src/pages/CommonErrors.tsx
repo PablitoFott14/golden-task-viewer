@@ -9,9 +9,7 @@ import {
   ScrollText,
   FlaskConical,
   Layers,
-  Sprout,
   ChevronDown,
-  Lightbulb,
 } from "lucide-react";
 import {
   commonErrors,
@@ -81,27 +79,6 @@ export default function CommonErrors() {
           </span>
           <p className="text-lg font-extrabold tracking-tight text-ink-900 sm:text-xl">
             Avoid these mistakes if you want to succeed in the project!
-          </p>
-        </div>
-      </Reveal>
-
-      {/* The root-cause teaching point */}
-      <Reveal>
-        <div className="mt-5 rounded-2xl border border-amber-300 bg-amber-50/60 p-5 dark:border-amber-500/40 dark:bg-amber-500/10">
-          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-700 dark:text-amber-300">
-            <Lightbulb size={15} /> The one root cause to internalize
-          </div>
-          <p className="mt-2 text-[15px] leading-relaxed text-ink-700">
-            Most of the errors below are{" "}
-            <strong className="text-ink-900">downstream symptoms of insufficient scenario complexity</strong>.
-            When the scenario isn't hard enough from the start, contributors end up forcing the task to meet the
-            bar, and that produces artificial constraints, brittle rubrics, over-specific requirements, and unit
-            tests that don't reflect the actual final state. Get the complexity right first and most of the rest
-            stops happening. Errors carrying the{" "}
-            <span className="inline-flex items-center gap-1 rounded-full bg-amber-200/70 px-1.5 align-middle text-[10px] font-bold text-amber-800 dark:bg-amber-500/25 dark:text-amber-200">
-              <Sprout size={10} /> ROOT
-            </span>{" "}
-            tag trace straight back to it.
           </p>
         </div>
       </Reveal>
@@ -177,18 +154,11 @@ export default function CommonErrors() {
 function ErrorCard({ error, n, t }: { error: CommonError; n: number; t: Theme }) {
   return (
     <div className={cx("card overflow-hidden border-l-4", t.border)}>
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-ink-100 p-4">
-        <div className="flex min-w-0 items-start gap-3">
-          <span className={cx("grid h-7 w-7 shrink-0 place-items-center rounded-lg text-sm font-bold", t.num)}>
-            {n}
-          </span>
-          <h3 className="mt-0.5 text-[15px] font-bold text-ink-900">{error.title}</h3>
-        </div>
-        {error.rootedInComplexity && (
-          <span className="chip shrink-0 bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200">
-            <Sprout size={11} /> ROOT
-          </span>
-        )}
+      <div className="flex items-start gap-3 border-b border-ink-100 p-4">
+        <span className={cx("grid h-7 w-7 shrink-0 place-items-center rounded-lg text-sm font-bold", t.num)}>
+          {n}
+        </span>
+        <h3 className="mt-0.5 text-[15px] font-bold text-ink-900">{error.title}</h3>
       </div>
 
       {error.callout && (

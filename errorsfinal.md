@@ -10,18 +10,6 @@ For each error:
 - **How to avoid it** — the practical fix.
 - **Looks like** — a concrete instance so the mistake is recognizable in a real task.
 - **Do this instead** — the same case done right.
-- **ROOT** — marks errors that are downstream symptoms of insufficient scenario complexity.
-
----
-
-## The one root cause to internalize
-
-Most of the errors below are **downstream symptoms of insufficient scenario complexity**.
-When the scenario isn't hard enough from the start, contributors end up forcing the task to
-meet the bar, and that produces artificial constraints, brittle rubrics, over-specific
-requirements, and unit tests that don't reflect the actual final state. Get the complexity
-right first and most of the rest stops happening. Errors carrying the **ROOT** tag trace
-straight back to it.
 
 ---
 
@@ -124,7 +112,7 @@ never set, contradictions, redundancy, and weights gamed to hit the failure thre
 - **Looks like:** A criterion that demands flagging a $4,800 flooring line as missing, when that line never appears in the source document, or one that reads three burners on a stove that clearly has four.
 - **Do this instead:** Grade only values you can find verbatim in the source at full zoom, or recompute from the raw data.
 
-### 3. Overfitting on values or format the prompt never set — ROOT
+### 3. Overfitting on values or format the prompt never set
 
 - **Why it happens:** The criterion demands a specific value, label, or format the prompt never established and the agent can't deterministically infer. It happens when criteria are reverse engineered from whatever one model produced, so private conventions and exact marketplace prices get enshrined as requirements.
 - **How to avoid it:** Search the prompt for every literal in the criterion. If it isn't there and isn't tool derivable, grade the shape of the value or the intent. Swap exact prices for tolerance bands or a check that the agent recorded a price.
@@ -166,7 +154,7 @@ never set, contradictions, redundancy, and weights gamed to hit the failure thre
 - **Looks like:** The prompt requires a specific section and ordering in the deliverable, but no criterion or test ever checks for it.
 - **Do this instead:** A covering check for every requirement in the deliverable spec, walked line by line.
 
-### 9. Weights or category gamed around the threshold — ROOT
+### 9. Weights or category gamed around the threshold
 
 - **Why it happens:** Weights or categories are assigned to engineer the failure rate rather than to reflect the honest severity of each check, tuned to hit the threshold instead of the real impact.
 - **How to avoid it:** Weight by impact: 5 for three or more dimensions, 3 for one or two, 1 for cosmetic. Never weight same-complexity actions differently by award status, and route hallucinated values to Factuality.

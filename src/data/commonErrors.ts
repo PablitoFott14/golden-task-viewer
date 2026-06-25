@@ -1,8 +1,6 @@
 /**
  * The recurring errors the customer flags in audit, grouped into the three
- * stages where they are introduced. Many are downstream symptoms of one root
- * cause, a scenario that was never complex enough, tracked via
- * `rootedInComplexity`.
+ * stages where they are introduced.
  *
  * `why` states what the mistake is and the root cause behind it in one place.
  * The concrete, recognizable instances live in `looksLike` (and the fix in
@@ -28,8 +26,6 @@ export interface CommonError {
   instead?: string;
   /** An emphatic, attention-grabbing warning shown above the error body. */
   callout?: string;
-  /** True when the error is a downstream symptom of insufficient scenario complexity. */
-  rootedInComplexity?: boolean;
 }
 
 export interface CategoryMeta {
@@ -208,7 +204,6 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
         "“The power supply row contains the price $129.99,” when the prompt only said to find a price on Amazon and any current listing price is valid.",
       instead:
         "“The power supply row contains the price shown in the listing the agent selected,” grading the behavior, not a frozen number.",
-      rootedInComplexity: true,
     },
     {
       title: "Criterion admits multiple interpretations",
@@ -275,7 +270,6 @@ export const commonErrors: Record<ErrorCategory, CommonError[]> = {
         "Two actions of identical difficulty weighted 1 and 5 depending on whether the model happened to get them right, nudging the set to exactly 50%.",
       instead:
         "Weight by real impact and let the failure rate fall wherever it honestly lands.",
-      rootedInComplexity: true,
     },
     {
       title: "Missing Evaluation Target tag",
