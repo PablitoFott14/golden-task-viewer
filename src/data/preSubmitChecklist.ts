@@ -1,9 +1,12 @@
 /**
- * The pre-submit checklist, distilled from pre_submit_checklist.md into a tight
- * final-validation pass. The source document carried three overlapping
- * checklists (Practical, Final Pass, Red-Flag); this merges them into one
- * deduplicated set grouped by review stage, dropping extraction noise. The goal
- * is a one-to-two-minute gate a contributor runs before every submission.
+ * The pre-submit checklist, distilled into a tight final-validation pass. The
+ * original reference carried three overlapping checklists (Practical, Final
+ * Pass, Red-Flag); this merges them into one deduplicated set grouped by review
+ * stage, dropping extraction noise. The goal is a one-to-two-minute gate a
+ * contributor runs before every submission.
+ *
+ * This is mirrored in the repo-root `pre_submit_checklist.md` for easy human
+ * review and editing; keep the two in sync.
  *
  * `critical` marks the items that are the most common Fail-band findings.
  */
