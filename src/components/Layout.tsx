@@ -38,6 +38,7 @@ const links = [
   { to: "/", label: "The Method", end: true },
   { to: "/tasks", label: "Golden Tasks" },
   { to: "/common-errors", label: "Common Errors" },
+  { to: "/spec", label: "Scoring Spec" },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {

@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Tasks from "./pages/Tasks";
 import TaskDetail from "./pages/TaskDetail";
 import CommonErrors from "./pages/CommonErrors";
+import SpecDoc from "./pages/SpecDoc";
 import NotFound from "./pages/NotFound";
 
 function ScrollToTop() {
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/tasks/:id" element={<TaskDetail />} />
         <Route path="/common-errors" element={<CommonErrors />} />
+        <Route path="/spec" element={<SpecDoc />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
