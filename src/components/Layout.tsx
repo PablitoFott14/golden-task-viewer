@@ -39,6 +39,7 @@ const links = [
   { to: "/tasks", label: "Golden Tasks" },
   { to: "/common-errors", label: "Common Errors" },
   { to: "/spec", label: "Scoring Spec" },
+  { to: "/checklist", label: "Pre-Submit" },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
