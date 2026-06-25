@@ -620,7 +620,7 @@ export default function TaskDetail() {
             <div className="mt-6 flex gap-3 rounded-xl border border-amber-300 bg-amber-50/70 p-4 dark:border-amber-500/40 dark:bg-amber-500/10">
               <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
               <p className="text-[13px] leading-relaxed text-ink-700">
-                <strong className="text-ink-900">If this task is being reviewed,</strong> the rubric set
+                <strong className="text-ink-900">If this task is a review,</strong> the rubric set
                 below must be modified so that no criterion overlaps with these unit tests. Anything already
                 enforced structurally by a unit test should not also be graded by a rubric.
               </p>
