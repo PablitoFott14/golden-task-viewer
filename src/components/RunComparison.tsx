@@ -13,7 +13,7 @@ export default function RunComparison({ run }: { run: ActualRun }) {
 
   return (
     <div>
-      <div className="rounded-2xl border border-ink-200/70 bg-surface p-5 shadow-soft">
+      <div className="card p-5">
         <p className="text-[15px] leading-relaxed text-ink-600">{run.summary}</p>
       </div>
 

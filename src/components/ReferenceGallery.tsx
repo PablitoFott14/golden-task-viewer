@@ -19,7 +19,7 @@ export default function ReferenceGallery({
       {assets.map((a) => (
         <div
           key={a.filename}
-          className="flex flex-col overflow-hidden rounded-2xl border border-ink-200/70 bg-surface shadow-soft"
+          className="card flex flex-col overflow-hidden"
         >
           <div className="bg-[#0b0e16] p-2">
             <img

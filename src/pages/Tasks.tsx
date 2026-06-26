@@ -48,7 +48,7 @@ export default function Tasks() {
             <Reveal key={t.meta.id} delay={i * 0.06}>
               <Link
                 to={`/tasks/${t.meta.id}`}
-                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink-200/70 bg-surface shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
+                className="group card flex h-full flex-col overflow-hidden transition hover:-translate-y-1 hover:shadow-glow"
               >
                 <div
                   className="grid gap-px bg-ink-100"

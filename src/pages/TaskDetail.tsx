@@ -167,7 +167,7 @@ export default function TaskDetail() {
             sub="Load the universe and get the persona's full context from the Database agent first. The category must fit their life naturally."
           >
             {task.personaPrompt && (
-              <div className="mb-6 rounded-2xl border border-ink-200/70 bg-surface p-5 shadow-soft">
+              <div className="mb-6 card p-5">
                 <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-brand-600">
                   <MessageSquare size={13} /> The prompt sent to the Database agent
                 </div>
@@ -419,7 +419,7 @@ export default function TaskDetail() {
             sub="High-level and natural. The annotations on the right decode the intent behind each key phrase."
           >
             <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-              <div className="rounded-2xl border border-ink-200/70 bg-surface p-6 shadow-soft">
+              <div className="card p-6">
                 <div className="mb-3 flex items-center gap-2 text-xs font-semibold text-ink-400">
                   <Quote size={14} /> prompt.md
                 </div>

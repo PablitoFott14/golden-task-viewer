@@ -21,7 +21,7 @@ export default function CalcTracks({ view }: { view: GtfaCalcView }) {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {view.tracks.map((track) => (
-          <div key={track.title} className="rounded-2xl border border-ink-200/70 bg-surface p-5 shadow-soft">
+          <div key={track.title} className="card p-5">
             <h4 className="mb-4 text-sm font-bold text-ink-900">{track.title}</h4>
             <div className="space-y-1">
               {track.steps.map((s, i) => (

@@ -52,7 +52,7 @@ export default function ImageGallery({
               className={cx(
                 "rounded-full px-3 py-1.5 text-xs font-semibold transition",
                 isActive
-                  ? "bg-ink-900 text-ink-50"
+                  ? "bg-brand-600 text-white shadow-glow"
                   : "bg-surface text-ink-600 border border-ink-200 hover:border-ink-300"
               )}
             >

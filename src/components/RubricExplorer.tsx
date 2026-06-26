@@ -188,7 +188,7 @@ export default function RubricExplorer({
             className={cx(
               "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
               view === v
-                ? "bg-ink-900 text-ink-50 dark:bg-ink-200 dark:text-ink-900"
+                ? "bg-brand-600 text-white shadow-glow"
                 : "bg-surface text-ink-600 border border-ink-200 hover:border-ink-300"
             )}
           >

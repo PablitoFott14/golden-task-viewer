@@ -296,7 +296,7 @@ export default function Home() {
                 sub="Build on reliable skills, then make realistic limitations the source of difficulty — grounded complexity, not decorative."
               />
 
-              <div className="mt-7 overflow-hidden rounded-2xl border border-ink-200/80 bg-surface shadow-soft">
+              <div className="mt-7 card overflow-hidden">
                 <div className="grid gap-4 border-b border-ink-200/70 bg-ink-50 px-5 py-5 md:grid-cols-[1fr_1.4fr] md:items-center">
                   <div>
                     <div className="text-sm font-extrabold text-ink-900">
