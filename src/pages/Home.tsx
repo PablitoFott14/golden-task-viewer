@@ -40,6 +40,51 @@ function scrollToId(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
+function StepCard({
+  s,
+  isActive,
+  onSelect,
+}: {
+  s: (typeof methodSteps)[number];
+  isActive: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      onClick={onSelect}
+      aria-pressed={isActive}
+      className={cx(
+        "group flex items-start gap-3 rounded-2xl border p-3.5 text-left transition",
+        isActive
+          ? "border-brand-400 bg-brand-50 shadow-glow dark:border-brand-500/50 dark:bg-brand-500/10"
+          : "border-ink-200/70 bg-surface hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-soft"
+      )}
+    >
+      <span
+        className={cx(
+          "grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br text-xs font-bold text-white shadow-soft",
+          phaseColors[phaseOf(s.n)]
+        )}
+      >
+        {s.n}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-2">
+          <span className="text-[13px] font-bold leading-tight text-ink-900">{s.title}</span>
+          <ChevronDown
+            size={15}
+            className={cx(
+              "shrink-0 transition-transform",
+              isActive ? "rotate-180 text-brand-500" : "text-ink-300 group-hover:text-ink-400"
+            )}
+          />
+        </span>
+        <span className="mt-1 line-clamp-2 block text-[11.5px] leading-snug text-ink-500">{s.short}</span>
+      </span>
+    </button>
+  );
+}
+
 const mindset = [
   {
     icon: <Target size={16} />,
@@ -176,47 +221,20 @@ export default function Home() {
             />
           </Reveal>
 
-          {/* Roadmap: all 12 steps as connected cards */}
-          <div className="mt-10 flex flex-wrap items-stretch gap-y-3">
-            {methodSteps.map((s, i) => {
-              const isActive = s.n === activeStep;
-              const grad = phaseColors[phaseOf(s.n)];
+          {/* Roadmap: 12 steps in a 6×2 grid */}
+          <div className="mt-10 space-y-3">
+            {Array.from({ length: Math.ceil(methodSteps.length / 2) }).map((_, ri) => {
+              const pair = methodSteps.slice(ri * 2, ri * 2 + 2);
               return (
-                <div key={s.n} className="flex items-stretch">
-                  <button
-                    onClick={() => setActiveStep(s.n)}
-                    aria-pressed={isActive}
-                    className={cx(
-                      "group flex w-[150px] flex-col rounded-2xl border p-3 text-left transition",
-                      isActive
-                        ? "border-brand-400 bg-brand-50 shadow-glow dark:border-brand-500/50 dark:bg-brand-500/10"
-                        : "border-ink-200/70 bg-surface hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-soft"
-                    )}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span
-                        className={cx(
-                          "grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br text-xs font-bold text-white shadow-soft",
-                          grad
-                        )}
-                      >
-                        {s.n}
-                      </span>
-                      <ChevronDown
-                        size={15}
-                        className={cx(
-                          "text-ink-300 transition-transform",
-                          isActive ? "rotate-180 text-brand-500" : "group-hover:text-ink-400"
-                        )}
-                      />
-                    </div>
-                    <h3 className="mt-2 text-[12.5px] font-bold leading-tight text-ink-900">{s.title}</h3>
-                    <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-ink-500">{s.short}</p>
-                  </button>
-                  {i < methodSteps.length - 1 && (
-                    <div className="flex w-5 shrink-0 items-center justify-center">
-                      <ChevronRight size={16} className="text-ink-300" />
-                    </div>
+                <div key={ri} className="grid items-stretch gap-3 sm:grid-cols-[1fr_auto_1fr]">
+                  <StepCard s={pair[0]} isActive={pair[0].n === activeStep} onSelect={() => setActiveStep(pair[0].n)} />
+                  <div className="hidden items-center justify-center sm:flex">
+                    <ChevronRight size={18} className="text-ink-300" />
+                  </div>
+                  {pair[1] ? (
+                    <StepCard s={pair[1]} isActive={pair[1].n === activeStep} onSelect={() => setActiveStep(pair[1].n)} />
+                  ) : (
+                    <div className="hidden sm:block" />
                   )}
                 </div>
               );
