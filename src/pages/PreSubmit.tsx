@@ -98,6 +98,15 @@ export default function PreSubmit() {
     });
   };
 
+  const setMany = (itemIds: string[], value: boolean) => {
+    setJustReset(false);
+    setChecked((prev) => {
+      const next = new Set(prev);
+      itemIds.forEach((id) => (value ? next.add(id) : next.delete(id)));
+      return next;
+    });
+  };
+
   const submit = () => {
     setChecked(new Set());
     setJustReset(true);
@@ -205,7 +214,7 @@ export default function PreSubmit() {
         {/* All sections, always visible */}
         <div className="min-w-0 space-y-5">
           {visibleSections.map((s) => (
-            <SectionBlock key={s.id} section={s} checked={checked} onToggle={toggle} />
+            <SectionBlock key={s.id} section={s} checked={checked} onToggle={toggle} onSetMany={setMany} />
           ))}
         </div>
       </div>
@@ -244,14 +253,17 @@ function SectionBlock({
   section,
   checked,
   onToggle,
+  onSetMany,
 }: {
   section: ChecklistSection;
   checked: Set<string>;
   onToggle: (id: string) => void;
+  onSetMany: (ids: string[], value: boolean) => void;
 }) {
   const Icon = sectionIcon[section.id] ?? FileText;
   const doneCount = section.items.filter((i) => checked.has(i.id)).length;
   const complete = doneCount === section.items.length;
+  const itemIds = section.items.map((i) => i.id);
 
   return (
     <section id={section.id} className="card scroll-mt-24 overflow-hidden">
@@ -287,6 +299,12 @@ function SectionBlock({
           </div>
           <p className="mt-0.5 text-[13px] leading-relaxed text-ink-500">{section.blurb}</p>
         </div>
+        <button
+          onClick={() => onSetMany(itemIds, !complete)}
+          className="shrink-0 self-center rounded-lg border border-ink-200 bg-surface px-2.5 py-1.5 text-xs font-semibold text-ink-600 transition hover:border-brand-300 hover:text-brand-700"
+        >
+          {complete ? "Uncheck all" : "Check all"}
+        </button>
       </div>
 
       <ul className="divide-y divide-ink-100">
@@ -314,25 +332,16 @@ function ItemRow({ item, on, onToggle }: { item: ChecklistItem; on: boolean; onT
         >
           <Check size={13} strokeWidth={3} />
         </span>
-        <span className="min-w-0">
-          <span
-            className={cx(
-              "flex items-center gap-2 text-[14px] font-semibold leading-snug transition",
-              on ? "text-ink-400 line-through" : "text-ink-800"
-            )}
-          >
-            {item.text}
-            {item.reviewerOnly && (
-              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-100 px-1.5 py-0.5 text-[10px] font-bold text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
-                <Eye size={10} /> Reviewer
-              </span>
-            )}
-          </span>
-          {item.detail && (
-            <span
-              className={cx("mt-1 block text-[12px] leading-relaxed transition", on ? "text-ink-300" : "text-ink-500")}
-            >
-              {item.detail}
+        <span
+          className={cx(
+            "flex min-w-0 items-center gap-2 text-[14px] font-semibold leading-snug transition",
+            on ? "text-ink-400 line-through" : "text-ink-800"
+          )}
+        >
+          {item.text}
+          {item.reviewerOnly && (
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-100 px-1.5 py-0.5 text-[10px] font-bold text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
+              <Eye size={10} /> Reviewer
             </span>
           )}
         </span>
