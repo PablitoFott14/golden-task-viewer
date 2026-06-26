@@ -1,0 +1,15 @@
+/**
+ * Landing-page changelog. Mirrored from the repo-root `changelog.md`, which the
+ * maintainer edits by hand — keep this array in sync with that file (newest
+ * entry first). Each line in the md is `DD-MM-YYYY — entry text`.
+ */
+
+export interface ChangelogEntry {
+  date: string;
+  text: string;
+}
+
+export const changelog: ChangelogEntry[] = [
+  { date: "26-06-2026", text: "Beta checklist launched." },
+  { date: "26-06-2026", text: "Scoring Spec & Common Errors tabs added." },
+];

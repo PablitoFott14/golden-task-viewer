@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Image, Layers, Gauge } from "lucide-react";
+import { ArrowRight, Image, Layers, Gauge, ShieldAlert } from "lucide-react";
 import { tasks } from "../data";
 import { Reveal, SectionHeading } from "../components/ui";
 import { assetUrl, cx } from "../lib/assets";
@@ -19,6 +19,23 @@ export default function Tasks() {
           title="Golden Tasks"
           sub="Each task is a complete, reconstructed example. Browse the reasoning, the multimodal inputs, the Ground Truth answer, and the full rubric set."
         />
+      </Reveal>
+
+      <Reveal>
+        <div className="mt-8 flex items-start gap-4 rounded-2xl border-2 border-rose-400 bg-rose-50 p-5 dark:border-rose-500/60 dark:bg-rose-500/10">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-rose-600 text-white shadow-glow">
+            <ShieldAlert size={24} />
+          </span>
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-rose-600 dark:text-rose-400">
+              Reference only
+            </p>
+            <p className="mt-1 text-[15px] font-bold leading-relaxed text-ink-900">
+              Use these scenarios only as references to understand the expected level of complexity. Do not copy or
+              reuse them. Doing so will result in automatic removal from the project.
+            </p>
+          </div>
+        </div>
       </Reveal>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">

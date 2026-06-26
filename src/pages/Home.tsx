@@ -12,8 +12,10 @@ import {
   ShieldCheck,
   Sparkles,
   History,
+  ChevronRight,
 } from "lucide-react";
 import { methodSteps, modelCapabilityReference } from "../data/method";
+import { changelog } from "../data/changelog";
 import { tasks } from "../data";
 import { Reveal, SectionHeading } from "../components/ui";
 import { cx } from "../lib/assets";
@@ -33,6 +35,14 @@ function phaseOf(n: number) {
   if (n <= 9) return 3;
   return 4;
 }
+
+const phaseMeta = [
+  { label: "Research & ideation", range: "1–3" },
+  { label: "Build the reality", range: "4–5" },
+  { label: "Prompt & ground truth", range: "6–7" },
+  { label: "Run & cross-reference", range: "8–9" },
+  { label: "Trajectory, tests & rubrics", range: "10–12" },
+];
 
 function scrollToId(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -56,10 +66,6 @@ const mindset = [
   },
 ];
 
-const changelog = [
-  { date: "26-06-2026", text: "Beta checklist launched." },
-  { date: "26-06-2026", text: "Scoring Spec & Common Errors tabs added." },
-];
 
 const capabilityTone = {
   reliable: {
@@ -174,146 +180,135 @@ export default function Home() {
             <SectionHeading
               eyebrow="The workflow"
               title="The 12-step Golden Task method"
-              sub="Click any step to see what happens, what it produces, and how it maps to the Complexity Playbook. The colored phases group steps into the major stages of task creation."
+              sub="The whole workflow at a glance. Colored phases group the steps into the major stages of task creation — click any step to open what it does, what it produces, and how it maps to the Complexity Playbook."
             />
           </Reveal>
 
-          <div className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_1.4fr]">
-            {/* Step rail */}
-            <div className="relative">
-              <div className="absolute bottom-2 left-[19px] top-2 w-px bg-ink-200" />
-              <div className="space-y-1.5">
-                {methodSteps.map((s) => {
-                  const isActive = s.n === activeStep;
-                  const grad = phaseColors[phaseOf(s.n)];
-                  return (
-                    <button
-                      key={s.n}
-                      onClick={() => setActiveStep(s.n)}
-                      className={cx(
-                        "group relative flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition",
-                        isActive ? "bg-ink-50" : "hover:bg-ink-50/60"
-                      )}
-                    >
-                      <span
-                        className={cx(
-                          "relative z-10 grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-bold text-white shadow-soft transition",
-                          `bg-gradient-to-br ${grad}`,
-                          isActive ? "scale-110 ring-4 ring-ink-50" : "opacity-85"
-                        )}
-                      >
-                        {s.n}
-                      </span>
-                      <span className="min-w-0">
-                        <span
-                          className={cx(
-                            "block truncate text-sm font-semibold",
-                            isActive ? "text-ink-900" : "text-ink-600"
+          {/* Roadmap: all 12 steps, grouped by phase */}
+          <div className="mt-10 space-y-4">
+            {phaseMeta.map((ph, pi) => {
+              const steps = methodSteps.filter((s) => phaseOf(s.n) === pi);
+              return (
+                <Reveal key={ph.label} delay={pi * 0.04}>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                    <div className="flex w-44 shrink-0 items-center gap-2">
+                      <span className={cx("h-2.5 w-2.5 shrink-0 rounded-full bg-gradient-to-br", phaseColors[pi])} />
+                      <div className="leading-tight">
+                        <div className="text-[12px] font-bold text-ink-700">{ph.label}</div>
+                        <div className="text-[11px] font-semibold text-ink-400">Steps {ph.range}</div>
+                      </div>
+                    </div>
+                    <div className="flex flex-1 flex-wrap items-stretch gap-2">
+                      {steps.map((s, si) => (
+                        <div key={s.n} className="flex items-stretch gap-2">
+                          <button
+                            onClick={() => setActiveStep(s.n)}
+                            aria-pressed={s.n === activeStep}
+                            className={cx(
+                              "group flex w-[150px] flex-col rounded-xl border p-3 text-left transition",
+                              s.n === activeStep
+                                ? "border-brand-400 bg-brand-50 shadow-glow dark:bg-brand-500/10"
+                                : "border-ink-200/70 bg-surface hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-soft"
+                            )}
+                          >
+                            <span
+                              className={cx(
+                                "grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br text-xs font-bold text-white shadow-soft",
+                                phaseColors[pi]
+                              )}
+                            >
+                              {s.n}
+                            </span>
+                            <h3 className="mt-2 text-[13px] font-bold leading-snug text-ink-900">{s.title}</h3>
+                          </button>
+                          {si < steps.length - 1 && (
+                            <ChevronRight size={16} className="my-auto hidden shrink-0 text-ink-300 sm:block" />
                           )}
-                        >
-                          {s.title}
-                        </span>
-                        <span className="block truncate text-xs text-ink-400">
-                          {s.short}
-                        </span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Detail panel */}
-            <div className="lg:sticky lg:top-24 lg:self-start">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={step.n}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.25 }}
-                  className="card overflow-hidden"
-                >
-                  <div
-                    className={cx(
-                      "bg-gradient-to-br p-6 text-white",
-                      phaseColors[phaseOf(step.n)]
-                    )}
-                  >
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-white/80">
-                      Step {step.n} of 12
-                    </div>
-                    <h3 className="mt-1 text-2xl font-extrabold">{step.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-white/90">
-                      {step.detail}
-                    </p>
-                  </div>
-                  <div className="space-y-4 p-6">
-                    {step.callouts?.map((c) => (
-                      <div
-                        key={c.title}
-                        className="rounded-xl border border-gold-300 bg-gold-50/70 p-3.5 dark:border-gold-500/40 dark:bg-gold-500/10"
-                      >
-                        <div className="flex items-center gap-1.5 text-[12px] font-extrabold uppercase tracking-wide text-gold-700 dark:text-gold-300">
-                          <Sparkles size={13} className="shrink-0" /> {c.title}
                         </div>
-                        <p className="mt-1 text-[13px] leading-relaxed text-ink-700">{c.body}</p>
-                      </div>
-                    ))}
-                    <div>
-                      <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">
-                        Key moves
-                      </div>
-                      <ul className="space-y-2">
-                        {step.tips.map((t) => (
-                          <li key={t} className="flex gap-2.5 text-sm text-ink-700">
-                            <CheckCircle2
-                              size={16}
-                              className="mt-0.5 shrink-0 text-emerald-500"
-                            />
-                            <span className="leading-snug">{t}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="flex gap-2 pt-1">
-                      <button
-                        disabled={step.n === 1}
-                        onClick={() => setActiveStep((n) => Math.max(1, n - 1))}
-                        className="btn-ghost flex-1 disabled:opacity-40"
-                      >
-                        Previous
-                      </button>
-                      <button
-                        disabled={step.n === 12}
-                        onClick={() => setActiveStep((n) => Math.min(12, n + 1))}
-                        className="btn-primary flex-1 disabled:opacity-40"
-                      >
-                        Next step <ArrowRight size={16} />
-                      </button>
+                      ))}
                     </div>
                   </div>
-                </motion.div>
-              </AnimatePresence>
+                </Reveal>
+              );
+            })}
+          </div>
 
-              <Link
-                to={`/tasks/${tasks[0].meta.id}`}
-                className="group mt-4 flex items-center justify-between gap-3 rounded-xl border border-ink-200/80 bg-ink-50/70 p-4 text-ink-800 transition hover:border-brand-300 hover:bg-brand-50/50 dark:bg-ink-100/40"
+          {/* Detail panel for the selected step */}
+          <div className="mt-8 grid gap-4 lg:grid-cols-[1.6fr_1fr] lg:items-start">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={step.n}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25 }}
+                className="card overflow-hidden"
               >
-                <span>
-                  <span className="block text-[11px] font-bold uppercase tracking-wide text-brand-600">
-                    Theory into practice
-                  </span>
-                  <span className="mt-0.5 block text-base font-extrabold leading-snug text-ink-900">
-                    See the method applied to a real task
-                  </span>
+                <div className={cx("bg-gradient-to-br p-6 text-white", phaseColors[phaseOf(step.n)])}>
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-white/80">
+                    Step {step.n} of 12
+                    {step.output && <span className="rounded-full bg-white/20 px-2 py-0.5">→ {step.output}</span>}
+                  </div>
+                  <h3 className="mt-1 text-2xl font-extrabold">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/90">{step.detail}</p>
+                </div>
+                <div className="space-y-4 p-6">
+                  {step.callouts?.map((c) => (
+                    <div
+                      key={c.title}
+                      className="rounded-xl border border-gold-300 bg-gold-50/70 p-3.5 dark:border-gold-500/40 dark:bg-gold-500/10"
+                    >
+                      <div className="flex items-center gap-1.5 text-[12px] font-extrabold uppercase tracking-wide text-gold-700 dark:text-gold-300">
+                        <Sparkles size={13} className="shrink-0" /> {c.title}
+                      </div>
+                      <p className="mt-1 text-[13px] leading-relaxed text-ink-700">{c.body}</p>
+                    </div>
+                  ))}
+                  <div>
+                    <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">Key moves</div>
+                    <ul className="space-y-2">
+                      {step.tips.map((t) => (
+                        <li key={t} className="flex gap-2.5 text-sm text-ink-700">
+                          <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-emerald-500" />
+                          <span className="leading-snug">{t}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="flex gap-2 pt-1">
+                    <button
+                      disabled={step.n === 1}
+                      onClick={() => setActiveStep((n) => Math.max(1, n - 1))}
+                      className="btn-ghost flex-1 disabled:opacity-40"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      disabled={step.n === 12}
+                      onClick={() => setActiveStep((n) => Math.min(12, n + 1))}
+                      className="btn-primary flex-1 disabled:opacity-40"
+                    >
+                      Next step <ArrowRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            <Link
+              to={`/tasks/${tasks[0].meta.id}`}
+              className="group flex items-center justify-between gap-3 rounded-xl border border-ink-200/80 bg-ink-50/70 p-4 text-ink-800 transition hover:border-brand-300 hover:bg-brand-50/50 dark:bg-ink-100/40 lg:sticky lg:top-24"
+            >
+              <span>
+                <span className="block text-[11px] font-bold uppercase tracking-wide text-brand-600">
+                  Theory into practice
                 </span>
-                <ArrowRight
-                  size={20}
-                  className="shrink-0 text-brand-600 transition-transform group-hover:translate-x-1"
-                />
-              </Link>
-            </div>
+                <span className="mt-0.5 block text-base font-extrabold leading-snug text-ink-900">
+                  See the method applied to a real task
+                </span>
+              </span>
+              <ArrowRight size={20} className="shrink-0 text-brand-600 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
 
           <Reveal className="mt-14 border-t border-ink-200/70 pt-12">

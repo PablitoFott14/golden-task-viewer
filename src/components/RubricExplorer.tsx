@@ -12,6 +12,8 @@ import {
   Activity,
   Crosshair,
   CheckCircle2,
+  Gauge,
+  Ban,
 } from "lucide-react";
 import type { Rubric, RubricDesignNote } from "../data/types";
 import { cx } from "../lib/assets";
@@ -85,6 +87,41 @@ export default function RubricExplorer({
 
   return (
     <div>
+      {/* ---- Weighting rule (most common mistake) ---- */}
+      <div className="mb-5 overflow-hidden rounded-2xl border-2 border-gold-400 bg-gradient-to-br from-gold-50 to-amber-50/40 p-5 dark:border-gold-500/50 dark:from-gold-500/10 dark:to-amber-500/5">
+        <div className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.18em] text-gold-700 dark:text-gold-300">
+          <Scale size={16} /> How to weight rubrics
+        </div>
+        <p className="mt-1.5 text-[16px] font-extrabold leading-snug text-ink-900">
+          Weights measure complexity, never importance.
+        </p>
+        <ul className="mt-3 space-y-2.5">
+          <li className="flex gap-2.5 text-[13.5px] leading-relaxed text-ink-700">
+            <Gauge size={16} className="mt-0.5 shrink-0 text-gold-600 dark:text-gold-400" />
+            <span>
+              Rubric weights are assigned based on{" "}
+              <strong className="text-ink-900">complexity, not importance</strong> — how hard the criterion is to
+              verify, not how much it matters to the prompt.
+            </span>
+          </li>
+          <li className="flex gap-2.5 text-[13.5px] leading-relaxed text-ink-700">
+            <Ban size={16} className="mt-0.5 shrink-0 text-rose-600 dark:text-rose-400" />
+            <span>
+              <strong className="text-ink-900">Never adjust weights just to reach the 50% failure threshold.</strong>{" "}
+              Gaming the weights to hit the bar is one of the most common findings.
+            </span>
+          </li>
+          <li className="flex gap-2.5 text-[13.5px] leading-relaxed text-ink-700">
+            <Activity size={16} className="mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <span>
+              The failure threshold should be a{" "}
+              <strong className="text-ink-900">consequence of the task's genuine complexity</strong>, not the
+              objective when assigning weights.
+            </span>
+          </li>
+        </ul>
+      </div>
+
       {/* ---- Result of the initial run ---- */}
       <div
         className={cx(
