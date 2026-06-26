@@ -10,6 +10,5 @@ export interface ChangelogEntry {
 }
 
 export const changelog: ChangelogEntry[] = [
-  { date: "26-06-2026", text: "Beta checklist launched." },
-  { date: "26-06-2026", text: "Scoring Spec & Common Errors tabs added." },
+  { date: "26-06-2026", text: "Beta version launched." },
 ];
