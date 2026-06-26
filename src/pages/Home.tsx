@@ -184,50 +184,64 @@ export default function Home() {
             />
           </Reveal>
 
-          {/* Roadmap: all 12 steps, grouped by phase */}
-          <div className="mt-10 space-y-4">
+          {/* Roadmap: five phases flowing left to right, all 12 steps visible */}
+          <div className="mt-10 flex flex-col gap-3 lg:flex-row lg:items-stretch lg:gap-0">
             {phaseMeta.map((ph, pi) => {
               const steps = methodSteps.filter((s) => phaseOf(s.n) === pi);
               return (
-                <Reveal key={ph.label} delay={pi * 0.04}>
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-                    <div className="flex w-44 shrink-0 items-center gap-2">
-                      <span className={cx("h-2.5 w-2.5 shrink-0 rounded-full bg-gradient-to-br", phaseColors[pi])} />
-                      <div className="leading-tight">
-                        <div className="text-[12px] font-bold text-ink-700">{ph.label}</div>
-                        <div className="text-[11px] font-semibold text-ink-400">Steps {ph.range}</div>
+                <Reveal key={ph.label} delay={pi * 0.05} className="lg:flex lg:flex-1 lg:items-stretch">
+                  <div className="flex flex-1 flex-col rounded-2xl border border-ink-200/70 bg-ink-50/50 p-3 dark:bg-ink-100/30">
+                    <div className="mb-2.5 flex items-center gap-2">
+                      <span
+                        className={cx(
+                          "grid h-6 w-6 shrink-0 place-items-center rounded-md bg-gradient-to-br text-[11px] font-extrabold text-white shadow-soft",
+                          phaseColors[pi]
+                        )}
+                      >
+                        {pi + 1}
+                      </span>
+                      <div className="min-w-0 leading-tight">
+                        <div className="truncate text-[12px] font-bold text-ink-800">{ph.label}</div>
+                        <div className="text-[10.5px] font-semibold uppercase tracking-wide text-ink-400">
+                          Phase {pi + 1}
+                        </div>
                       </div>
                     </div>
-                    <div className="flex flex-1 flex-wrap items-stretch gap-2">
-                      {steps.map((s, si) => (
-                        <div key={s.n} className="flex items-stretch gap-2">
+                    <div className="flex flex-1 flex-col gap-2">
+                      {steps.map((s) => {
+                        const isActive = s.n === activeStep;
+                        return (
                           <button
+                            key={s.n}
                             onClick={() => setActiveStep(s.n)}
-                            aria-pressed={s.n === activeStep}
+                            aria-pressed={isActive}
                             className={cx(
-                              "group flex w-[150px] flex-col rounded-xl border p-3 text-left transition",
-                              s.n === activeStep
-                                ? "border-brand-400 bg-brand-50 shadow-glow dark:bg-brand-500/10"
-                                : "border-ink-200/70 bg-surface hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-soft"
+                              "group rounded-xl border p-2.5 text-left transition",
+                              isActive
+                                ? "border-brand-400 bg-brand-50 shadow-glow dark:border-brand-500/50 dark:bg-brand-500/10"
+                                : "border-ink-200/70 bg-surface hover:border-brand-300 hover:shadow-soft"
                             )}
                           >
-                            <span
-                              className={cx(
-                                "grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br text-xs font-bold text-white shadow-soft",
-                                phaseColors[pi]
-                              )}
-                            >
-                              {s.n}
-                            </span>
-                            <h3 className="mt-2 text-[13px] font-bold leading-snug text-ink-900">{s.title}</h3>
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={cx(
+                                  "grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-br text-[11px] font-bold text-white shadow-soft",
+                                  phaseColors[pi]
+                                )}
+                              >
+                                {s.n}
+                              </span>
+                              <h3 className="text-[12.5px] font-bold leading-tight text-ink-900">{s.title}</h3>
+                            </div>
+                            <p className="mt-1.5 line-clamp-2 text-[11.5px] leading-snug text-ink-500">{s.short}</p>
                           </button>
-                          {si < steps.length - 1 && (
-                            <ChevronRight size={16} className="my-auto hidden shrink-0 text-ink-300 sm:block" />
-                          )}
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
+                  {pi < phaseMeta.length - 1 && (
+                    <ChevronRight size={18} className="mx-1 hidden shrink-0 self-center text-ink-300 lg:block" />
+                  )}
                 </Reveal>
               );
             })}
