@@ -737,17 +737,17 @@ def _parse_section_3a_bullets(content: str):
     hidePersonaDoc: true,
     showFrictionTypes: false,
     realitySub:
-      "After choosing the capital-plan idea, pressure-test it: would Brandon really face this decision, and what would have to be true for it to hold? That reasoning decides which evidence to place where, and which step is the one most likely to be skipped.",
+      "Pressure-test the idea: would Brandon really face this decision, and what must be true for it to hold? That decides which evidence to place where, and which step is most likely to be skipped.",
     inputsSub:
-      "Three sources have to be reconciled: a handwritten note of positions, the liquid cash held in Brandon's accounts, and a live web price. A format specification fixes the output. The catch is that the liquidity has to be retrieved, not read from the prompt.",
+      "Three sources reconcile: a handwritten note of positions, the liquid cash in Brandon's accounts, and a live web price; a format spec fixes the output. The catch: liquidity must be retrieved, not read from the prompt.",
     ssotTitle: "The handwritten note — the five positions",
     ssotBlurb:
-      "Brandon jotted down what he holds and the current cash value in each position. The values are dollars, not share counts, so the 5% increase applies directly. This note is one of two sources the selection depends on; the other, his liquid cash, has to be pulled from his accounts.",
+      "Brandon jotted down each position's current cash value — dollars, not share counts, so the 5% increase applies directly. It's one of two sources the selection depends on; the other, his liquid cash, must be pulled from his accounts.",
     frictionTitle: "The reasoning traps planted in this task",
     frictionBlurb:
-      "None of these are perception gotchas. Each is an attractive wrong path a careful reader could still take: liquidity that has to be fetched rather than read, a note of cash values rather than shares, a subset-sum with a single clean answer, and a sale price sitting next to the retail price that the prompt actually asks for.",
+      "None are perception gotchas — each is an attractive wrong path: liquidity that must be fetched rather than read, cash values rather than shares, a subset-sum with one clean answer, and a sale price sitting next to the retail price the prompt actually asks for.",
     gtfaSub:
-      "The one correct deliverable, worked out by hand before the prompt was written. The answer is a derived chain, so it is shown as two dependent tracks: a missed step at the top of a track cascades into every figure below it.",
+      "The one correct deliverable, worked out by hand before the prompt. The answer is a derived chain, shown as two dependent tracks: a missed step at the top cascades into every figure below.",
     gtfaBehaviorTitle: "The expected behavior",
     gtfaBehavior: [
       "Retrieve Brandon's liquid cash from his accounts ($3,900 checking + $2,800 savings = $6,700) before selecting anything.",
@@ -756,9 +756,9 @@ def _parse_section_3a_bullets(content: str):
       "Turn 80% of the budget into a manufacturing estimate ($20,000 / $23.75 = 842 units) and write everything into final_insights.md exactly as final_artifact_format.md requires.",
     ],
     actualSub:
-      "Reconstructed from the seed trajectory and its workspace (including the produced final_insights.md). A single prompt and agent interaction, compared against the GTFA.",
+      "Reconstructed from the seed trajectory and its workspace (including the produced final_insights.md), compared against the GTFA.",
     silverSub:
-      "A couple of targeted follow-ups guide the model to the correct brief, always restoring to seed. The first repairs the root cause; the second carries the fix into the artifact.",
+      "A couple of targeted follow-ups, each restoring to seed. The first repairs the root cause; the second carries the fix into the artifact.",
     silverSuccessHeadline: "The brief now matches the GTFA",
     silverSuccess: [
       ["Liquidity counted", "The $6,700 liquid cash is retrieved and the remaining amount drops to $18,300."],
@@ -767,7 +767,7 @@ def _parse_section_3a_bullets(content: str):
       ["Manufacturing intact", "The Stanley price, budget, per-unit cost, and 842 units carry over unchanged."],
     ],
     testsSub:
-      "Reviewer only structural and value checks on final_insights.md. Each test is defined on its own; the shared scaffolding lives in the Template dropdown.",
+      "Reviewer-only structural and value checks on final_insights.md. Each test stands alone; shared scaffolding is in the Template dropdown.",
     unitTestGroups: ["Structure", "Values"],
   },
 };

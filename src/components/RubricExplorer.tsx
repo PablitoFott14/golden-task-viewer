@@ -136,18 +136,16 @@ export default function RubricExplorer({
           How the initial trajectory scored
         </div>
         <p className="mt-1 text-[13px] leading-relaxed text-ink-600">
-          Each criterion below is marked <strong>Present</strong> / <strong>Not Present</strong> against the
-          model's first (seed) run. The model earned{" "}
+          Marked <strong>Present</strong> / <strong>Not Present</strong> against the model's seed run. It earned{" "}
           <strong className="text-ink-900">
             {earnedPositive} of {totalPositive}
           </strong>{" "}
-          positive points{penaltyIncurred < 0 ? <>, minus a <strong className="text-rose-600">{penaltyIncurred}</strong> negative penalty,</> : <> </>}{" "}
-          for a net of <strong className="text-ink-900">{netScore}</strong>.{" "}
+          positive points{penaltyIncurred < 0 ? <>, minus a <strong className="text-rose-600">{penaltyIncurred}</strong> penalty,</> : <> </>}{" "}
+          for a net of <strong className="text-ink-900">{netScore}</strong> —{" "}
           {belowBar ? (
-            <>That is below the <strong>{failThreshold}-point</strong> bar, which clears the threshold to
-            move on to the Silver Trajectory.</>
+            <>below the <strong>{failThreshold}-point</strong> bar, clearing the threshold for the Silver Trajectory.</>
           ) : (
-            <>That is at or above the <strong>{failThreshold}-point</strong> bar.</>
+            <>at or above the <strong>{failThreshold}-point</strong> bar.</>
           )}
         </p>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -164,7 +162,7 @@ export default function RubricExplorer({
             <ClipboardCheck size={16} /> Rubric Design Logic
           </div>
           <p className="mb-3 text-[12px] leading-relaxed text-ink-500">
-            Before reading individual criteria, internalize the rules that shaped this whole set.
+            The rules that shaped this whole set.
           </p>
           <div className="grid gap-3 lg:grid-cols-2">
             {designNotes.map((note) => (

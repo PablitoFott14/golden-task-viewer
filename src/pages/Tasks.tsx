@@ -17,7 +17,7 @@ export default function Tasks() {
         <SectionHeading
           eyebrow="The library"
           title="Golden Tasks"
-          sub="Each task is a complete, reconstructed example. Browse the reasoning, the multimodal inputs, the Ground Truth answer, and the full rubric set."
+          sub="Complete, reconstructed examples: the reasoning, the multimodal inputs, the Ground Truth answer, and the full rubric set."
         />
       </Reveal>
 

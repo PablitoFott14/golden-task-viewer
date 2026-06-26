@@ -906,20 +906,20 @@ def _workspace_state():
 
   narrative: {
     realitySub:
-      "Once the deck idea is chosen, pressure-test it before defining anything: would Aaliyah really study asset allocation this way, and what would have to be true for it to hold? That reasoning decides which messy, gathered inputs to build, and then the strategy locks them in.",
+      "Before defining anything, pressure-test the idea: would Aaliyah really study asset allocation this way, and what must be true for it to hold? That decides which messy inputs to build — then the strategy locks them in.",
     inputsSub:
-      "The handwritten note and presentation.md are the source of truth. Four reference inputs and two spec files have to be read and reconciled into a seven slide deck, and every input drives a checkable output. Filter by role and click any asset for details.",
+      "The handwritten note and presentation.md are the source of truth. Four reference inputs and two spec files reconcile into a seven-slide deck, each driving a checkable output. Filter by role or click any asset for details.",
     ssotTitle: "The handwritten note and presentation.md, the source of truth",
     ssotBlurb:
-      "The investor profile values live on a rushed handwritten note. The slide structure, exact titles, and formatting rules live in presentation.md (shown below). Together they define what correct means, and every other input is read against them.",
+      "Investor-profile values live on a rushed handwritten note; slide structure, titles, and formatting rules live in presentation.md (below). Together they define correct, and every other input is read against them.",
     inputsVariant: "reference",
     showFrictionTypes: false,
     galleryTitle: "The reference inputs, and what each one feeds",
     frictionTitle: "The reasoning traps planted across these inputs",
     frictionBlurb:
-      "None of these are perception gotchas. Each is an attractive wrong path a careful reader could still take: decade labeled data that invites independent compounding, a contribution rate with two plausible bases, reference images that look like slide content. Difficulty lives in the joins between sources, not in any single hard to read value.",
+      "None are perception gotchas — each is an attractive wrong path: decade-labeled data that invites independent compounding, a contribution rate with two plausible bases, reference images that look like slide content. Difficulty lives in the joins between sources, not any single hard-to-read value.",
     gtfaSub:
-      "The one correct deliverable, built by hand before the prompt was written: a seven slide deck with deterministic compounding, plus the mentor review and email. This is the behavior a correct agent should produce.",
+      "The one correct deliverable, built by hand before the prompt: a seven-slide deck with deterministic compounding, plus the mentor review and email.",
     gtfaTreeTitle: "The deck and state changes",
     gtfaBehaviorTitle: "The expected behavior",
     gtfaBehavior: [
@@ -929,9 +929,9 @@ def _workspace_state():
       "Schedule a 15 minute Carlton review on Monday 8 June 2026, 10:00 to 10:15 AM, and email the deck to c.davis.columbus@outlook.com.",
     ],
     actualSub:
-      "Reconstructed from the seed trajectory and its workspace, including the model's own build_presentation.py. A single prompt and agent interaction, compared against the GTFA.",
+      "Reconstructed from the seed trajectory and its workspace (including the model's build_presentation.py), compared against the GTFA.",
     silverSub:
-      "A couple of targeted follow-ups guide the model to the correct deck, always restoring to seed. Each one addresses specific failures observed in the run above.",
+      "A couple of targeted follow-ups, each restoring to seed, that address specific failures from the run above.",
     silverSuccessHeadline: "The deck and both state changes now match the GTFA",
     silverSuccess: [
       ["The deck", "asset_allocation.pptx rebuilt with the chained 20-year compounding and the correct monthly contribution math on Slides 4 and 5."],
@@ -940,7 +940,7 @@ def _workspace_state():
       ["State changes", "The Carlton review event (Mon 8 Jun, 10:00 to 10:15) and the email with the deck attached are confirmed."],
     ],
     testsSub:
-      "Reviewer only structural checks on the deck skeleton and the calendar and email state changes. Each test is defined on its own; the shared scaffolding lives in the Template dropdown.",
+      "Reviewer-only structural checks on the deck skeleton and the calendar/email state changes. Each test stands alone; shared scaffolding is in the Template dropdown.",
     unitTestGroups: ["Presentation structure", "State changes"],
   },
 };

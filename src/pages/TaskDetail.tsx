@@ -164,7 +164,7 @@ export default function TaskDetail() {
             n={2}
             title="Persona Understanding"
             kicker="Step 1: Persona"
-            sub="Load the universe, then ask the Database agent for the persona's full context before doing anything else. The category must fit the persona's life naturally."
+            sub="Load the universe and get the persona's full context from the Database agent first. The category must fit their life naturally."
           >
             {task.personaPrompt && (
               <div className="mb-6 rounded-2xl border border-ink-200/70 bg-surface p-5 shadow-soft">
@@ -245,7 +245,7 @@ export default function TaskDetail() {
             n={4}
             title="Build the Reality First"
             kicker="Step 4: Build the reality"
-            sub={nv.realitySub ?? "After the idea is chosen but before the task is defined, pressure-test the scenario: would this really happen, and what would have to be true for it to? That reasoning decides what context to build, then lock the strategy for it."}
+            sub={nv.realitySub ?? "Before defining the task, pressure-test the scenario: would this really happen, and what must be true for it to? That decides what context to build — then lock the strategy."}
           >
             <div className="grid gap-6 md:grid-cols-2">
               <div>
@@ -283,7 +283,7 @@ export default function TaskDetail() {
             n={5}
             title="The Multimodal Inputs"
             kicker="Step 5: MM inputs"
-            sub={nv.inputsSub ?? "Two handwritten notes are the SSOT. A mixed caption file and 23 images must be audited against them. Filter by role and click any asset for details."}
+            sub={nv.inputsSub ?? "Two handwritten notes are the SSOT; a mixed caption file and 23 images are audited against them. Filter by role or click any asset for details."}
           >
             {/* SSOT spotlight */}
             <div className="mb-8">
@@ -294,7 +294,7 @@ export default function TaskDetail() {
                 </h3>
               </div>
               <p className="mb-4 max-w-2xl text-sm text-ink-500">
-                {nv.ssotBlurb ?? "The notes are intentionally messy but still readable, a rushed two-page draft jotted down during the emergency meeting, covering the whole of June. When a line is genuinely hard to make out, the GTFA is the tie-breaker for what it says."}
+                {nv.ssotBlurb ?? "A rushed, messy but readable two-page draft from the emergency meeting, covering all of June. When a line is hard to make out, the GTFA is the tie-breaker."}
               </p>
               <div className="grid gap-4 md:grid-cols-2">
                 {task.assets
@@ -368,8 +368,7 @@ export default function TaskDetail() {
               <div className="mt-8">
                 <h3 className="mb-1 text-sm font-bold text-ink-900">The written specification</h3>
                 <p className="mb-3 max-w-2xl text-sm text-ink-500">
-                  These files carry the structural rules the deck must follow. Read them alongside the images,
-                  not in place of them.
+                  Structural rules the deck must follow — read them alongside the images, not instead of them.
                 </p>
                 {task.inputDocs.map((d) =>
                   d.markdown ? (
@@ -401,7 +400,7 @@ export default function TaskDetail() {
                 </h3>
               </div>
               <p className="mb-4 max-w-2xl text-sm text-ink-500">
-                {nv.frictionBlurb ?? "Each friction point below was embedded on purpose, yet every one is the kind of mess a real June recovery would contain. It is spread deliberately across the handwritten notes, the images, and the mixed caption file, so no single misread decides the task. Together they cover mismatches to log, files expected to be removed, and information that is simply missing."}
+                {nv.frictionBlurb ?? "Every friction point is deliberate, but each is the kind of mess a real June recovery would contain — spread across the notes, images, and caption file so no single misread decides the task. Together they cover mismatches to log, files to remove, and missing information."}
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {task.friction.map((f) => (
@@ -417,7 +416,7 @@ export default function TaskDetail() {
             n={6}
             title="Materialize the Prompt"
             kicker="Step 6: The prompt"
-            sub="The prompt stays high-level and natural. The annotations on the right explain the structural intent behind each key phrase."
+            sub="High-level and natural. The annotations on the right decode the intent behind each key phrase."
           >
             <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
               <div className="rounded-2xl border border-ink-200/70 bg-surface p-6 shadow-soft">
@@ -457,7 +456,7 @@ export default function TaskDetail() {
             n={7}
             title="The Ground Truth Final Answer"
             kicker="Step 7: GTFA"
-            sub={nv.gtfaSub ?? "The one correct deliverable, built by hand before the prompt was written. This is the intended solution and the behavior a correct agent should produce."}
+            sub={nv.gtfaSub ?? "The one correct deliverable, built by hand before the prompt — the solution a correct agent should produce."}
           >
             <div className={task.gtfaView || task.gtfaCalc ? "space-y-8" : "grid gap-6 lg:grid-cols-[1.2fr_1fr]"}>
               <div>
@@ -500,7 +499,7 @@ export default function TaskDetail() {
             n={8}
             title="What the Model Actually Did"
             kicker="Steps 8–9: Run & cross-reference"
-            sub={nv.actualSub ?? "Reconstructed directly from the seed trajectory and its workspace. A single prompt and agent interaction, compared against the GTFA."}
+            sub={nv.actualSub ?? "Reconstructed from the seed trajectory and its workspace, compared against the GTFA."}
           >
             {task.actualRun.layout === "compare" ? (
               <RunComparison run={task.actualRun} />
@@ -515,7 +514,7 @@ export default function TaskDetail() {
             n={9}
             title="The Silver Trajectory"
             kicker="Step 10: Silver trajectory"
-            sub={nv.silverSub ?? "Targeted follow-ups guide the model to the correct answer, always restoring to seed. Each one targets a specific failure observed in the run above."}
+            sub={nv.silverSub ?? "Targeted follow-ups, each restoring to seed, that address a specific failure from the run above."}
           >
             <div className="relative space-y-4 pl-8">
               <div className="absolute bottom-4 left-[11px] top-4 w-px bg-ink-200" />
@@ -587,7 +586,7 @@ export default function TaskDetail() {
             n={10}
             title="Unit Tests"
             kicker="Step 11: Unit tests (reviewers only)"
-            sub={nv.testsSub ?? "Reviewer-only checks for the platform folders and the date folders. Each test is defined on its own; the shared scaffolding lives in the Template dropdown."}
+            sub={nv.testsSub ?? "Reviewer-only structural checks. Each test stands alone; shared scaffolding is in the Template dropdown."}
           >
             {/* Shared template (helpers), once */}
             <div className="mb-6">
@@ -620,9 +619,9 @@ export default function TaskDetail() {
             <div className="mt-6 flex gap-3 rounded-xl border border-amber-300 bg-amber-50/70 p-4 dark:border-amber-500/40 dark:bg-amber-500/10">
               <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
               <p className="text-[13px] leading-relaxed text-ink-700">
-                <strong className="text-ink-900">If this task is a review,</strong> the rubric set
-                below must be modified so that no criterion overlaps with these unit tests. Anything already
-                enforced structurally by a unit test should not also be graded by a rubric.
+                <strong className="text-ink-900">If this task is a review,</strong> modify the rubric set below so
+                no criterion overlaps these unit tests. Anything a test already enforces shouldn't also be graded
+                by a rubric.
               </p>
             </div>
           </Section>
@@ -643,7 +642,7 @@ export default function TaskDetail() {
             n={12}
             title="Raw Artifacts"
             kicker="Source documents"
-            sub="The original files produced for this task, rendered for reference."
+            sub="The original files produced for this task."
           >
             <div className="space-y-2.5">
               {task.artifactDocs.map((d) => (

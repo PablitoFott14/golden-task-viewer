@@ -150,7 +150,7 @@ export default function SpecDoc() {
         <SectionHeading
           eyebrow="Scoring Spec"
           title="How every task gets scored"
-          sub={`The L0 review QC rubric, the exact standard a task is graded against across ${dimensionCount} dimensions. Search the whole spec, or pick a section to jump to it.`}
+          sub={`The exact standard a task is graded against, across ${dimensionCount} dimensions. Search the spec or jump to a section.`}
         />
       </Reveal>
 

@@ -13,10 +13,10 @@ import {
   Sparkles,
   History,
   ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 import { methodSteps, modelCapabilityReference } from "../data/method";
 import { changelog } from "../data/changelog";
-import { tasks } from "../data";
 import { Reveal, SectionHeading } from "../components/ui";
 import { cx } from "../lib/assets";
 
@@ -35,14 +35,6 @@ function phaseOf(n: number) {
   if (n <= 9) return 3;
   return 4;
 }
-
-const phaseMeta = [
-  { label: "Research & ideation", range: "1–3" },
-  { label: "Build the reality", range: "4–5" },
-  { label: "Prompt & ground truth", range: "6–7" },
-  { label: "Run & cross-reference", range: "8–9" },
-  { label: "Trajectory, tests & rubrics", range: "10–12" },
-];
 
 function scrollToId(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -180,157 +172,128 @@ export default function Home() {
             <SectionHeading
               eyebrow="The workflow"
               title="The 12-step Golden Task method"
-              sub="The whole workflow at a glance. Colored phases group the steps into the major stages of task creation — click any step to open what it does, what it produces, and how it maps to the Complexity Playbook."
+              sub="The whole flow at a glance. Click any step to expand what it does, what it produces, and how it maps to the Complexity Playbook."
             />
           </Reveal>
 
-          {/* Roadmap: five phases flowing left to right, all 12 steps visible */}
-          <div className="mt-10 flex flex-col gap-3 lg:flex-row lg:items-stretch lg:gap-0">
-            {phaseMeta.map((ph, pi) => {
-              const steps = methodSteps.filter((s) => phaseOf(s.n) === pi);
+          {/* Roadmap: all 12 steps as connected cards */}
+          <div className="mt-10 flex flex-wrap items-stretch gap-y-3">
+            {methodSteps.map((s, i) => {
+              const isActive = s.n === activeStep;
+              const grad = phaseColors[phaseOf(s.n)];
               return (
-                <Reveal key={ph.label} delay={pi * 0.05} className="lg:flex lg:flex-1 lg:items-stretch">
-                  <div className="flex flex-1 flex-col rounded-2xl border border-ink-200/70 bg-ink-50/50 p-3 dark:bg-ink-100/30">
-                    <div className="mb-2.5 flex items-center gap-2">
+                <div key={s.n} className="flex items-stretch">
+                  <button
+                    onClick={() => setActiveStep(s.n)}
+                    aria-pressed={isActive}
+                    className={cx(
+                      "group flex w-[150px] flex-col rounded-2xl border p-3 text-left transition",
+                      isActive
+                        ? "border-brand-400 bg-brand-50 shadow-glow dark:border-brand-500/50 dark:bg-brand-500/10"
+                        : "border-ink-200/70 bg-surface hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-soft"
+                    )}
+                  >
+                    <div className="flex items-center justify-between">
                       <span
                         className={cx(
-                          "grid h-6 w-6 shrink-0 place-items-center rounded-md bg-gradient-to-br text-[11px] font-extrabold text-white shadow-soft",
-                          phaseColors[pi]
+                          "grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br text-xs font-bold text-white shadow-soft",
+                          grad
                         )}
                       >
-                        {pi + 1}
+                        {s.n}
                       </span>
-                      <div className="min-w-0 leading-tight">
-                        <div className="truncate text-[12px] font-bold text-ink-800">{ph.label}</div>
-                        <div className="text-[10.5px] font-semibold uppercase tracking-wide text-ink-400">
-                          Phase {pi + 1}
-                        </div>
-                      </div>
+                      <ChevronDown
+                        size={15}
+                        className={cx(
+                          "text-ink-300 transition-transform",
+                          isActive ? "rotate-180 text-brand-500" : "group-hover:text-ink-400"
+                        )}
+                      />
                     </div>
-                    <div className="flex flex-1 flex-col gap-2">
-                      {steps.map((s) => {
-                        const isActive = s.n === activeStep;
-                        return (
-                          <button
-                            key={s.n}
-                            onClick={() => setActiveStep(s.n)}
-                            aria-pressed={isActive}
-                            className={cx(
-                              "group rounded-xl border p-2.5 text-left transition",
-                              isActive
-                                ? "border-brand-400 bg-brand-50 shadow-glow dark:border-brand-500/50 dark:bg-brand-500/10"
-                                : "border-ink-200/70 bg-surface hover:border-brand-300 hover:shadow-soft"
-                            )}
-                          >
-                            <div className="flex items-center gap-2">
-                              <span
-                                className={cx(
-                                  "grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-br text-[11px] font-bold text-white shadow-soft",
-                                  phaseColors[pi]
-                                )}
-                              >
-                                {s.n}
-                              </span>
-                              <h3 className="text-[12.5px] font-bold leading-tight text-ink-900">{s.title}</h3>
-                            </div>
-                            <p className="mt-1.5 line-clamp-2 text-[11.5px] leading-snug text-ink-500">{s.short}</p>
-                          </button>
-                        );
-                      })}
+                    <h3 className="mt-2 text-[12.5px] font-bold leading-tight text-ink-900">{s.title}</h3>
+                    <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-ink-500">{s.short}</p>
+                  </button>
+                  {i < methodSteps.length - 1 && (
+                    <div className="flex w-5 shrink-0 items-center justify-center">
+                      <ChevronRight size={16} className="text-ink-300" />
                     </div>
-                  </div>
-                  {pi < phaseMeta.length - 1 && (
-                    <ChevronRight size={18} className="mx-1 hidden shrink-0 self-center text-ink-300 lg:block" />
                   )}
-                </Reveal>
+                </div>
               );
             })}
           </div>
 
           {/* Detail panel for the selected step */}
-          <div className="mt-8 grid gap-4 lg:grid-cols-[1.6fr_1fr] lg:items-start">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={step.n}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25 }}
-                className="card overflow-hidden"
-              >
-                <div className={cx("bg-gradient-to-br p-6 text-white", phaseColors[phaseOf(step.n)])}>
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-white/80">
-                    Step {step.n} of 12
-                    {step.output && <span className="rounded-full bg-white/20 px-2 py-0.5">→ {step.output}</span>}
-                  </div>
-                  <h3 className="mt-1 text-2xl font-extrabold">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/90">{step.detail}</p>
-                </div>
-                <div className="space-y-4 p-6">
-                  {step.callouts?.map((c) => (
-                    <div
-                      key={c.title}
-                      className="rounded-xl border border-gold-300 bg-gold-50/70 p-3.5 dark:border-gold-500/40 dark:bg-gold-500/10"
-                    >
-                      <div className="flex items-center gap-1.5 text-[12px] font-extrabold uppercase tracking-wide text-gold-700 dark:text-gold-300">
-                        <Sparkles size={13} className="shrink-0" /> {c.title}
-                      </div>
-                      <p className="mt-1 text-[13px] leading-relaxed text-ink-700">{c.body}</p>
-                    </div>
-                  ))}
-                  <div>
-                    <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">Key moves</div>
-                    <ul className="space-y-2">
-                      {step.tips.map((t) => (
-                        <li key={t} className="flex gap-2.5 text-sm text-ink-700">
-                          <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-emerald-500" />
-                          <span className="leading-snug">{t}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="flex gap-2 pt-1">
-                    <button
-                      disabled={step.n === 1}
-                      onClick={() => setActiveStep((n) => Math.max(1, n - 1))}
-                      className="btn-ghost flex-1 disabled:opacity-40"
-                    >
-                      Previous
-                    </button>
-                    <button
-                      disabled={step.n === 12}
-                      onClick={() => setActiveStep((n) => Math.min(12, n + 1))}
-                      className="btn-primary flex-1 disabled:opacity-40"
-                    >
-                      Next step <ArrowRight size={16} />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            <Link
-              to={`/tasks/${tasks[0].meta.id}`}
-              className="group flex items-center justify-between gap-3 rounded-xl border border-ink-200/80 bg-ink-50/70 p-4 text-ink-800 transition hover:border-brand-300 hover:bg-brand-50/50 dark:bg-ink-100/40 lg:sticky lg:top-24"
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={step.n}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="card mt-8 overflow-hidden"
             >
-              <span>
-                <span className="block text-[11px] font-bold uppercase tracking-wide text-brand-600">
-                  Theory into practice
-                </span>
-                <span className="mt-0.5 block text-base font-extrabold leading-snug text-ink-900">
-                  See the method applied to a real task
-                </span>
-              </span>
-              <ArrowRight size={20} className="shrink-0 text-brand-600 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
+              <div className={cx("bg-gradient-to-br p-6 text-white", phaseColors[phaseOf(step.n)])}>
+                <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wide text-white/80">
+                  Step {step.n} of 12
+                  {step.output && <span className="rounded-full bg-white/20 px-2 py-0.5">→ {step.output}</span>}
+                </div>
+                <h3 className="mt-1 text-2xl font-extrabold">{step.title}</h3>
+                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/90">{step.detail}</p>
+              </div>
+              <div className="grid gap-4 p-6 lg:grid-cols-2">
+                <div>
+                  <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-ink-400">Key moves</div>
+                  <ul className="space-y-2">
+                    {step.tips.map((t) => (
+                      <li key={t} className="flex gap-2.5 text-sm text-ink-700">
+                        <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-emerald-500" />
+                        <span className="leading-snug">{t}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {step.callouts && step.callouts.length > 0 && (
+                  <div className="space-y-2.5">
+                    {step.callouts.map((c) => (
+                      <div
+                        key={c.title}
+                        className="rounded-xl border border-gold-300 bg-gold-50/70 p-3.5 dark:border-gold-500/40 dark:bg-gold-500/10"
+                      >
+                        <div className="flex items-center gap-1.5 text-[12px] font-extrabold uppercase tracking-wide text-gold-700 dark:text-gold-300">
+                          <Sparkles size={13} className="shrink-0" /> {c.title}
+                        </div>
+                        <p className="mt-1 text-[13px] leading-relaxed text-ink-700">{c.body}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="flex gap-2 lg:col-span-2">
+                  <button
+                    disabled={step.n === 1}
+                    onClick={() => setActiveStep((n) => Math.max(1, n - 1))}
+                    className="btn-ghost disabled:opacity-40"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    disabled={step.n === 12}
+                    onClick={() => setActiveStep((n) => Math.min(12, n + 1))}
+                    className="btn-primary disabled:opacity-40"
+                  >
+                    Next step <ArrowRight size={16} />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
           <Reveal className="mt-14 border-t border-ink-200/70 pt-12">
             <div id="capabilities" className="scroll-mt-24">
               <SectionHeading
                 eyebrow="Task-design guide"
                 title="What the model can — and can't — reliably do"
-                sub="Use reliable skills as building blocks, then choose realistic limitations as the source of task difficulty. This keeps complexity grounded instead of decorative."
+                sub="Build on reliable skills, then make realistic limitations the source of difficulty — grounded complexity, not decorative."
               />
 
               <div className="mt-7 overflow-hidden rounded-2xl border border-ink-200/80 bg-surface shadow-soft">
