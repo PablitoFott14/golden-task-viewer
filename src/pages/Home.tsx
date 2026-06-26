@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   ShieldCheck,
   Sparkles,
+  History,
 } from "lucide-react";
 import { methodSteps, modelCapabilityReference } from "../data/method";
 import { tasks } from "../data";
@@ -37,6 +38,29 @@ function scrollToId(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
+const mindset = [
+  {
+    icon: <Target size={16} />,
+    title: "Stepping into the user's shoes",
+    body: "Build realistic, believable scenarios, not artificial benchmark-style tasks.",
+  },
+  {
+    icon: <Lightbulb size={16} />,
+    title: "Originality",
+    body: "Go beyond overused scenarios into unique situations that naturally demand complex reasoning.",
+  },
+  {
+    icon: <GitBranch size={16} />,
+    title: "Planning before execution",
+    body: "Design the task before building it, instead of improvising and hitting issues later.",
+  },
+];
+
+const changelog = [
+  { date: "26-06-2026", text: "Beta checklist launched." },
+  { date: "26-06-2026", text: "Scoring Spec & Common Errors tabs added." },
+];
+
 const capabilityTone = {
   reliable: {
     label: "Build on it",
@@ -60,91 +84,87 @@ export default function Home() {
     <div>
       {/* Hero */}
       <section className="border-b border-ink-200/70 bg-surface">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-3xl"
-          >
-            <h1 className="text-3xl font-black leading-[1.05] tracking-tight text-ink-900 sm:text-5xl">
-              Natural complexity is what drives success
-              <span className="bg-gradient-to-r from-brand-600 to-violet-500 bg-clip-text text-transparent">
-                {" "}in this project.
-              </span>
-            </h1>
-            <p className="mt-4 max-w-2xl text-lg font-bold uppercase tracking-wide text-brand-600 sm:text-2xl">
-              Let your imagination lead the way.
-            </p>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-500">
-              Realistic, naturally complex scenarios are the foundation of every successful task,
-              not artificial constraints or forced difficulty.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link to="/tasks" className="btn-primary">
-                Explore Golden Tasks <ArrowRight size={16} />
-              </Link>
-              <button
-                onClick={() => scrollToId("method")}
-                className="btn-ghost"
-              >
-                <Compass size={16} /> See the method
-              </button>
-            </div>
-            <button
-              onClick={() => scrollToId("capabilities")}
-              className="group mt-5 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-bold text-brand-700 transition hover:bg-brand-100 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300"
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+          <div className="grid gap-10 lg:grid-cols-[1.25fr_1fr] lg:items-start">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              <ShieldCheck size={15} /> Jump to model capabilities &amp; task levers
-              <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </motion.div>
-        </div>
-      </section>
+              <h1 className="text-3xl font-black leading-[1.05] tracking-tight text-ink-900 sm:text-5xl">
+                Natural complexity is what drives success
+                <span className="bg-gradient-to-r from-brand-600 to-violet-500 bg-clip-text text-transparent">
+                  {" "}in this project.
+                </span>
+              </h1>
+              <p className="mt-4 text-lg font-bold uppercase tracking-wide text-brand-600 sm:text-2xl">
+                Let your imagination lead the way.
+              </p>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-500">
+                Realistic, naturally complex scenarios are the foundation of every successful task,
+                not artificial constraints or forced difficulty.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link to="/tasks" className="btn-primary">
+                  Explore Golden Tasks <ArrowRight size={16} />
+                </Link>
+                <button onClick={() => scrollToId("method")} className="btn-ghost">
+                  <Compass size={16} /> See the method
+                </button>
+              </div>
+              <button
+                onClick={() => scrollToId("capabilities")}
+                className="group mt-5 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-bold text-brand-700 transition hover:bg-brand-100 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300"
+              >
+                <ShieldCheck size={15} /> Jump to model capabilities &amp; task levers
+                <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+              </button>
+            </motion.div>
 
-      {/* Three principles strip */}
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <Reveal>
-          <div className="card p-5 sm:p-6">
-            <div className="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-600">
-                The mindset
-              </span>
-              <h2 className="text-lg font-extrabold tracking-tight text-ink-900">
-                Three principles drive every task
-              </h2>
-            </div>
-            <div className="grid gap-5 md:grid-cols-3 md:gap-0 md:divide-x md:divide-ink-200/60">
-              {[
-                {
-                  icon: <Target size={18} />,
-                  title: "Stepping into the user's shoes",
-                  body: "Create realistic, believable scenarios that resemble real-world situations rather than artificial benchmark-style tasks.",
-                },
-                {
-                  icon: <Lightbulb size={18} />,
-                  title: "Originality",
-                  body: "Go beyond common, overused scenarios and develop unique situations that naturally require complex reasoning.",
-                },
-                {
-                  icon: <GitBranch size={18} />,
-                  title: "Planning before execution",
-                  body: "Design the task before building it. Stay in control of the requirements instead of improvising midway and discovering issues later.",
-                },
-              ].map((p, i) => (
-                <div key={p.title} className={cx("flex gap-3", i > 0 && "md:pl-5")}>
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
-                    {p.icon}
-                  </span>
-                  <div>
-                    <h3 className="text-sm font-bold text-ink-900">{p.title}</h3>
-                    <p className="mt-1 text-[13px] leading-relaxed text-ink-500">{p.body}</p>
-                  </div>
+            {/* Mindset + changelog */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="space-y-4"
+            >
+              <div className="card p-5">
+                <div className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-brand-600">
+                  The mindset
                 </div>
-              ))}
-            </div>
+                <div className="space-y-3.5">
+                  {mindset.map((p) => (
+                    <div key={p.title} className="flex gap-3">
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+                        {p.icon}
+                      </span>
+                      <div>
+                        <h3 className="text-sm font-bold text-ink-900">{p.title}</h3>
+                        <p className="mt-0.5 text-[12.5px] leading-relaxed text-ink-500">{p.body}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card p-4">
+                <div className="mb-2.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-400">
+                  <History size={13} /> Changelog
+                </div>
+                <ul className="space-y-2">
+                  {changelog.map((c) => (
+                    <li key={c.date + c.text} className="flex gap-2.5 text-[12.5px] leading-relaxed">
+                      <span className="shrink-0 font-mono text-[11px] font-semibold text-brand-600 dark:text-brand-300">
+                        {c.date}
+                      </span>
+                      <span className="text-ink-600">{c.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
           </div>
-        </Reveal>
+        </div>
       </section>
 
       {/* Interactive method */}

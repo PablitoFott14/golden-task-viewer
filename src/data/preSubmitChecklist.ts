@@ -1,22 +1,17 @@
 /**
- * The pre-submit checklist, distilled into a tight final-validation pass and
- * organized to follow the actual task-creation workflow. The original reference
- * carried three overlapping checklists (Practical, Final Pass, Red-Flag); this
- * merges them into one deduplicated set grouped by review stage, dropping
- * extraction noise.
- *
- * This is mirrored in the repo-root `pre_submit_checklist.md` for easy human
+ * The pre-submit checklist, organized to follow the actual task-creation
+ * workflow. Mirrored in the repo-root `pre_submit_checklist.md` for easy human
  * review and editing; keep the two in sync.
  *
- * `critical` marks the items that are the most common Fail-band findings.
- * `reviewerOnly` sections are hidden from contributors unless reviewer mode is on.
+ * `reviewerOnly` (on a section or an individual item) hides that content from
+ * contributors unless reviewer mode is enabled.
  */
 
 export interface ChecklistItem {
   id: string;
   text: string;
   detail?: string;
-  critical?: boolean;
+  reviewerOnly?: boolean;
 }
 
 export interface ChecklistSection {
@@ -29,6 +24,39 @@ export interface ChecklistSection {
 
 export const checklistSections: ChecklistSection[] = [
   {
+    id: "scenario",
+    title: "Scenario",
+    blurb: "The foundation of the task: a realistic, complex, user-grounded need.",
+    items: [
+      {
+        id: "scenario-longhorizon",
+        text: "Represents a genuine long-horizon user need rather than a collection of isolated or single-step actions.",
+      },
+      {
+        id: "scenario-crossmodal",
+        text: "Requires meaningful cross-modal reasoning across multiple modalities.",
+        detail: "e.g., universe context, multimodal inputs, and appropriate tool usage.",
+      },
+      {
+        id: "scenario-userperspective",
+        text: "Written from the user's perspective, reflecting their context, goals, and constraints rather than a generic or detached scenario.",
+        detail: "Universe interaction is needed for this.",
+      },
+      {
+        id: "scenario-category",
+        text: "Aligns with the assigned category, subcategory, and universe.",
+      },
+      {
+        id: "scenario-tools",
+        text: "Solvable using only the existing tools.",
+      },
+      {
+        id: "scenario-complex",
+        text: "Complex enough to genuinely meet the 50% threshold.",
+      },
+    ],
+  },
+  {
     id: "prompt",
     title: "Prompt",
     blurb: "Every word the user types is graded. It should read like a real request, not a spec.",
@@ -36,52 +64,33 @@ export const checklistSections: ChecklistSection[] = [
       {
         id: "prompt-filenames",
         text: "Every required output file is named in the prompt itself.",
-        detail: "Not in input files, the agent objective, or the desired outcome — the model can't see those fields.",
-        critical: true,
+        detail: "For the inputs, it's not needed.",
       },
-      {
-        id: "prompt-persona",
-        text: "Reads like a real person with a real stake.",
-        detail: "No “act as X agent”, and no listing of which tools or systems to call.",
-      },
-      {
-        id: "prompt-policies",
-        text: "Thresholds and policies live in input files, not hard-coded in the prompt.",
-      },
+      { id: "prompt-persona", text: "Reads like a real person with a real stake." },
       {
         id: "prompt-noleak",
         text: "Describes the shape of success, never the answer key or values the agent must derive.",
       },
-      {
-        id: "prompt-feasible",
-        text: "Every request is actually doable with the available tools.",
-        detail: "No step that's impossible for the loadout — that fails the task for the wrong reason.",
-      },
+      { id: "prompt-feasible", text: "Every request is actually doable with the available tools." },
       {
         id: "prompt-modifycreate",
         text: "No modify-vs-create ambiguity for existing artifacts (e.g., MEMORY.md).",
       },
       {
-        id: "prompt-cta",
-        text: "Closes with a natural call to action, not “Begin.” or “Return the output as…”.",
+        id: "prompt-gtfa",
+        text: "Contains a single GTFA that can be objectively derived from the prompt and/or multimodal context.",
       },
     ],
   },
   {
     id: "inputs",
-    title: "Inputs & Multimodal",
+    title: "Multimodal Inputs",
     blurb: "Realistic, solvable, leak-free, and light enough to run.",
     items: [
-      {
-        id: "inputs-env",
-        text: "Environment loads and universe data renders.",
-        detail: "All task IDs added before deploy; if data is missing, load the Artifact ID in Settings and refresh.",
-      },
       {
         id: "inputs-unavoidable",
         text: "The task can't be solved without the non-text inputs.",
         detail: "No transcript or text shortcut that lets the agent skip the media.",
-        critical: true,
       },
       {
         id: "inputs-media-core",
@@ -90,19 +99,12 @@ export const checklistSections: ChecklistSection[] = [
       {
         id: "inputs-noleak",
         text: "No answer leaks in filenames, manifests, notes, or helper docs.",
-        detail: "No suggestive spoilers like doordash_pizzahut_20260323.png when the merchant must be read from the image.",
-        critical: true,
-      },
-      {
-        id: "inputs-realistic",
-        text: "Inputs look like real, messy user data with neutral names.",
-        detail: "IMG_0427.JPG, duplicates, mixed orientations. A perfectly curated set of cropped JPGs reads as contrived.",
+        detail: "No suggestive spoilers, just genuine mess in real inputs.",
       },
       {
         id: "inputs-heavy",
         text: "Heavy media downsampled or chunked before upload.",
         detail: "Raw long video, full-resolution audio, or oversized PDFs trigger runtime timeouts and fail the task.",
-        critical: true,
       },
       {
         id: "inputs-hygiene",
@@ -113,7 +115,6 @@ export const checklistSections: ChecklistSection[] = [
         id: "inputs-pii",
         text: "No real PII; sensitive domains use mocked or synthetic data.",
         detail: "Medical, tax, IDs, faces, children, homework, insurance, seller DMs.",
-        critical: true,
       },
       {
         id: "inputs-llm",
@@ -131,57 +132,10 @@ export const checklistSections: ChecklistSection[] = [
         text: "The Silver Trajectory reflects how a competent agent would actually solve the task.",
       },
       {
-        id: "silver-stages",
-        text: "Runs at least 3 stages: acquire → reason → generate output.",
-      },
-      {
-        id: "silver-crossmodal",
-        text: "Cross-modal reconciliation is required.",
-        detail: "A value from source A is needed to query or validate source B. One MM artifact alone is not enough.",
-      },
-      {
-        id: "silver-tools",
-        text: "Solvable using only the provisioned tools, verified in the loadout.",
-      },
-      {
-        id: "silver-category",
-        text: "Clearly fits the selected category and the uploaded files.",
-      },
-      {
         id: "silver-tests-first",
-        text: "All unit tests pass on the Silver Trajectory first.",
-        detail: "If a test fails on Silver, the test is broken, not the model — fix it before running the initial trajectory.",
-        critical: true,
-      },
-    ],
-  },
-  {
-    id: "difficulty",
-    title: "Difficulty & Failure",
-    blurb: "Proof the task is genuinely hard, measured on the initial trajectory.",
-    items: [
-      {
-        id: "difficulty-failbar",
-        text: "The model fails ≥50% of the rubric weight on the initial trajectory.",
-        detail: "The core bar. If the agent passes too easily, the task is too simple — rework the scenario.",
-        critical: true,
-      },
-      {
-        id: "difficulty-realfailure",
-        text: "Each failure is a real capability gap, not an environment crash or a rubric defect.",
-      },
-      {
-        id: "difficulty-friction",
-        text: "The task forces multi-stage coordination with at least one realistic friction point.",
-        detail: "Conflicting data, missing fields, normalization, or a failed tool call the agent must recover from.",
-      },
-      {
-        id: "difficulty-memory",
-        text: "Multi-turn tasks require the model to write to MEMORY.md, explicitly or implicitly.",
-      },
-      {
-        id: "difficulty-differentiates",
-        text: "The task meaningfully separates strong and weak models.",
+        reviewerOnly: true,
+        text: "If the Silver Trajectory was left unedited, all unit tests should pass on the first run.",
+        detail: "If the reviewer edited the Silver Trajectory, only the unit tests affected by those edits may fail.",
       },
     ],
   },
@@ -193,13 +147,11 @@ export const checklistSections: ChecklistSection[] = [
       {
         id: "rubrics-coverage",
         text: "Every critical prompt requirement has a covering criterion, on the right deliverable.",
-        critical: true,
       },
       {
         id: "rubrics-media",
-        text: "At least one rubric or test grades media content, not just file existence.",
+        text: "The rubric set grades media content when the prompt requires it, not just file existence.",
         detail: "A value, match, visual detail, or decision that depends on the media.",
-        critical: true,
       },
       {
         id: "rubrics-weights",
@@ -207,36 +159,37 @@ export const checklistSections: ChecklistSection[] = [
       },
       {
         id: "rubrics-negatives",
-        text: "Negative-weight criteria ≤30% (aim ~25%), all written in positive phrasing.",
+        text: "Negative-weight criteria aren't forced (~≤30%), all written in positive phrasing.",
       },
       {
-        id: "rubrics-atomic",
-        text: "Each criterion is self-contained, atomic, and measurable.",
-        detail: "No “and” / “;” / “each of”. 3 entities → 3 criteria. Name the exact filename, not “the image”.",
+        id: "rubrics-bundling",
+        text: "Bundles actions only when they form a single logical unit.",
+        detail: "Independent actions (e.g., different dates or platforms) stay separate to preserve partial-failure visibility.",
       },
       {
-        id: "rubrics-defects",
-        text: "No contradictions, redundancy, overfitting, or underfitting.",
-        detail: "Check is_positive before flagging a pair as contradictory. Don't pin a format the prompt never stated.",
+        id: "rubrics-noduplicate",
+        text: "The same model behaviour isn't evaluated in more than one rubric.",
       },
       {
         id: "rubrics-oracle",
         text: "Every hard-coded value matches live tool output, verified by running the call.",
-        detail: "Price, name, ID, dimension. A mismatch is a rubric defect, not a model failure.",
-        critical: true,
       },
       {
-        id: "rubrics-general",
-        text: "Grades the user's general request, not literal format unless the prompt states it.",
+        id: "rubrics-explicitrefs",
+        text: "Explicit references are only enforced when the prompt states them.",
       },
       {
         id: "rubrics-evtag",
         text: "Each criterion is tagged with exactly one Evaluation Target.",
-        detail: "State change, user-facing message, trajectory, or final answer / artifact.",
       },
       {
-        id: "rubrics-spot",
-        text: "Groups of similar outcomes use ≤5 spot checks plus a volume criterion.",
+        id: "rubrics-notforced",
+        text: "Weights are not forced to meet the 50% failing threshold.",
+      },
+      {
+        id: "rubrics-nooverlap",
+        reviewerOnly: true,
+        text: "Rubrics do not overlap with the unit tests.",
       },
     ],
   },
@@ -249,20 +202,15 @@ export const checklistSections: ChecklistSection[] = [
       {
         id: "tests-structural",
         text: "Tests do structural, schema, and file-level checks only — no string searches inside files.",
-        detail: "Substring checks like \"$1,500\" in content belong in the rubric.",
       },
       {
         id: "tests-overlap",
         text: "Zero overlap between rubric criteria and pytest tests, and criteria outnumber tests.",
-        critical: true,
       },
+      { id: "tests-single", text: "Every unit test validates a single deterministic requirement." },
       {
-        id: "tests-coverage",
-        text: "Every mechanically verifiable requirement has a test — names, sections, counts, ordering.",
-      },
-      {
-        id: "tests-quality",
-        text: "Tests are correct: not >30% underfitted, not >20% coverage gaps.",
+        id: "tests-precise",
+        text: "Tests are precise: not underfitted, not overfitted, no coverage gaps (combined with the rubrics).",
       },
     ],
   },
@@ -274,16 +222,10 @@ export const checklistSections: ChecklistSection[] = [
       {
         id: "just-complete",
         text: "Every failed criterion explains why it's correct, where the model failed, and why it's necessary.",
-        detail: "Quote the prompt/input and point to the exact trajectory step. Can't cover all three? Delete the criterion.",
-        critical: true,
-      },
-      {
-        id: "just-clean",
-        text: "No justification cites other models, pass rates, or pipeline-internal files.",
-        detail: "gold_justification.md, plan.json, and similar references are an automatic Justification Fail.",
       },
       {
         id: "just-manual",
+        reviewerOnly: true,
         text: "Manually added any failed cases the taxonomy didn't pull automatically.",
       },
     ],
