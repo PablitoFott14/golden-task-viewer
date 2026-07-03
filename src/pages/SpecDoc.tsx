@@ -33,10 +33,9 @@ import {
   type WeightBucket,
   type RubricQualityIssue,
 } from "../data/specDoc";
-import { specUpdateLog, specVersions, type SpecChange, type SpecVersion } from "../data/specChangelog";
+import { specUpdateLog } from "../data/specChangelog";
 import { Reveal, SectionHeading } from "../components/ui";
-import { UpdateTimeline, LatestBadge, type TimelineEntry } from "../components/UpdateTimeline";
-import { assetUrl, cx } from "../lib/assets";
+import { cx } from "../lib/assets";
 
 /* ---- section registry: one entry per nav target ---- */
 
@@ -70,8 +69,6 @@ const dimensionNav: NavItem[] = specGroups.map((g) => ({
 const appendixNav: NavItem[] = [
   { id: "rubric-quality", label: "Rubric Quality", icon: ListChecks, count: rubricQualityIssues.length },
   { id: "weights", label: "Weight Definitions", icon: Scale, count: weightBuckets.length },
-  { id: "change-log", label: "Change Log", icon: History, count: specVersions.length },
-  { id: "source-coverage", label: "Source Coverage", icon: FileText },
 ];
 
 /* ---- text highlighting for search ---- */
@@ -191,7 +188,7 @@ export default function SpecDoc() {
 
       {!searching && (
         <Reveal>
-          <SpecUpdateLogPanel onViewLog={() => goTo("change-log")} />
+          <SpecUpdateLogPanel />
         </Reveal>
       )}
 
@@ -224,8 +221,6 @@ export default function SpecDoc() {
             {activeGroup && <GroupSection group={activeGroup} />}
             {active === "weights" && <WeightSection />}
             {active === "rubric-quality" && <RubricQualitySection />}
-            {active === "change-log" && <ChangeLogSection />}
-            {active === "source-coverage" && <SourceCoverageSection />}
           </motion.div>
         </div>
       )}
@@ -272,10 +267,11 @@ function SideButton({ item, active, onClick }: { item: NavItem; active: boolean;
   );
 }
 
-function SpecUpdateLogPanel({ onViewLog }: { onViewLog: () => void }) {
+function SpecUpdateLogPanel() {
+  const [latest, ...older] = specUpdateLog;
   return (
-    <div className="mt-4 rounded-2xl border border-brand-200/80 bg-brand-50/70 p-4 dark:border-brand-500/30 dark:bg-brand-500/10">
-      <div className="flex flex-wrap items-start gap-3">
+    <details className="group mt-4 rounded-2xl border border-brand-200/80 bg-brand-50/70 p-4 dark:border-brand-500/30 dark:bg-brand-500/10">
+      <summary className="flex cursor-pointer list-none flex-wrap items-start gap-3">
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand-600 text-white shadow-glow">
           <History size={17} />
         </span>
@@ -285,19 +281,17 @@ function SpecUpdateLogPanel({ onViewLog }: { onViewLog: () => void }) {
               Update Log
             </span>
             <span className="font-mono text-[11px] font-bold text-ink-400">{specUpdateLog.length} dated notes</span>
-            <LatestBadge />
+            <span className="rounded-md bg-brand-600 px-2 py-0.5 font-mono text-[10px] font-bold text-white">
+              {latest.dateLabel}
+            </span>
           </div>
-          <h3 className="mt-1 text-sm font-extrabold text-ink-900">Visible source updates, independent from the main content</h3>
-          <p className="mt-1 max-w-3xl text-[12.5px] leading-relaxed text-ink-600">
-            These entries track dated source notes from the CSV so reviewers can scan what changed without digging through long rubric definitions.
-          </p>
+          <h3 className="mt-1 text-sm font-extrabold text-ink-900">{latest.title}</h3>
+          <p className="mt-1 max-w-3xl text-[12.5px] leading-relaxed text-ink-600">{latest.summary}</p>
         </div>
-        <button onClick={onViewLog} className="btn-ghost px-3 py-2 text-xs">
-          <History size={14} /> Full log
-        </button>
-      </div>
-      <div className="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {specUpdateLog.map((entry) => (
+        <ChevronDown size={18} className="mt-2 shrink-0 text-brand-500 transition-transform group-open:rotate-180" />
+      </summary>
+      <div className="mt-3 grid gap-2 border-t border-brand-200/70 pt-3 md:grid-cols-2 xl:grid-cols-3 dark:border-brand-500/30">
+        {older.map((entry) => (
           <div key={entry.id} className="rounded-xl border border-brand-200/70 bg-surface/80 p-3 dark:border-brand-500/25">
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-md bg-brand-600 px-2 py-0.5 font-mono text-[10px] font-bold text-white">
@@ -312,7 +306,7 @@ function SpecUpdateLogPanel({ onViewLog }: { onViewLog: () => void }) {
           </div>
         ))}
       </div>
-    </div>
+    </details>
   );
 }
 
@@ -590,262 +584,6 @@ function RubricQualitySection() {
           );
         })}
       </div>
-    </section>
-  );
-}
-
-/* ---- appendix: spec version / change log ---- */
-
-const changeKindTone: Record<SpecChange["kind"], string> = {
-  added: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200",
-  updated: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200",
-  removed: "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200",
-  verified: "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-200",
-};
-
-function ChangeCard({ change }: { change: SpecChange }) {
-  return (
-    <div className="card p-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className={cx("chip capitalize", changeKindTone[change.kind])}>{change.kind}</span>
-        <h4 className="text-[13px] font-bold text-ink-900">{change.dimension}</h4>
-      </div>
-      <p className="mt-2 text-[13px] leading-relaxed text-ink-600">{change.description}</p>
-      {change.before !== undefined && change.after !== undefined && (
-        <div className="mt-3 grid gap-2 sm:grid-cols-2">
-          <div className="rounded-lg border border-rose-200 bg-rose-50/60 p-3 dark:border-rose-500/30 dark:bg-rose-500/10">
-            <div className="mb-1 text-[10px] font-bold uppercase tracking-wide text-rose-600 dark:text-rose-300">Before</div>
-            <p className="whitespace-pre-line font-mono text-[12px] leading-relaxed text-ink-700">{change.before}</p>
-          </div>
-          <div className="rounded-lg border border-emerald-200 bg-emerald-50/60 p-3 dark:border-emerald-500/30 dark:bg-emerald-500/10">
-            <div className="mb-1 text-[10px] font-bold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">After</div>
-            <p className="whitespace-pre-line font-mono text-[12px] leading-relaxed text-ink-700">{change.after}</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function VersionDetail({ v }: { v: SpecVersion }) {
-  const isLatest = v.id === specVersions[0].id;
-  return (
-    <div>
-      <div className="mb-4 flex flex-wrap items-center gap-2.5 border-b border-ink-200/70 pb-4">
-        <span className="rounded-full bg-brand-600 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
-          {v.version}
-        </span>
-        <span className="font-mono text-xs font-semibold text-ink-400">{v.dateLabel}</span>
-        {isLatest && <LatestBadge />}
-        <h3 className="w-full text-lg font-extrabold tracking-tight text-ink-900 sm:w-auto">{v.title}</h3>
-      </div>
-      <p className="text-[13px] leading-relaxed text-ink-600">{v.summary}</p>
-      {v.changes.length > 0 ? (
-        <div className="mt-4 space-y-3">
-          {v.changes.map((c, i) => (
-            <ChangeCard key={i} change={c} />
-          ))}
-        </div>
-      ) : (
-        <div className="mt-4 rounded-xl border border-dashed border-ink-200 px-4 py-6 text-center text-[12.5px] text-ink-400">
-          Baseline version, nothing to diff against yet.
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ChangeLogSection() {
-  const [active, setActive] = useState(specVersions[0].id);
-  const v = specVersions.find((x) => x.id === active) ?? specVersions[0];
-  const timelineEntries: TimelineEntry[] = specVersions.map((s) => ({
-    id: s.id,
-    date: s.dateLabel,
-    badge: s.version,
-    title: s.title,
-    summary: s.summary,
-  }));
-  return (
-    <section>
-      <SectionHeader
-        icon={History}
-        title="Spec Doc Change Log"
-        note={`${specVersions.length} version${specVersions.length > 1 ? "s" : ""} tracked · newest first`}
-      />
-      <div className="mb-4">
-        <UpdateTimeline entries={timelineEntries} activeId={active} onSelect={setActive} />
-      </div>
-      <motion.div
-        key={v.id}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25 }}
-        className="card min-w-0 p-5"
-      >
-        <VersionDetail v={v} />
-      </motion.div>
-    </section>
-  );
-}
-
-/* ---- appendix: full source CSV coverage ---- */
-
-const sourceCsvUrl = () => assetUrl("spec", "qc-rubric-cb-facing.csv");
-
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = "";
-  let quoted = false;
-
-  for (let i = 0; i < text.length; i += 1) {
-    const ch = text[i];
-    const next = text[i + 1];
-
-    if (ch === '"') {
-      if (quoted && next === '"') {
-        field += '"';
-        i += 1;
-      } else {
-        quoted = !quoted;
-      }
-      continue;
-    }
-
-    if (ch === "," && !quoted) {
-      row.push(field);
-      field = "";
-      continue;
-    }
-
-    if ((ch === "\n" || ch === "\r") && !quoted) {
-      if (ch === "\r" && next === "\n") i += 1;
-      row.push(field);
-      rows.push(row);
-      row = [];
-      field = "";
-      continue;
-    }
-
-    field += ch;
-  }
-
-  if (field.length > 0 || row.length > 0) {
-    row.push(field);
-    rows.push(row);
-  }
-
-  return rows;
-}
-
-function sourceRowTitle(row: string[], rowNumber: number) {
-  const dimension = row[0]?.trim();
-  const question = row[1]?.trim();
-  const answer = row[4]?.trim();
-  if (dimension) return dimension.replace(/\s+/g, " ");
-  if (question) return question.replace(/\s+/g, " ").slice(0, 92);
-  if (answer) return `Answer option - ${answer.replace(/\s+/g, " ").slice(0, 82)}`;
-  return `CSV row ${rowNumber}`;
-}
-
-function SourceField({ label, value }: { label: string; value: string }) {
-  if (!value.trim()) return null;
-  return (
-    <div className="rounded-lg border border-ink-200/70 bg-ink-50/50 p-3 dark:bg-ink-100/30">
-      <div className="mb-1 text-[10px] font-bold uppercase tracking-wide text-ink-400">{label}</div>
-      <p className="whitespace-pre-line text-[12.5px] leading-relaxed text-ink-700">{value}</p>
-    </div>
-  );
-}
-
-function SourceRowCard({ row, headers, rowNumber }: { row: string[]; headers: string[]; rowNumber: number }) {
-  const score = row[5]?.trim();
-  return (
-    <details className="group rounded-xl border border-ink-200/70 bg-surface">
-      <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3">
-        <ChevronDown size={15} className="shrink-0 text-ink-400 transition-transform group-open:rotate-180" />
-        <span className="min-w-0 flex-1">
-          <span className="block text-[11px] font-bold uppercase tracking-wide text-ink-400">CSV row {rowNumber}</span>
-          <span className="block truncate text-sm font-bold text-ink-900">{sourceRowTitle(row, rowNumber)}</span>
-        </span>
-        {score && <span className="rounded-lg bg-brand-100 px-2 py-1 text-xs font-extrabold text-brand-700">{score}</span>}
-      </summary>
-      <div className="grid gap-2 border-t border-ink-100 p-4">
-        {headers.map((header, i) => (
-          <SourceField key={`${rowNumber}-${header}`} label={header || `Column ${i + 1}`} value={row[i] ?? ""} />
-        ))}
-      </div>
-    </details>
-  );
-}
-
-function SourceCoverageSection() {
-  const [rows, setRows] = useState<string[][] | null>(null);
-  const [error, setError] = useState("");
-  const csvUrl = sourceCsvUrl();
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(csvUrl)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Could not load source CSV (${res.status})`);
-        return res.text();
-      })
-      .then((text) => {
-        if (!cancelled) setRows(parseCsv(text));
-      })
-      .catch((err: Error) => {
-        if (!cancelled) setError(err.message);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [csvUrl]);
-
-  const headers = rows?.[0] ?? [];
-  const sourceRows = (rows ?? []).slice(1).filter((row) => row.some((cell) => cell.trim().length > 0));
-
-  return (
-    <section>
-      <SectionHeader
-        icon={FileText}
-        title="Source CSV Coverage"
-        note="Exact row archive from OpenClaw MM Rubrics - L0 Reviews - QC Rubric-cb facing (1).csv"
-      />
-      <div className="mb-4 rounded-xl border border-brand-200/80 bg-brand-50/60 p-4 dark:border-brand-500/30 dark:bg-brand-500/10">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-700 dark:text-brand-200">
-              Completeness Backstop
-            </div>
-            <p className="mt-1 max-w-3xl text-[13px] leading-relaxed text-ink-600">
-              The formatted sections above are the primary reading path. This archive preserves the raw CSV fields row by row,
-              including source labels, dates, examples, answer options, scores, and continuation rows.
-            </p>
-          </div>
-          <a href={csvUrl} className="btn-ghost px-3 py-2 text-xs" target="_blank" rel="noreferrer">
-            Open CSV
-          </a>
-        </div>
-      </div>
-
-      {error ? (
-        <div className="card p-5 text-sm text-rose-600">{error}</div>
-      ) : !rows ? (
-        <div className="card p-5 text-sm text-ink-500">Loading source CSV...</div>
-      ) : (
-        <div>
-          <div className="mb-3 flex flex-wrap items-center gap-2 text-[12px] font-semibold text-ink-500">
-            <span className="chip bg-brand-100 text-brand-700">{sourceRows.length} non-empty rows</span>
-            <span className="chip bg-ink-100 text-ink-500">{headers.length} source columns</span>
-          </div>
-          <div className="space-y-2">
-            {sourceRows.map((row, index) => (
-              <SourceRowCard key={index} row={row} headers={headers} rowNumber={index + 2} />
-            ))}
-          </div>
-        </div>
-      )}
     </section>
   );
 }
