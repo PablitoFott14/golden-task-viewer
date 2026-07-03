@@ -9,7 +9,8 @@ export type AlignmentKind = "rule" | "weighting" | "guidance";
 
 export interface AlignmentScenario {
   title: string;
-  prompt: string;
+  href?: string;
+  prompt?: string;
   details: string;
 }
 
@@ -158,14 +159,16 @@ Anything that directly, not only implicitly, requires visual understanding shoul
 
 These are the lowest-weighted kinds of criteria a rubric can contain because they verify mechanical presence, shape, or direct copying from a human-authored source. **No exists, structure, or literal-verification check can carry a weight above 1.**
 
-### What weight 1 can cover
+### What should weight 1 cover
+
+> **Reviewer rule:** "Exists" and "structure" checks **must be Unit Tests, never rubric criteria**. They are weight-1 concepts because they are mechanical checks, but reviewers should place them in the Unit Test layer rather than spending rubric slots on them.
 
 - **"Exists" check** - Confirms only that *something is present*, without judging whether it is correct.
   - "A file named \`report.csv\` was created."
   - "The response includes a table."
   - "An email was sent to Brandon." This confirms it was sent, not that it should have been sent or said the right thing.
 
-- **"Structure" check** - Confirms the *shape or format* is right, without judging the content. This should be Unit Test coverage in the review layer.
+- **"Structure" check** - Confirms the *shape or format* is right, without judging the content. This also belongs in Unit Tests, not rubrics.
   - "The \`interactive_dash.html\` table contains columns 'date', 'result' and 'notes'."
   - "The invoice total is formatted as a dollar amount ('$80,000')."
   - "The HTML page has a 'Low Units' tab."
@@ -212,96 +215,6 @@ Example:
 
 When a rubric implies a visual reference, naming the file or image may be acceptable because the grader has access to the visual artifact.
 
-### Anti-pattern: blanket rubric
-
-[Photo QC / storefront audit task](https://openclaw-viewer-mm.vercel.app/attempt/6a32dce2238b8ac896b224cc/#rubrics)
-
-The anti-pattern here is the **blanket rubric**: one criterion tries to cover every product at once, so its ground truth (which photo depicts which product, and the correct verdict for each) never fits inside the rubric text.
-
-**R1** - "Every Photo QC record with a PASS or EDIT verdict cites a photo_file that genuinely depicts that product, matching the product's appearance in the labeled walkthrough video; products for which no faithful still exists are recorded as RETAKE."
-
-- For which product, and which photo_file is the correct one for each?
-- What is the expected verdict per product?
-- Where does the grader get the photo-to-product ground truth this rubric checks against?
-
-It lives in the walkthrough video and the images, not in the rubric. One general rubric "covering all the photos" cannot be graded from its own content.
-
-Self-contained reframe: one rubric **per product**, each naming the expected photo_file and verdict - exactly what **R3** already does:
-
-> "The Photo QC record for Baby Beanie - Solid Gray has verdict PASS, citing IMG_0489.jpg (the only square 2710 x 2710 still, sharp, accurate color)."
-
-Repeat that shape for each product.
-
-**R5** (borderline) - "Each verdict is judged against the four photo-quality standards in IMG_5050.jpg (color accuracy, square crop with >=15px margin, subject fully in frame, no motion blur)..."
-
-- What are the four standards, and what verdict does each product deserve under them?
-- The standards themselves are inlined, which is good; that part is self-contained.
-- But "each verdict" still needs the per-product ground truth.
-
-Keep the inlined standards and move the correctness check into the per-product rubrics above.
-
-**R7** (borderline) - "The agent maps still photos to products by cross-referencing the walkthrough video's product labels rather than loose color/shape similarity."
-
-- What is the correct mapping?
-- What counts as cross-referencing the labels versus loose similarity?
-
-This is gradable as a trajectory/process check because it asks whether the agent consulted the labels, but the correct mapping itself is external. It is fine as a process rubric; do not rely on it to verify that the mapping is right.
-
-### Anti-pattern: expected value pushed into the environment
-
-[Kiln & Co sponsored mockup task](https://openclaw-viewer-mm.vercel.app/attempt/6a3f4946980f47b835c4062f/#rubrics)
-
-Several rubrics push the expected value out of the rubric and into the environment. The tell is simple: to grade them, you have to ask a question the rubric cannot answer by itself.
-
-**R3** - "mockup.webm contains product segments for each received product registered in order KC-26-04182"
-
-- Which products are registered in order KC-26-04182?
-- How does the grader confirm the segments are complete without opening the internal database?
-
-The answer lives in the database, not the rubric.
-
-Self-contained reframe:
-
-> "mockup.webm contains a product segment for each of the four received products: Stoneware Glaze Set, Underglaze Duo (Midnight Blue / Desert Sand), Studio Towels, and Sticker Pack."
-
-This is what R4 already does, so R3 is not only non-self-contained but also redundant.
-
-**R6** - "mockup.webm uses each of the four verified uploaded images that match the four descriptions, or semantically equivalent images matching each of the four sponsored products"
-
-- Which uploaded image maps to which product?
-- Where does the grader read "the four descriptions" the images must match?
-
-Both the image-to-product pairing and the descriptions are external. Reframe by naming each pair explicitly, such as \`glazze.jpg\` -> Stoneware Glaze Set and \`towl.jpeg\` -> Studio Towels, or split into one rubric per product-image pair.
-
-**R12** - "outline.docx contains a Google Maps link to the Virginia kiln address that is deduced from the file link_for_photos.docx"
-
-- What address should the link point to?
-- What is inside \`link_for_photos.docx\` that lets the grader deduce it?
-
-"Deduced from the file" outsources the deduction to the grader.
-
-Self-contained reframe:
-
-> "outline.docx contains a Google Maps link to 132 Church St NW, Vienna, VA (e.g., 'https://www.google.com/maps?q=132+Church+St+NW,+Vienna,+VA')."
-
-**R14** - "outline.docx contains grounded instructions for the professional editor based on the retrieved requirement from the sponsor emails or from messages with Lena or Drew"
-
-- What is "the retrieved requirement"?
-- Which specific facts from those emails/messages make an instruction grounded versus not?
-
-The requirement is never stated in the rubric. The rationale mentions a due date and an expired coupon code, but those never made it into the criterion. Reframe by stating them, for example:
-
-> "instructions that reflect the sponsor's due date of [X] and drop or flag the expired coupon code [Y]."
-
-**R15** - "the agent sends a message to Lena addressing the context of the last registered messages"
-
-- What was said in "the last registered messages"?
-- What must the reply reference to count as addressing the context?
-
-This requires opening Lena's chat history to grade. Reframe:
-
-> "sends a message to Lena acknowledging the softbox / white-balance check from their prior conversation, or semantically equivalent."
-
 ### ⚠️ SELF-CONTAINMENT IS CRITICAL
 
 This has been a recurring issue since day one of the project, and we cannot afford to let it keep happening.
@@ -313,7 +226,55 @@ Before submitting any task, **always ask yourself**:
 - If **yes**, the rubric is self-contained, assuming it is also atomic.
 - If **no**, then unless there is a valid exception because the nature of the data makes full self-containment impossible, the rubric is **not self-contained**.
 
-Non-self-contained rubrics fall under **Fail - 10%+ Major Rubric Errors**. In practice, this means that **having just two non-self-contained rubrics in a rubric set of around 15 to 20 criteria is enough for the entire task to fail.**`,
+Non-self-contained rubrics fall under **Fail - 10%+ Major Rubric Errors**. In practice, this means that **having just two non-self-contained rubrics in a rubric set of around 15 to 20 criteria is enough for the entire task to fail.**
+
+Open the task-link examples below only when you need the details.`,
+        scenarios: [
+          {
+            title: "https://openclaw-viewer-mm.vercel.app/attempt/6a32dce2238b8ac896b224cc/#rubrics",
+            href: "https://openclaw-viewer-mm.vercel.app/attempt/6a32dce2238b8ac896b224cc/#rubrics",
+            details: `One criterion tries to cover every product at once, so its ground truth cannot fit inside the rubric text: which photo depicts which product, and what the correct verdict is for each.
+
+**R1** - "Every Photo QC record with a PASS or EDIT verdict cites a photo_file that genuinely depicts that product, matching the product's appearance in the labeled walkthrough video; products for which no faithful still exists are recorded as RETAKE."
+
+- Which product is being checked?
+- Which photo_file is correct for that product?
+- What verdict should that product receive?
+- Where does the grader get the photo-to-product ground truth?
+
+The answer lives in the walkthrough video and images, not in the rubric. The cleaner self-contained shape is one rubric **per product**, each naming the expected photo_file and verdict, exactly what **R3** already does:
+
+> "The Photo QC record for Baby Beanie - Solid Gray has verdict PASS, citing IMG_0489.jpg (the only square 2710 x 2710 still, sharp, accurate color)."
+
+**R5** is borderline because it inlines the four photo-quality standards, but "each verdict" still needs per-product ground truth. Keep the inlined standards and move the correctness check into per-product rubrics.
+
+**R7** can work as a trajectory/process check because it asks whether the agent consulted the walkthrough labels, but it should not be used to verify the mapping itself unless the correct mapping is stated.`,
+          },
+          {
+            title: "https://openclaw-viewer-mm.vercel.app/attempt/6a3f4946980f47b835c4062f/#rubrics",
+            href: "https://openclaw-viewer-mm.vercel.app/attempt/6a3f4946980f47b835c4062f/#rubrics",
+            details: `Several rubrics push expected values into the environment. The tell is simple: to grade them, you have to ask a question the criterion cannot answer by itself.
+
+**R3** - "mockup.webm contains product segments for each received product registered in order KC-26-04182"
+
+- Which products are registered in order KC-26-04182?
+- How does the grader confirm the segments are complete without opening the internal database?
+
+Self-contained reframe:
+
+> "mockup.webm contains a product segment for each of the four received products: Stoneware Glaze Set, Underglaze Duo (Midnight Blue / Desert Sand), Studio Towels, and Sticker Pack."
+
+**R6** needs the image-to-product pairing and "the four descriptions" to be stated directly. Name each pair explicitly, such as \`glazze.jpg\` -> Stoneware Glaze Set and \`towl.jpeg\` -> Studio Towels, or split into one rubric per product-image pair.
+
+**R12** should state the expected address instead of saying it is "deduced from" another file:
+
+> "outline.docx contains a Google Maps link to 132 Church St NW, Vienna, VA (e.g., 'https://www.google.com/maps?q=132+Church+St+NW,+Vienna,+VA')."
+
+**R14** should state the sponsor facts that make the editor instructions grounded, such as the due date and the expired coupon code.
+
+**R15** should state the prior-message context the Lena reply must acknowledge, such as the softbox / white-balance check, or a semantically equivalent reference.`,
+          },
+        ],
       },
       {
         id: "output-modality-diversity",
@@ -380,6 +341,8 @@ Use **state changes** when the environment supports them, such as sending emails
 - Keep the visual identification load-bearing so the task genuinely cannot be solved text-only.
 
 Examples of scenarios with genuine complexity beyond handwritten notes can be found in the Golden Task Viewer. In particular, Scenarios 2 and 3 use handwritten notes as **just one component of a broader workflow**, rather than making them the primary source of difficulty. The handwritten content supports the overall intent instead of serving as a shortcut or trap to force the model to fail.
+
+The examples below are intentionally reused in **Point 6**. Here in Point 5, read them from the perspective of handwritten notes and scenario design: the note or document can contribute to the scenario, but the real difficulty should come from the workflow, artifact, state change, and cross-modal reasoning. Point 6 uses the same examples from the friction angle.
 
 **Remember:** handwritten notes should contribute naturally to the scenario, not become the sole challenge. The complexity should come from the overall reasoning, workflow, and interactions across multiple modalities.`,
         scenarios: [
@@ -468,24 +431,34 @@ This is deliberate, meticulous design work, not random clutter. Every task in th
 - **Temporal** - a timestamp or event that superficially matches the ask but falls outside the actually requested window.
 - **Identity** - near-duplicate names, emails, or IDs that require correct matching, not just presence-checking.
 
-### Applying this to Scenario 1 and Scenario 2
+### Examples of friction
 
-**Scenario 1 (Zoe):**
+The examples below are the **same examples used in Point 5**, intentionally reused here from a different angle. Point 5 explains why the scenarios should not depend on handwritten notes as the main failure mode. Point 6 explains how the same scenarios can include realistic friction, complexity, and verification pressure without becoming artificial traps.
 
-- Among the uploaded exercises, include one or two that target a skill Zoe's notes say she has *already* mastered, such as shape recognition when Ms. Carter's notes flag reading and math as the actual gaps. This is a plausible-looking exercise that the model must correctly discard into \`MEMORY.md\`, exactly as the prompt already asks.
-- Include two versions of the same worksheet with near-identical filenames, such as \`addition_practice_draft.pdf\` versus \`addition_practice_final.pdf\`, where only the final one reflects Ms. Carter's actual recommendation. The model must use the current one, not just the first match.
-- Include different-level exercises that are not appropriate for a 6-year-old about to start 1st grade, such as multiplication worksheets, advanced grammar or syntax analysis, or age-inappropriate reading comprehension. The model must filter these out even if they are otherwise well-made exercises.
-- Include calendar scheduling edge cases. The event series must run for **six months starting from now, excluding the current month**, every **2 days**, **Monday through Saturday only**, with **Sundays treated as off days rather than counting toward the 2-day interval**. The model must correctly handle the schedule instead of simply adding events every other calendar day.
-
-**Scenario 2 (Milek's backyard):**
-
-- Include an older backyard inventory list from before some plants were removed or replaced alongside the current photos. The SVG baseline must reflect the *current* state shown in the photos, not the stale list.
-- Include multimodal inputs referencing parts of the garden that are not related to the irrigation process: not plants, not vegetables, just decorative elements, tables, figures, and similar items.
-- Include calendar scheduling edge cases. The event series must start **tomorrow** and continue **until August 14**, occurring **every 2 days** across **Monday through Saturday only**. **Sundays are off days and should never count toward the 2-day interval**. For example, if the previous event is on Saturday, the next one should be on Monday, not Tuesday. The model must correctly infer the schedule rather than simply adding events every other calendar day.
+Open each example when you need the compact friction view.
 
 ### Guardrail
 
-Friction has to earn its place in the scenario. If a decoy only makes sense because the task author inserted it, not because a real person's files would plausibly look that way, it is contrived. Every decoy above works because it is the kind of mess that shows up naturally: outdated files, near-duplicate filenames, and calendars that already have things on them, not an artificial trap dropped in just to catch the model.`,
+Friction has to earn its place in the scenario. If a decoy only makes sense because the task author inserted it, not because a real person's files would plausibly look that way, it is contrived. The examples here work because they are the kind of mess that shows up naturally: outdated files, near-duplicate filenames, and calendars that already have things on them, not artificial traps dropped in just to catch the model.`,
+        scenarios: [
+          {
+            title: "Same example as Point 5: Zoe's school prep",
+            details: `Read this as the friction version of the Point 5 example. The scenario should still be difficult because of the workflow, not because the handwriting is hard to read.
+
+- **Skill mismatch:** Include one or two exercises that target a skill Zoe's notes say she has *already* mastered, such as shape recognition when Ms. Carter's notes flag reading and math as the actual gaps. The model must discard them into \`MEMORY.md\`, exactly as the prompt asks.
+- **Near-duplicate files:** Include two versions of the same worksheet, such as \`addition_practice_draft.pdf\` versus \`addition_practice_final.pdf\`, where only the final one reflects Ms. Carter's actual recommendation.
+- **Age mismatch:** Include exercises that are not appropriate for a 6-year-old about to start 1st grade, such as multiplication worksheets, advanced grammar or syntax analysis, or age-inappropriate reading comprehension.
+- **Calendar friction:** The event series must run for **six months starting from now, excluding the current month**, every **2 days**, **Monday through Saturday only**, with **Sundays treated as off days rather than counting toward the 2-day interval**.`,
+          },
+          {
+            title: "Same example as Point 5: Milek's backyard timeline",
+            details: `Read this as the friction version of the Point 5 example. The SVG and reminder workflow should carry the complexity; the decoys should force verification, not act like random traps.
+
+- **Stale inventory:** Include an older backyard inventory list from before some plants were removed or replaced. The SVG baseline must reflect the *current* state shown in the photos, not the stale list.
+- **Irrelevant garden content:** Include multimodal inputs referencing decorative elements, tables, figures, or other garden content unrelated to the irrigation process. The model must filter those out instead of treating every visible item as relevant.
+- **Calendar friction:** The event series must start **tomorrow** and continue **until August 14**, occurring **every 2 days** across **Monday through Saturday only**. **Sundays are off days and should never count toward the 2-day interval**. For example, if the previous event is on Saturday, the next one should be on Monday, not Tuesday.`,
+          },
+        ],
       },
     ],
   },

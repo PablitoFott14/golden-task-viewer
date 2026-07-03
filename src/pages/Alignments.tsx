@@ -233,7 +233,7 @@ function ScenarioDropdowns({ topic, query }: { topic: AlignmentTopic; query?: st
   return (
     <div className="mt-6 space-y-3 border-t border-ink-100 pt-5">
       <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-400">
-        Expand examples
+        Examples
       </div>
       {topic.scenarios.map((scenario) => (
         <details
@@ -242,18 +242,34 @@ function ScenarioDropdowns({ topic, query }: { topic: AlignmentTopic; query?: st
         >
           <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-extrabold text-ink-900">
             <ChevronDown size={15} className="shrink-0 text-brand-500 transition-transform group-open:rotate-180" />
-            <span>{scenario.title}</span>
+            {scenario.href ? (
+              <a
+                href={scenario.href}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(event) => event.stopPropagation()}
+                className="break-all text-brand-700 underline decoration-brand-300 underline-offset-4 transition hover:text-brand-800 dark:text-brand-200"
+              >
+                {scenario.title}
+              </a>
+            ) : (
+              <span>{scenario.title}</span>
+            )}
           </summary>
           <div className="border-t border-brand-200/70 px-4 py-4 dark:border-brand-500/30">
-            <div className="mb-2 text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
-              Prompt
-            </div>
-            <div className="prose-alignment rounded-lg border border-ink-200/70 bg-surface px-3 py-2 text-[13px] italic leading-relaxed text-ink-700">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MdLink }}>
-                {scenario.prompt}
-              </ReactMarkdown>
-            </div>
-            <div className="prose-alignment mt-4 max-w-none">
+            {scenario.prompt && (
+              <>
+                <div className="mb-2 text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+                  Prompt
+                </div>
+                <div className="prose-alignment rounded-lg border border-ink-200/70 bg-surface px-3 py-2 text-[13px] italic leading-relaxed text-ink-700">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MdLink }}>
+                    {scenario.prompt}
+                  </ReactMarkdown>
+                </div>
+              </>
+            )}
+            <div className={cx("prose-alignment max-w-none", scenario.prompt && "mt-4")}>
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MdLink }}>
                 {scenario.details}
               </ReactMarkdown>
@@ -335,7 +351,8 @@ function TopicBrowser({ update }: { update: AlignmentUpdate }) {
     if (!q) return [];
     const has = (s: string) => s.toLowerCase().includes(q);
     return update.topics.filter((t) => {
-      const scenarioHit = t.scenarios?.some((s) => has(s.title) || has(s.prompt) || has(s.details)) ?? false;
+      const scenarioHit =
+        t.scenarios?.some((s) => has(s.title) || has(s.prompt ?? "") || has(s.details) || has(s.href ?? "")) ?? false;
       return has(t.title) || has(t.impact) || has(t.summary) || has(t.tag) || has(t.body) || scenarioHit;
     });
   }, [q, update]);
