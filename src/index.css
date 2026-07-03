@@ -97,6 +97,40 @@ body {
   .prose-task th { @apply border border-ink-200 bg-ink-50 px-3 py-2 text-left font-semibold; }
   .prose-task td { @apply border border-ink-200 px-3 py-2 align-top; }
   .prose-task a { @apply text-brand-600 underline underline-offset-2 hover:text-brand-700; }
+  .prose-alignment {
+    @apply text-[14px] leading-7 text-ink-700;
+  }
+  .prose-alignment h3 {
+    @apply mt-6 border-t border-ink-100 pt-5 text-[15px] font-extrabold text-ink-900;
+  }
+  .prose-alignment h3:first-child {
+    @apply mt-0 border-t-0 pt-0;
+  }
+  .prose-alignment p {
+    @apply my-2.5;
+  }
+  .prose-alignment ul,
+  .prose-alignment ol {
+    @apply my-3 space-y-1.5 pl-5;
+  }
+  .prose-alignment ul {
+    @apply list-disc;
+  }
+  .prose-alignment ol {
+    @apply list-decimal;
+  }
+  .prose-alignment strong {
+    @apply font-semibold text-ink-900;
+  }
+  .prose-alignment code {
+    @apply rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[0.85em] text-brand-700;
+  }
+  .prose-alignment blockquote {
+    @apply my-3 rounded-r-lg border-l-4 border-brand-300 bg-brand-50/50 px-4 py-2 text-ink-700;
+  }
+  .prose-alignment a {
+    @apply text-brand-600 underline underline-offset-2 hover:text-brand-700;
+  }
 }
 
 .bg-grid {
