@@ -231,7 +231,7 @@ Non-self-contained rubrics fall under **Fail - 10%+ Major Rubric Errors**. In pr
 Open the task-link examples below only when you need the details.`,
         scenarios: [
           {
-            title: "https://openclaw-viewer-mm.vercel.app/attempt/6a32dce2238b8ac896b224cc/#rubrics",
+            title: "Photo QC / storefront audit task",
             href: "https://openclaw-viewer-mm.vercel.app/attempt/6a32dce2238b8ac896b224cc/#rubrics",
             details: `One criterion tries to cover every product at once, so its ground truth cannot fit inside the rubric text: which photo depicts which product, and what the correct verdict is for each.
 
@@ -251,7 +251,7 @@ The answer lives in the walkthrough video and images, not in the rubric. The cle
 **R7** can work as a trajectory/process check because it asks whether the agent consulted the walkthrough labels, but it should not be used to verify the mapping itself unless the correct mapping is stated.`,
           },
           {
-            title: "https://openclaw-viewer-mm.vercel.app/attempt/6a3f4946980f47b835c4062f/#rubrics",
+            title: "Kiln & Co sponsored mockup task",
             href: "https://openclaw-viewer-mm.vercel.app/attempt/6a3f4946980f47b835c4062f/#rubrics",
             details: `Several rubrics push expected values into the environment. The tell is simple: to grade them, you have to ask a question the criterion cannot answer by itself.
 
