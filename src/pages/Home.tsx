@@ -14,9 +14,11 @@ import {
   History,
   ChevronRight,
   ChevronDown,
+  Megaphone,
 } from "lucide-react";
 import { methodSteps, modelCapabilityReference } from "../data/method";
 import { changelog } from "../data/changelog";
+import { latestAlignmentUpdate } from "../data/alignments";
 import { Reveal, SectionHeading } from "../components/ui";
 import { cx } from "../lib/assets";
 
@@ -119,12 +121,43 @@ const capabilityTone = {
   },
 };
 
+function UrgentAlignmentsBanner() {
+  const u = latestAlignmentUpdate;
+  return (
+    <Link
+      to="/alignments"
+      className="group block border-b border-rose-200/70 bg-gradient-to-r from-rose-50 via-amber-50/50 to-rose-50 transition hover:from-rose-100/80 hover:to-rose-100/80 dark:border-rose-500/25 dark:from-rose-500/10 dark:via-amber-500/5 dark:to-rose-500/10"
+    >
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 sm:px-6 lg:px-8">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-rose-600 text-white shadow-soft">
+          <Megaphone size={15} />
+        </span>
+        <p className="min-w-0 flex-1 truncate text-[13px] text-ink-700">
+          <span className="font-bold uppercase tracking-wide text-rose-700 dark:text-rose-300">
+            Urgent alignments
+          </span>
+          <span className="mx-2 text-ink-300">·</span>
+          <span className="font-semibold text-ink-900">{u.title}</span>
+          <span className="ml-2 hidden text-ink-500 sm:inline">
+            {u.topics.length} new standards, updated {u.dateLabel}
+          </span>
+        </p>
+        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-bold text-white transition group-hover:bg-rose-700">
+          Review now <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
 export default function Home() {
   const [activeStep, setActiveStep] = useState(1);
   const step = methodSteps.find((s) => s.n === activeStep)!;
 
   return (
     <div>
+      <UrgentAlignmentsBanner />
+
       {/* Hero */}
       <section className="border-b border-ink-200/70 bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">

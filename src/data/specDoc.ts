@@ -1,9 +1,12 @@
 /**
  * The L0 Review QC Rubric (CB-facing spec doc), transcribed verbatim from
- * "OpenClaw MM Rubrics - L0 Reviews - QC Rubric-cb facing.csv".
+ * "OpenClaw MM Rubrics - L0 Reviews - QC Rubric-cb facing (2).csv" (the
+ * 03 Jul 2026 export; version differences are tracked in `specChangelog.ts`).
  *
  * Each dimension lists its failing and non-failing error categories and every
- * scored answer option (2 = Fail, 3 = Non-Fail, 5 = Pass). The two appendices,
+ * scored answer option (2 = Fail, 3 = Non-Fail, 5 = Pass). Per that export,
+ * selecting any Fail or Non-Fail option requires a written justification;
+ * the SpecDoc page renders that marker from the score. The two appendices,
  * the criteria weight definitions and the rubric quality definitions, follow.
  * Keep this in sync with the source CSV.
  */

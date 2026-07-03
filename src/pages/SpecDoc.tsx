@@ -20,6 +20,7 @@ import {
   Search,
   X,
   History,
+  PenLine,
 } from "lucide-react";
 import {
   specGroups,
@@ -285,7 +286,7 @@ function Legend() {
     { icon: CircleCheck, label: "Pass", score: 5, tone: "text-emerald-600 dark:text-emerald-400" },
   ];
   return (
-    <div className="mb-5 flex flex-wrap gap-x-5 gap-y-2 rounded-xl border border-ink-200/70 bg-ink-50/50 px-4 py-2.5">
+    <div className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-ink-200/70 bg-ink-50/50 px-4 py-2.5">
       {items.map((it) => {
         const Icon = it.icon;
         return (
@@ -296,6 +297,9 @@ function Legend() {
           </span>
         );
       })}
+      <span className="inline-flex items-center gap-1.5 text-[11.5px] text-ink-400">
+        <PenLine size={13} /> Selecting a Fail or Non-Fail option requires a written justification
+      </span>
     </div>
   );
 }
@@ -377,11 +381,24 @@ function DimensionCard({ dim, query, openGuidance }: { dim: SpecDimension; query
 function OptionRow({ opt, query }: { opt: SpecOption; query?: string }) {
   const s = scoreStyle(opt.score);
   const Icon = s.icon;
+  // Per the 03 Jul 2026 export, every Fail / Non-Fail selection requires a
+  // written justification; Pass selections do not.
+  const requiresJustification = opt.score < 5;
   return (
     <div className={cx("border-l-4 bg-surface p-4", s.border)}>
       <div className="flex items-start gap-3">
-        <span className={cx("inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold", s.chip)}>
-          <Icon size={12} /> {s.label}
+        <span className="flex shrink-0 flex-col items-start gap-1">
+          <span className={cx("inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold", s.chip)}>
+            <Icon size={12} /> {s.label}
+          </span>
+          {requiresJustification && (
+            <span
+              className="inline-flex items-center gap-1 text-[10px] font-semibold text-ink-400"
+              title="Selecting this option requires a written justification"
+            >
+              <PenLine size={11} /> Justify
+            </span>
+          )}
         </span>
         <p className="whitespace-pre-line text-[13px] leading-relaxed text-ink-700">
           <Highlight text={opt.text} query={query} />
@@ -565,7 +582,7 @@ function VersionDetail({ v }: { v: SpecVersion }) {
         <span className="rounded-full bg-brand-600 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
           {v.version}
         </span>
-        <span className="font-mono text-xs font-semibold text-ink-400">{v.date}</span>
+        <span className="font-mono text-xs font-semibold text-ink-400">{v.dateLabel}</span>
         {isLatest && <LatestBadge />}
         <h3 className="w-full text-lg font-extrabold tracking-tight text-ink-900 sm:w-auto">{v.title}</h3>
       </div>
@@ -578,7 +595,7 @@ function VersionDetail({ v }: { v: SpecVersion }) {
         </div>
       ) : (
         <div className="mt-4 rounded-xl border border-dashed border-ink-200 px-4 py-6 text-center text-[12.5px] text-ink-400">
-          Baseline version — nothing to diff against yet.
+          Baseline version, nothing to diff against yet.
         </div>
       )}
     </div>
@@ -590,7 +607,7 @@ function ChangeLogSection() {
   const v = specVersions.find((x) => x.id === active) ?? specVersions[0];
   const timelineEntries: TimelineEntry[] = specVersions.map((s) => ({
     id: s.id,
-    date: s.date,
+    date: s.dateLabel,
     badge: s.version,
     title: s.title,
     summary: s.summary,
@@ -602,18 +619,18 @@ function ChangeLogSection() {
         title="Specification Change Log"
         note={`${specVersions.length} version${specVersions.length > 1 ? "s" : ""} tracked · newest first`}
       />
-      <div className="grid gap-5 lg:grid-cols-[240px_1fr]">
+      <div className="mb-4">
         <UpdateTimeline entries={timelineEntries} activeId={active} onSelect={setActive} />
-        <motion.div
-          key={v.id}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25 }}
-          className="card min-w-0 p-5"
-        >
-          <VersionDetail v={v} />
-        </motion.div>
       </div>
+      <motion.div
+        key={v.id}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25 }}
+        className="card min-w-0 p-5"
+      >
+        <VersionDetail v={v} />
+      </motion.div>
     </section>
   );
 }

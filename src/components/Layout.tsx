@@ -37,10 +37,10 @@ function Brand() {
 const links = [
   { to: "/", label: "The Method", end: true },
   { to: "/tasks", label: "Golden Tasks" },
+  { to: "/alignments", label: "URGENT ALIGNMENTS", urgent: true },
   { to: "/common-errors", label: "Common Errors" },
   { to: "/spec", label: "Scoring Spec" },
   { to: "/checklist", label: "Pre-Submit" },
-  { to: "/alignments", label: "Alignments", flag: true },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -56,17 +56,24 @@ export default function Layout({ children }: { children: ReactNode }) {
                 key={l.to}
                 to={l.to}
                 end={l.end}
-                className={({ isActive }) =>
-                  cx(
+                className={({ isActive }) => {
+                  const active = isActive || (l.to === "/tasks" && pathname.startsWith("/tasks"));
+                  if (l.urgent) {
+                    return cx(
+                      "relative rounded-lg px-3.5 py-2 text-[13px] font-bold tracking-wide transition",
+                      active
+                        ? "bg-rose-600 text-white shadow-glow"
+                        : "text-rose-600 hover:bg-rose-50 dark:text-rose-300 dark:hover:bg-rose-500/10"
+                    );
+                  }
+                  return cx(
                     "relative rounded-lg px-3.5 py-2 text-sm font-semibold transition",
-                    isActive || (l.to === "/tasks" && pathname.startsWith("/tasks"))
-                      ? "bg-brand-600 text-white shadow-glow"
-                      : "text-ink-600 hover:bg-ink-100"
-                  )
-                }
+                    active ? "bg-brand-600 text-white shadow-glow" : "text-ink-600 hover:bg-ink-100"
+                  );
+                }}
               >
                 {l.label}
-                {l.flag && (
+                {l.urgent && (
                   <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-ink-50" />
                 )}
               </NavLink>
