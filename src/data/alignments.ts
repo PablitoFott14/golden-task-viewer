@@ -439,7 +439,7 @@ Open each example when you need the compact friction view.
 
 ### Guardrail
 
-Friction has to earn its place in the scenario. If a decoy only makes sense because the task author inserted it, not because a real person's files would plausibly look that way, it is contrived. The examples here work because they are the kind of mess that shows up naturally: outdated files, near-duplicate filenames, and calendars that already have things on them, not artificial traps dropped in just to catch the model.`,
+Friction has to earn its place in the scenario. If a decoy only makes sense because the task author inserted it, not because a real person's files would plausibly look that way, it is contrived.`,
         scenarios: [
           {
             title: "Same example as Point 5: Zoe's school prep",

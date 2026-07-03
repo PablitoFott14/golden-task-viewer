@@ -238,17 +238,17 @@ function ScenarioDropdowns({ topic, query }: { topic: AlignmentTopic; query?: st
       {topic.scenarios.map((scenario) => (
         <details
           key={scenario.title}
-          className="group overflow-hidden rounded-xl border border-brand-200 bg-brand-50/50 dark:border-brand-500/30 dark:bg-brand-500/10"
+          className="group overflow-hidden rounded-xl border border-brand-200 bg-brand-50/50 dark:border-brand-400/40 dark:bg-ink-100/80"
         >
-          <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-extrabold text-ink-900">
-            <ChevronDown size={15} className="shrink-0 text-brand-500 transition-transform group-open:rotate-180" />
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-extrabold text-ink-900 dark:text-white">
+            <ChevronDown size={15} className="shrink-0 text-brand-500 transition-transform group-open:rotate-180 dark:text-brand-200" />
             {scenario.href ? (
               <a
                 href={scenario.href}
                 target="_blank"
                 rel="noreferrer"
                 onClick={(event) => event.stopPropagation()}
-                className="break-all text-brand-700 underline decoration-brand-300 underline-offset-4 transition hover:text-brand-800 dark:text-brand-200"
+                className="break-all text-brand-700 underline decoration-brand-300 underline-offset-4 transition hover:text-brand-800 dark:text-brand-100 dark:decoration-brand-300 dark:hover:text-white"
               >
                 {scenario.title}
               </a>
@@ -256,13 +256,13 @@ function ScenarioDropdowns({ topic, query }: { topic: AlignmentTopic; query?: st
               <span>{scenario.title}</span>
             )}
           </summary>
-          <div className="border-t border-brand-200/70 px-4 py-4 dark:border-brand-500/30">
+          <div className="border-t border-brand-200/70 px-4 py-4 dark:border-brand-400/30 dark:bg-ink-50/70">
             {scenario.prompt && (
               <>
-                <div className="mb-2 text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+                <div className="mb-2 text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-100">
                   Prompt
                 </div>
-                <div className="prose-alignment rounded-lg border border-ink-200/70 bg-surface px-3 py-2 text-[13px] italic leading-relaxed text-ink-700">
+                <div className="prose-alignment rounded-lg border border-ink-200/70 bg-surface px-3 py-2 text-[13px] italic leading-relaxed text-ink-700 dark:border-ink-300/70 dark:bg-ink-100 dark:text-ink-800">
                   <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MdLink }}>
                     {scenario.prompt}
                   </ReactMarkdown>
