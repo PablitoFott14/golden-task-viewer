@@ -243,7 +243,11 @@ Subcategories: Real Estate Listing Review, Interior Design/Renovation. See the s
           N("Non-Fail - Trivial Integration"),
         ],
         options: [
-          { score: 2, text: "[Fail - Disconnected Processing]" },
+          {
+            score: 2,
+            text:
+              "[Fail - Disconnected Processing]\nThe agent treats inputs as isolated silos. It fails to extract a necessary value from one modality to use in another (e.g., ignores a date in a blurry HEIC photo when searching a database) or provides a response based on only one source while ignoring conflicting evidence in a second source.",
+          },
           {
             score: 2,
             text:

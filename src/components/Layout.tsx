@@ -40,6 +40,7 @@ const links = [
   { to: "/common-errors", label: "Common Errors" },
   { to: "/spec", label: "Scoring Spec" },
   { to: "/checklist", label: "Pre-Submit" },
+  { to: "/alignments", label: "Alignments", flag: true },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -57,7 +58,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 end={l.end}
                 className={({ isActive }) =>
                   cx(
-                    "rounded-lg px-3.5 py-2 text-sm font-semibold transition",
+                    "relative rounded-lg px-3.5 py-2 text-sm font-semibold transition",
                     isActive || (l.to === "/tasks" && pathname.startsWith("/tasks"))
                       ? "bg-brand-600 text-white shadow-glow"
                       : "text-ink-600 hover:bg-ink-100"
@@ -65,6 +66,9 @@ export default function Layout({ children }: { children: ReactNode }) {
                 }
               >
                 {l.label}
+                {l.flag && (
+                  <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-ink-50" />
+                )}
               </NavLink>
             ))}
             <span className="mx-1.5 h-5 w-px bg-ink-200" />

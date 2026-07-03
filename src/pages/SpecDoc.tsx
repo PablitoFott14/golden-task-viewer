@@ -19,6 +19,7 @@ import {
   Gavel,
   Search,
   X,
+  History,
 } from "lucide-react";
 import {
   specGroups,
@@ -31,7 +32,9 @@ import {
   type WeightBucket,
   type RubricQualityIssue,
 } from "../data/specDoc";
+import { specVersions, type SpecChange, type SpecVersion } from "../data/specChangelog";
 import { Reveal, SectionHeading } from "../components/ui";
+import { UpdateTimeline, LatestBadge, type TimelineEntry } from "../components/UpdateTimeline";
 import { cx } from "../lib/assets";
 
 /* ---- section registry: one entry per nav target ---- */
@@ -66,6 +69,7 @@ const dimensionNav: NavItem[] = specGroups.map((g) => ({
 const appendixNav: NavItem[] = [
   { id: "weights", label: "Weight Definitions", icon: Scale, count: weightBuckets.length },
   { id: "rubric-quality", label: "Rubric Quality", icon: ListChecks, count: rubricQualityIssues.length },
+  { id: "change-log", label: "Change Log", icon: History, count: specVersions.length },
 ];
 
 /* ---- text highlighting for search ---- */
@@ -212,6 +216,7 @@ export default function SpecDoc() {
             {activeGroup && <GroupSection group={activeGroup} />}
             {active === "weights" && <WeightSection />}
             {active === "rubric-quality" && <RubricQualitySection />}
+            {active === "change-log" && <ChangeLogSection />}
           </motion.div>
         </div>
       )}
@@ -515,6 +520,99 @@ function RubricQualitySection() {
             </div>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+/* ---- appendix: spec version / change log ---- */
+
+const changeKindTone: Record<SpecChange["kind"], string> = {
+  added: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200",
+  updated: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200",
+  removed: "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200",
+};
+
+function ChangeCard({ change }: { change: SpecChange }) {
+  return (
+    <div className="card p-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className={cx("chip capitalize", changeKindTone[change.kind])}>{change.kind}</span>
+        <h4 className="text-[13px] font-bold text-ink-900">{change.dimension}</h4>
+      </div>
+      <p className="mt-2 text-[13px] leading-relaxed text-ink-600">{change.description}</p>
+      {change.before !== undefined && change.after !== undefined && (
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <div className="rounded-lg border border-rose-200 bg-rose-50/60 p-3 dark:border-rose-500/30 dark:bg-rose-500/10">
+            <div className="mb-1 text-[10px] font-bold uppercase tracking-wide text-rose-600 dark:text-rose-300">Before</div>
+            <p className="whitespace-pre-line font-mono text-[12px] leading-relaxed text-ink-700">{change.before}</p>
+          </div>
+          <div className="rounded-lg border border-emerald-200 bg-emerald-50/60 p-3 dark:border-emerald-500/30 dark:bg-emerald-500/10">
+            <div className="mb-1 text-[10px] font-bold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">After</div>
+            <p className="whitespace-pre-line font-mono text-[12px] leading-relaxed text-ink-700">{change.after}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VersionDetail({ v }: { v: SpecVersion }) {
+  const isLatest = v.id === specVersions[0].id;
+  return (
+    <div>
+      <div className="mb-4 flex flex-wrap items-center gap-2.5 border-b border-ink-200/70 pb-4">
+        <span className="rounded-full bg-brand-600 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+          {v.version}
+        </span>
+        <span className="font-mono text-xs font-semibold text-ink-400">{v.date}</span>
+        {isLatest && <LatestBadge />}
+        <h3 className="w-full text-lg font-extrabold tracking-tight text-ink-900 sm:w-auto">{v.title}</h3>
+      </div>
+      <p className="text-[13px] leading-relaxed text-ink-600">{v.summary}</p>
+      {v.changes.length > 0 ? (
+        <div className="mt-4 space-y-3">
+          {v.changes.map((c, i) => (
+            <ChangeCard key={i} change={c} />
+          ))}
+        </div>
+      ) : (
+        <div className="mt-4 rounded-xl border border-dashed border-ink-200 px-4 py-6 text-center text-[12.5px] text-ink-400">
+          Baseline version — nothing to diff against yet.
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ChangeLogSection() {
+  const [active, setActive] = useState(specVersions[0].id);
+  const v = specVersions.find((x) => x.id === active) ?? specVersions[0];
+  const timelineEntries: TimelineEntry[] = specVersions.map((s) => ({
+    id: s.id,
+    date: s.date,
+    badge: s.version,
+    title: s.title,
+    summary: s.summary,
+  }));
+  return (
+    <section>
+      <SectionHeader
+        icon={History}
+        title="Specification Change Log"
+        note={`${specVersions.length} version${specVersions.length > 1 ? "s" : ""} tracked · newest first`}
+      />
+      <div className="grid gap-5 lg:grid-cols-[240px_1fr]">
+        <UpdateTimeline entries={timelineEntries} activeId={active} onSelect={setActive} />
+        <motion.div
+          key={v.id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="card min-w-0 p-5"
+        >
+          <VersionDetail v={v} />
+        </motion.div>
       </div>
     </section>
   );

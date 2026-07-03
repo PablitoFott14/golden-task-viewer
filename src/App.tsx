@@ -7,6 +7,7 @@ import TaskDetail from "./pages/TaskDetail";
 import CommonErrors from "./pages/CommonErrors";
 import SpecDoc from "./pages/SpecDoc";
 import PreSubmit from "./pages/PreSubmit";
+import Alignments from "./pages/Alignments";
 import NotFound from "./pages/NotFound";
 
 function ScrollToTop() {
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="/common-errors" element={<CommonErrors />} />
         <Route path="/spec" element={<SpecDoc />} />
         <Route path="/checklist" element={<PreSubmit />} />
+        <Route path="/alignments" element={<Alignments />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
