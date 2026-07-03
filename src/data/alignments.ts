@@ -1,5 +1,5 @@
 /**
- * Urgent Alignments: the standards the client has asked contributors to adopt,
+ * Urgent Alignments - standards the client has asked contributors to adopt,
  * transcribed from the root `latest_alignments.md`. Grouped into dated batches
  * so new alignments can be appended over time without losing the history of
  * what changed and when. Keep this in sync with `latest_alignments.md`.
@@ -39,379 +39,448 @@ export const alignmentUpdates: AlignmentUpdate[] = [
     id: "2026-07-03",
     date: "2026-07-03",
     dateLabel: "03 Jul 2026",
-    title: "Rubric weighting and visual reasoning standards tightened",
+    title: "To emphasize during training sessions",
     summary:
-      "Outcome criteria must now carry 60 to 70 percent of the rubric weight. Direct visual identification becomes a weight-5 check and must cover at least 40 percent of the score. Presence and format checks are capped at weight 1. Self-containment is enforced as a fail-level rule. Scenario design moves away from handwritten notes toward richer cross-modal outputs with deliberately planted, graded decoys.",
+      "Six urgent alignments on rubric weighting, visual understanding, exists and structure checks, self-containment, output modality diversity, and decoys in multimodal inputs.",
     logSummary:
-      "Rubric weights, visual checks, self-containment, richer outputs, and graded decoys.",
+      "Covers rubric weighting, weight-5 visual checks, self-containment, richer outputs, and graded decoys.",
     topics: [
       {
         id: "weight-distribution",
-        title: "Outcome criteria must carry 60 to 70% of the rubric weight",
+        title: "Rubric weight distribution",
         kind: "weighting",
         tag: "Rubric Weighting",
         impact:
-          "Criteria that verify the outcome and task fulfillment must account for 60 to 70 percent of the total rubric weight, with 30 to 40 percent left for supporting reasoning and trajectory.",
+          "Rubrics should put 60 to 70 percent of their weight on outcome and task-fulfillment accuracy, with 30 to 40 percent on supporting reasoning, process, and trajectory.",
         summary:
-          "The rubric should mostly grade whether the task was actually completed, while still leaving room for the reasoning steps that make the outcome possible.",
-        body: `Use this split when designing the rubric:
+          "Outcome-oriented rubrics can evaluate intermediate logical decisions when those decisions make a key contribution to fulfilling the prompt.",
+        body: `Requiring outcome-oriented rubrics does not mean rubrics should only evaluate the final artifact, snapshot, or user-facing message. Intermediate logical decisions can also be outcome-oriented when they make a key contribution to fulfilling the prompt.
 
-- **60 to 70%: outcome and task-fulfillment accuracy**
-- **30 to 40%: supporting reasoning, process, and trajectory**
+### 60-70%: outcome and task-fulfillment accuracy
 
-### What belongs in the 60 to 70% band
+Focus this portion on whether the model successfully completes the user's task.
 
-This is the majority of the score. It verifies that the model completed the user's task.
+- Relevant categories: **Task Completion**, **Instruction Following**, and **Factuality and Hallucination**.
+- Relevant evaluation targets: **State Change**, **User-Facing Message**, and **Final Answer Artifact**.
 
-Use this band for criteria that check:
+### 30-40%: supporting reasoning, process, and trajectory
 
-- the final state change
-- the user-facing message
-- the final answer artifact
-- the specific outcome the prompt asked for
+Focus this portion on the logical, outcome-oriented decisions the model makes along the way.
 
-These criteria usually sit under **Task Completion**, **Instruction Following**, or **Factuality and Hallucination**.
-
-### What belongs in the 30 to 40% band
-
-This part covers reasoning that is necessary for the outcome, even when it happens before the final artifact.
-
-Use this band for criteria that check:
-
-- key logical decisions made along the way
-- visual identifications required to reach the answer
-- universe or context checks needed to gather the right information
-- tool or safety decisions that affect the outcome
-
-These criteria usually sit under **Agent Behavior**, **Tool Use**, or **Safety and Boundaries**.
-
-### Important distinction
-
-Outcome-oriented does not mean "final artifact only." An intermediate decision counts when it materially helps fulfill the prompt.`,
+- Include specific visual identifications required to reach the correct solution.
+- Include universe or context checks needed to gather the information required for the expected output.
+- Relevant categories: **Agent Behavior**, **Tool Use**, and **Safety and Boundaries**.
+- Relevant evaluation target: **Trajectory**.`,
       },
       {
         id: "visual-understanding-weighting",
-        title: "Direct visual identification is now a weight-5 check",
+        title: "Visual understanding weighting",
         kind: "weighting",
         tag: "Rubric Weighting",
         impact:
-          "Any criterion that directly evaluates a load-bearing visual identification must be weighted 5, and visual understanding must account for at least 40 percent of the rubric score.",
+          "Any rubric that directly evaluates load-bearing visual identification should usually be weighted as 5, and the spec now requires at least 40 percent visual understanding.",
         summary:
-          "When the task cannot be solved without interpreting the image, the visual identification carries top weight. Incidental images should not be inflated.",
-        body: `Visual understanding must carry more of the overall rubric score. The current expectation is:
+          "The key distinction is explicit versus implicit visual understanding: only visual reasoning that the task truly depends on should receive top weight.",
+        body: `Increase how much of the overall rubric score depends on visual understanding. Our tasks should include enough complexity to require cross-modal reasoning with visual identification. When a rubric directly evaluates that visual identification, it should usually be weighted as a **5**.
 
-- direct, load-bearing visual identification should usually be **weight 5**
-- visual understanding should make up at least **40%** of the rubric score
-- an image should not be inflated just because it is attached
+The spec has been updated to require at least **40% visual understanding**.
 
-### The test
+### Implicit vs. explicit direct visual understanding
 
-Ask this question:
+The weight-5 rule applies only when visual understanding is **explicit/direct**: the task cannot be completed correctly unless the model actually reasons over the image. When the visual content is merely **implicit** (present, attached, or referenced, but not load-bearing for the outcome), it should not be weighted as a 5.
 
-> Could the model fulfill the intent correctly without identifying what is in the image?
+Use this test:
 
-If the answer is **no**, the image is load-bearing. The criterion should be weighted 5.
+> **Could the model fulfill the intent correctly without identifying what is in the image?**
+>
+> - **No** -> the image is load-bearing -> **explicit/direct** -> weight 5.
+> - **Yes** -> the image is incidental -> **implicit** -> weight normally.
 
-If the answer is **yes**, the image is incidental. Weight it normally.
+### Explicit / direct visual understanding
 
-### Explicit visual understanding
+Identifying, reading, counting, comparing, or locating something *in* the image is the actual work. Removing the visual identification breaks the task.
 
-This is weight 5 because the image is the work.
-
-Examples:
-
-- read the total from an attached invoice before deciding whether to email Brandon
-- count screw types in structure photos before updating the "Low Units" tab
-- compare uploaded floor plans to find the emergency exit closest to the stairwell
+- "If the total on the attached invoice exceeds our record for that customer, email Brandon." -> must read the total off the invoice.
+- "Count the screws of each type in the structure photos and add the ones under 20 to the 'Low Units' tab." -> must identify and count from the image.
+- "Which of the three uploaded floor plans has the emergency exit closest to the stairwell?" -> must interpret the plans.
 
 ### Implicit visual content
 
-This is weighted normally because the pixels are not load-bearing.
+An image is involved, but success depends on something else: a file operation, a text instruction, or metadata. The pixels are never interpreted.
 
-Examples:
+- "Save \`kitchen.jpg\` to \`projects/2024/\` and rename it to \`kitchen-final.jpg\`." -> pure file operation; contents never read.
+- "Summarize this report." where the report contains a chart but the text alone answers the prompt -> the chart is decorative to the outcome.
+- "Attach the uploaded photo to the ticket and set its status to 'Resolved'." -> the image is a payload, not something to understand.
 
-- save \`kitchen.jpg\` to a folder and rename it
-- summarize a report where the text alone answers the prompt, even if a chart is present
-- attach a photo to a ticket without interpreting the image
+> **Guardrail:** do not inflate a rubric to weight 5 just because an image is attached. Reserve the 5 for cases where extracting or identifying the visual information *is* the reasoning that fulfills the intent.
 
-### Two valid rubric shapes
-
-**1. Identify visually, then act elsewhere.**
-
-Use an **Agent Behavior / Trajectory** rubric weighted 5 for the visual identification. A separate final-action rubric can be lower weight when it only checks that the correct action followed.
-
-Example: the model identifies that \`invoice.pdf\` shows "$80,000", compares it with the internal record for "Plumbing Solutions" at "$67,000", then decides whether to email Brandon.
-
-**2. The visual identification is the expected output.**
-
-Use one **Instruction Following / Final Answer Artifact** rubric weighted 5. Do not split the same visual answer into duplicate rubrics.
-
-Example: the model reports that "screw 1" has 15 units in the "Low Units" tab of \`inventory_control.html\`.
-
-### Guardrail
-
-Reserve weight 5 for cases where extracting or identifying the visual information is part of fulfilling the intent.`,
-      },
-      {
-        id: "exists-structure-checks",
-        title: "Exists and structure checks are capped at weight 1",
-        kind: "weighting",
-        tag: "Rubric Weighting",
-        impact:
-          "No presence or format check may carry a weight above 1. For reviewers, these checks usually belong in unit tests rather than in the rubric.",
-        summary:
-          "Presence and shape checks catch whether a container exists, not whether the task was actually solved.",
-        body: `These are the lowest-weighted kinds of checks:
-
-- **exists checks**
-- **structure checks**
-
-They must not carry weight above 1.
-
-### Exists checks
-
-An exists check only confirms that something is present.
-
-Examples:
-
-- a file named \`report.csv\` was created
-- the response includes a table
-- an email was sent to Brandon
-
-These do not prove the output is correct. They only prove the container exists.
-
-### Structure checks
-
-A structure check only confirms format or shape.
-
-Examples:
-
-- \`interactive_dash.html\` contains columns named \`date\`, \`result\`, and \`notes\`
-- the invoice total is formatted as a dollar amount, such as "$80,000"
-- the HTML page has a "Low Units" tab
-
-### Why the cap matters
-
-A model can pass these checks while still getting the task wrong. It might create a valid table full of hallucinated values, or send an email that should not have been sent.
-
-High weights are reserved for criteria that verify substance:
-
-- the correct value
-- the correct decision
-- the correct visual identification
-- the correct task outcome`,
-      },
-      {
-        id: "self-containment",
-        title: "Self-containment is enforced as a fail-level rule",
-        kind: "rule",
-        tag: "Rubric Quality",
-        impact:
-          "Non-self-contained rubrics count as Major Rubric Errors. In a typical set of 15 to 20 criteria, just two can be enough to fail the entire task.",
-        summary:
-          "Every criterion must be gradable from its own text alone unless it falls into one of two narrow exceptions.",
-        body: `A rubric must be evaluable from the criterion text itself.
-
-Before submitting, ask:
-
-> Can this rubric be evaluated using only the information contained in the criterion itself, without relying on external sources?
-
-If the answer is no, the criterion is not self-contained unless one of the exceptions below applies.
-
-### Allowed exceptions
-
-**1. Dynamic data**
-
-Some values naturally change, such as Amazon listing prices, web search results, or date-sensitive information.
-
-Valid shape:
-
-- "The final user-facing message reports the price shown in the selected 'XPG CORE REACTOR II 850W Gold' Amazon listing, such as '$129.99'."
-
-**2. Visual references**
-
-If a criterion must point to a specific uploaded image or file, naming the file is acceptable because the grader has the file.
-
-### Anti-pattern: one blanket rubric
-
-In the Photo QC / storefront audit task, one rubric tried to cover every product at once. That made the ground truth impossible to grade from the criterion alone.
-
-Problems to avoid:
-
-- **R1:** asks whether every PASS or EDIT verdict cites the correct photo, but does not name the correct photo and verdict for each product
-- **R5:** inlines photo-quality standards, but still relies on external per-product ground truth
-- **R7:** checks whether the agent used walkthrough labels, but cannot by itself verify that the final mapping is correct
-
-Better shape:
-
-- write one rubric per product
-- name the expected \`photo_file\`
-- name the expected verdict
-- include the expected visual basis when needed
+### Case 1: identify a visual reference, cross-reference it, then act
 
 Example:
 
-- "The Photo QC record for Baby Beanie - Solid Gray has verdict PASS, citing IMG_0489.jpg, the only square 2710 x 2710 still that is sharp and color-accurate."
+> "If the total of the attached invoice is over our internal records reference for that customer, send an email to Brandon. If it is not, just keep that total in memory so I can follow up on it in the next quarter report."
 
-### Anti-pattern: hiding the expected value in the environment
+Use:
 
-In the Kiln & Co sponsored mockup task, several criteria required the grader to open external context to know the answer.
+- An **Agent Behavior / Trajectory** rubric to evaluate whether the model identifies that the invoice total in \`invoice.pdf\` is "$80,000", which exceeds the internal record for "Plumbing Solutions" ($67,000).
+- A **Final Answer / Artifact** rubric to evaluate whether the final state change, final answer, or artifact is appropriate, such as sending the email or keeping the total in memory.
 
-Fix these by naming the expected value directly:
+Weighting approach:
 
-- **R3:** state the four received products instead of referring only to order \`KC-26-04182\`
-- **R6:** name each image-to-product pair instead of saying "verified uploaded images"
-- **R12:** state the Virginia kiln address, \`132 Church St NW, Vienna, VA\`
-- **R14:** state the sponsor requirement, such as the due date and expired coupon issue
-- **R15:** state the prior Lena context, such as the softbox or white-balance check
+- The visual identification rubric should get **weight 5** because all the core reasoning and complexity needed to fulfill that part of the intent lives in that rubric.
+- The outcome rubric can get **weight 1** because the core identification process is already covered by the Agent Behavior rubric.
 
-### The bar
+### Case 2: the visual reference is the expected output
 
-Self-containment is not optional. Non-self-contained rubrics fall under **Fail - 10%+ Major Rubric Errors**.
+Example:
 
-In practice, two non-self-contained rubrics in a set of around 15 to 20 criteria can fail the whole task.`,
+> "I need you to help me count the number of screws of each type present on the structure photos uploaded so we can compare them against inventory and see which ones we need for the next maintenance. Add the ones under 20 to the 'Low Units' tab within the \`inventory_control.html\` page."
+
+In this case, the act of identifying the visual information already represents the outcome, and generating one rubric to identify and another to report would be redundant.
+
+Weighting approach:
+
+- Use one **Instruction Following / Final Answer Artifact** rubric weighted as 5: "The model reports 'screw 1' as having 15 units in the 'Low Units' of the \`inventory_control.html\`."
+- This works because the complexity of the visual identification is nested inside the final artifact rubric.
+
+Anything that directly, not only implicitly, requires visual understanding should get a weight of 5.`,
+      },
+      {
+        id: "exists-structure-checks",
+        title: "\"Exists\" and \"structure\" checks",
+        kind: "weighting",
+        tag: "Rubric Weighting",
+        impact:
+          "No exists or structure check can carry a weight above 1, and reviewers should usually cover these checks with unit tests.",
+        summary:
+          "These checks confirm that something is present or shaped correctly; they do not verify whether the answer is actually correct.",
+        body: `> For reviewers, these should be in the Unit Tests, since they are structural parts of the intent.
+
+These are the two lowest-weighted kinds of criteria a rubric can contain, and they should be de-emphasized: **no exists/structure check can carry a weight above 1.**
+
+### "Exists" check
+
+Confirms only that *something is present*, without judging whether it is correct.
+
+- "A file named \`report.csv\` was created."
+- "The response includes a table."
+- "An email was sent to Brandon." This confirms it was sent, not that it should have been sent or said the right thing.
+
+### "Structure" check
+
+Confirms the *shape or format* is right, without judging the content. This should be Unit Test coverage in the review layer.
+
+- "The \`interactive_dash.html\` table contains columns 'date', 'result' and 'notes'."
+- "The invoice total is formatted as a dollar amount ('$80,000')."
+- "The HTML page has a 'Low Units' tab."
+
+Both answer *"is the container there / the right shape?"* - not *"is the answer actually correct?"* A model can satisfy them while getting the task completely wrong, for example by producing a perfectly formatted table full of hallucinated values.
+
+Because they capture almost no reasoning or task fulfillment, they must not be weighted highly. The high weights are reserved for criteria that verify the substance:
+
+- the correct value
+- the correct decision
+- the correct visual identification`,
+      },
+      {
+        id: "self-containment",
+        title: "Self Containment",
+        kind: "rule",
+        tag: "Rubric Quality",
+        impact:
+          "Non-self-contained rubrics fall under Fail - 10%+ Major Rubric Errors, and two such issues can fail a typical rubric set.",
+        summary:
+          "A rubric must be possible to evaluate from the criterion text itself, with only narrow exceptions for dynamic data and visual references.",
+        body: `A rubric has to be possible to evaluate with the content of the rubric itself, nothing else.
+
+The only two cases where sacrificing a little self-containment would be justified are:
+
+### Dynamic data
+
+This applies to Amazon listing prices, web-search-specific results, specific days, or similar values whose exact content can change.
+
+Example:
+
+- "Give me in the final message the cheapest Amazon listing for each one of the matching products" -> "The final user-facing message reports the price shown in the selected 'XPG CORE REACTOR II 850W Gold' Amazon listing (e.g., '$129.99')."
+
+### Rubrics implying visual references
+
+When a rubric implies a visual reference, naming the file or image may be acceptable because the grader has access to the visual artifact.
+
+### Anti-pattern: blanket rubric
+
+[Photo QC / storefront audit task](https://openclaw-viewer-mm.vercel.app/attempt/6a32dce2238b8ac896b224cc/#rubrics)
+
+The anti-pattern here is the **blanket rubric**: one criterion tries to cover every product at once, so its ground truth (which photo depicts which product, and the correct verdict for each) never fits inside the rubric text.
+
+**R1** - "Every Photo QC record with a PASS or EDIT verdict cites a photo_file that genuinely depicts that product, matching the product's appearance in the labeled walkthrough video; products for which no faithful still exists are recorded as RETAKE."
+
+- For which product, and which photo_file is the correct one for each?
+- What is the expected verdict per product?
+- Where does the grader get the photo-to-product ground truth this rubric checks against?
+
+It lives in the walkthrough video and the images, not in the rubric. One general rubric "covering all the photos" cannot be graded from its own content.
+
+Self-contained reframe: one rubric **per product**, each naming the expected photo_file and verdict - exactly what **R3** already does:
+
+> "The Photo QC record for Baby Beanie - Solid Gray has verdict PASS, citing IMG_0489.jpg (the only square 2710 x 2710 still, sharp, accurate color)."
+
+Repeat that shape for each product.
+
+**R5** (borderline) - "Each verdict is judged against the four photo-quality standards in IMG_5050.jpg (color accuracy, square crop with >=15px margin, subject fully in frame, no motion blur)..."
+
+- What are the four standards, and what verdict does each product deserve under them?
+- The standards themselves are inlined, which is good; that part is self-contained.
+- But "each verdict" still needs the per-product ground truth.
+
+Keep the inlined standards and move the correctness check into the per-product rubrics above.
+
+**R7** (borderline) - "The agent maps still photos to products by cross-referencing the walkthrough video's product labels rather than loose color/shape similarity."
+
+- What is the correct mapping?
+- What counts as cross-referencing the labels versus loose similarity?
+
+This is gradable as a trajectory/process check because it asks whether the agent consulted the labels, but the correct mapping itself is external. It is fine as a process rubric; do not rely on it to verify that the mapping is right.
+
+### Anti-pattern: expected value pushed into the environment
+
+[Kiln & Co sponsored mockup task](https://openclaw-viewer-mm.vercel.app/attempt/6a3f4946980f47b835c4062f/#rubrics)
+
+Several rubrics push the expected value out of the rubric and into the environment. The tell is simple: to grade them, you have to ask a question the rubric cannot answer by itself.
+
+**R3** - "mockup.webm contains product segments for each received product registered in order KC-26-04182"
+
+- Which products are registered in order KC-26-04182?
+- How does the grader confirm the segments are complete without opening the internal database?
+
+The answer lives in the database, not the rubric.
+
+Self-contained reframe:
+
+> "mockup.webm contains a product segment for each of the four received products: Stoneware Glaze Set, Underglaze Duo (Midnight Blue / Desert Sand), Studio Towels, and Sticker Pack."
+
+This is what R4 already does, so R3 is not only non-self-contained but also redundant.
+
+**R6** - "mockup.webm uses each of the four verified uploaded images that match the four descriptions, or semantically equivalent images matching each of the four sponsored products"
+
+- Which uploaded image maps to which product?
+- Where does the grader read "the four descriptions" the images must match?
+
+Both the image-to-product pairing and the descriptions are external. Reframe by naming each pair explicitly, such as \`glazze.jpg\` -> Stoneware Glaze Set and \`towl.jpeg\` -> Studio Towels, or split into one rubric per product-image pair.
+
+**R12** - "outline.docx contains a Google Maps link to the Virginia kiln address that is deduced from the file link_for_photos.docx"
+
+- What address should the link point to?
+- What is inside \`link_for_photos.docx\` that lets the grader deduce it?
+
+"Deduced from the file" outsources the deduction to the grader.
+
+Self-contained reframe:
+
+> "outline.docx contains a Google Maps link to 132 Church St NW, Vienna, VA (e.g., 'https://www.google.com/maps?q=132+Church+St+NW,+Vienna,+VA')."
+
+**R14** - "outline.docx contains grounded instructions for the professional editor based on the retrieved requirement from the sponsor emails or from messages with Lena or Drew"
+
+- What is "the retrieved requirement"?
+- Which specific facts from those emails/messages make an instruction grounded versus not?
+
+The requirement is never stated in the rubric. The rationale mentions a due date and an expired coupon code, but those never made it into the criterion. Reframe by stating them, for example:
+
+> "instructions that reflect the sponsor's due date of [X] and drop or flag the expired coupon code [Y]."
+
+**R15** - "the agent sends a message to Lena addressing the context of the last registered messages"
+
+- What was said in "the last registered messages"?
+- What must the reply reference to count as addressing the context?
+
+This requires opening Lena's chat history to grade. Reframe:
+
+> "sends a message to Lena acknowledging the softbox / white-balance check from their prior conversation, or semantically equivalent."
+
+### ⚠️ SELF-CONTAINMENT IS CRITICAL
+
+This has been a recurring issue since day one of the project, and we cannot afford to let it keep happening.
+
+Before submitting any task, **always ask yourself**:
+
+> **"Can this rubric be evaluated using only the information contained within the criterion itself, without relying on external sources?"**
+
+- If **yes**, the rubric is self-contained, assuming it is also atomic.
+- If **no**, then unless there is a valid exception because the nature of the data makes full self-containment impossible, the rubric is **not self-contained**.
+
+Non-self-contained rubrics fall under **Fail - 10%+ Major Rubric Errors**. In practice, this means that **having just two non-self-contained rubrics in a rubric set of around 15 to 20 criteria is enough for the entire task to fail.**`,
       },
       {
         id: "output-modality-diversity",
-        title: "Handwritten Notes should support richer outputs",
+        title: "Output modality diversity",
         kind: "guidance",
         tag: "Scenario Design",
         impact:
-          "Difficulty must come from cross-modal workflows and less common output artifacts, not from hard-to-read inputs. Handwritten-notes-into-CSV should no longer be the default failure mechanism.",
+          "Stop using handwritten notes as the default way to make the model fail; difficulty should come from cross-modal workflows and richer output artifacts.",
         summary:
-          "Handwritten notes can still be useful, but they should be one part of a broader workflow that asks the model to reason across modalities and produce richer artifacts.",
-        body: `Around 95% of submitted tasks follow the same pattern: handwriting goes in, then a plain \`.csv\` or \`.pdf\` comes out.
+          "Handwritten notes can still be part of a scenario, but the main complexity should come from coordinating modalities, producing richer artifacts, and taking realistic state-changing actions.",
+        body: `Most submitted tasks follow the typical handwritten-note scenario and produce a regular \`.csv\` or \`.pdf\` output. **Be creative.** The model can do much more than we are asking it for, and the complexity is nested in asking for other types of outputs and requiring cross-modal reasoning across different multimodal inputs.
 
-That pattern should no longer be the default.
+**Stop using handwritten notes as the default way to make the model fail.**
 
-### What should create difficulty
+The difficulty should come from:
 
-Use complexity from the workflow, not from making inputs harder to read.
+- **cross-modal reasoning**, such as extracting information from one modality, using it to perform actions in another, then validating or continuing the workflow using yet another
+- richer and more interconnected reasoning chains
+- **less common output artifacts**
 
-Better sources of difficulty:
+The difficulty should **not** come from making the inputs themselves harder to read, such as using more challenging handwriting.
 
-- reading one modality and acting in another
-- reconciling several inputs before deciding what belongs in the output
-- producing less common artifacts such as \`.pptx\`, \`.xlsx\`, \`.webm\`, \`.svg\`, rendered charts, or interactive HTML
-- combining artifact creation with state changes like emails, calendar events, database updates, file organization, or memory updates
+### What Claude Opus 4.6 can read
 
-### What to avoid
+- **Text:** plain text (\`.txt\`), Markdown (\`.md\`), source code, logs, configuration files (\`.json\`, \`.yaml\`, \`.toml\`, \`.ini\`), XML, SQL, emails, and long reference documents.
+- **Images:** \`.png\`, \`.jpg\`, \`.jpeg\`, \`.webp\`, screenshots, photos, scanned documents, diagrams, charts, graphs, tables, UI mockups, maps, forms, and reasonably legible handwritten notes.
+- **Documents:** PDF (\`.pdf\`), Microsoft Word (\`.docx\`), HTML (\`.html\`), Rich Text (\`.rtf\`), Markdown (\`.md\`), and other document formats containing text, tables, images, and structured layouts.
+- **Structured data:** CSV (\`.csv\`), Microsoft Excel (\`.xlsx\`, \`.xls\`), JSON (\`.json\`), XML (\`.xml\`), SQLite databases (\`.sqlite\`, \`.db\`), and other structured data files.
+- **Video:** video files such as \`.mp4\`, \`.mov\`, \`.avi\`, and \`.webm\` when processed through frame extraction or labeled frames provided by the task environment.
+- **Audio:** audio files such as \`.mp3\`, \`.wav\`, and \`.m4a\` when a transcript or supported processing path is available.
 
-Do not make the main challenge:
+### What Claude Opus 4.6 can produce
 
-- harder handwriting
-- more cramped notes
-- handwriting converted into a plain CSV
-- a task that can be solved by transcription alone
+- plain text (\`.txt\`)
+- Markdown (\`.md\`)
+- HTML (\`.html\`)
+- CSS (\`.css\`)
+- JavaScript (\`.js\`)
+- JSON (\`.json\`)
+- YAML (\`.yaml\`)
+- XML (\`.xml\`)
+- CSV (\`.csv\`)
+- SQL (\`.sql\`)
+- configuration files
+- source code in virtually any programming language
+- Excel workbooks (\`.xlsx\`)
+- Word documents (\`.docx\`)
+- PowerPoint presentations (\`.pptx\`)
+- PDFs (\`.pdf\`)
+- charts and visualizations (\`.png\`, \`.svg\`)
+- generated or edited images
+- multi-file projects and applications
+- other binary artifacts supported by the available libraries
 
-### How to design instead
+Use **state changes** when the environment supports them, such as sending emails, updating databases, creating calendar events, modifying files, organizing folders, or updating project memory. This complements your scenarios in a realistic way and adds a new cross-modal reasoning layer for the model.
 
-Pair one input modality with a different output modality.
+> **Design principle:** The challenge should come from coordinating information across modalities and producing complex workflows, not from making the inputs artificially difficult to read.
 
-Examples:
+### How to use this when authoring
 
-- read a chart, then write a spreadsheet
-- read a video, then produce a slide
-- read invoices, then send the correct email
-- read notes and selected exercises, then build an interactive page
+- Pair an input modality with a *different* output modality: read a chart -> write a spreadsheet; read a video -> produce a slide; read invoices -> send an email.
+- The reasoning that bridges the two is where the difficulty and the weight-5 visual rubric should live.
+- Prefer the richer artifact when the scenario allows it: \`.pptx\`, \`.xlsx\`, a rendered chart, or \`.webm\` over a plain \`.csv\` or \`.pdf\` dump.
+- Keep the visual identification load-bearing so the task genuinely cannot be solved text-only.
 
-Keep the visual identification load-bearing so the task cannot be solved as text-only.
+Examples of scenarios with genuine complexity beyond handwritten notes can be found in the Golden Task Viewer. In particular, Scenarios 2 and 3 use handwritten notes as **just one component of a broader workflow**, rather than making them the primary source of difficulty. The handwritten content supports the overall intent instead of serving as a shortcut or trap to force the model to fail.
 
-Handwritten notes are still allowed. They should support the scenario instead of being the entire scenario.`,
+**Remember:** handwritten notes should contribute naturally to the scenario, not become the sole challenge. The complexity should come from the overall reasoning, workflow, and interactions across multiple modalities.`,
         scenarios: [
           {
             title: "Scenario 1: Zoe's school prep",
-            prompt:
-              "Zoe is about to start 1st grade, and I am concerned about her reading, writing, and math. Create `zoe_learns.html` using Keisha's notes from the meeting with Ms. Carter, the selected exercises, and the uploaded layout requirements. Include only exercises that apply to Zoe's gaps, discard the others into MEMORY.md, and create a calendar event series for Keisha and me from tomorrow until August 14, every 2 days across Monday through Saturday, with Sundays treated as off days.",
-            details: `This works because the model must coordinate several sources:
+            prompt: `Zoe is about to start 1st grade, and I am a bit concerned about her reading, writing, and math, and I want to create something interactive that can help her catch up and start school feeling confident.
 
-- parent-teacher notes identify Zoe's gaps
-- exercise files arrive as photos, screenshots, videos, or handwritten worksheets
-- the model must judge which exercises fit a 6-year-old entering 1st grade
-- matching exercises go into the page
-- discarded exercises are recorded in \`MEMORY.md\`
-- the final \`zoe_learns.html\` must follow the uploaded layout
-- the calendar series has a non-trivial schedule rule`,
+Help me create \`zoe_learns.html\` using the notes Keisha put together from her meeting with Ms Carter, the exercises I have selected to include, and the uploaded layout requirements. You have to focus only on exercises that apply to Zoe's gaps; any other has to be discarded and referenced into MEMORY.md.
+
+Also, since I want us to be very strict about tracking her progress before she starts school on August 14, please create a calendar event series for Keisha and me from now, starting tomorrow, until then. The events should be scheduled every 2 days across Monday through Saturday, with Sundays treated as off days.`,
+            details: `**Why this represents genuine complexity:**
+
+- Requires cross-modal reasoning across **3 different sources**:
+  - Identify Zoe's improvement areas from the parent-teacher notes, which could be provided as a PDF, DOCX, TXT, or similar document.
+  - Cross-reference those gaps against the selected set of exercises, which could come from photos, screenshots, videos, handwritten worksheets, or other uploaded materials.
+  - Determine which exercises are actually appropriate for a 6-year-old about to start 1st grade.
+- Requires filtering and discarding:
+  - Exercises that match Zoe's gaps should be included in the final output.
+  - Exercises that do not apply should be discarded and documented in \`MEMORY.md\`.
+- Requires producing a specific final artifact:
+  - A polished \`zoe_learns.html\` page.
+  - The page must follow the uploaded \`layout.md\` requirements.
+- Requires an additional state/action outcome:
+  - Create a calendar event series for Keisha and the parent.
+  - Events must run every 2 days from tomorrow until August 14.
+  - Scheduling must happen only Monday through Saturday, with Sundays treated as off days.`,
           },
           {
             title: "Scenario 2: Milek's backyard timeline",
-            prompt:
-              "I got my drip irrigation kit and want to document the current state of my backyard before setting it up. Based on the uploaded content, create `backyard_timeline.svg` as a six-month progress tracker starting now. Use the uploaded backyard inventory as the baseline, follow the layout spec, include monthly milestones, group tracked plants and areas, leave placeholders for future updates, and set a recurring reminder every Friday of the last week of each month. Include Terrence in the event.",
-            details: `This works because the model must reconcile and transform the inputs:
+            prompt: `Hey, Milek here. I got my drip irrigation kit and I'm about to install it. Before setting it up, I want to document the current state of my backyard, including all the plants and the rest of the things I currently have, so I can track how everything evolves over the next few months with this new irrigation system.
 
-- current inventory comes from photos, screenshots, or written lists
-- layout requirements constrain the SVG structure
-- the model must decide what counts as a six-month milestone
-- plants and backyard areas must be grouped into clear sections
-- the output is an uncommon artifact: \`backyard_timeline.svg\`
-- the task also requires a recurring reminder with a naming constraint and an attendee`,
+Based on the uploaded content, please create a \`backyard_timeline.svg\` that visually documents the current state of my backyard and serves as a six-month progress tracker starting from now. I'll upload the exact layout and design specifications I want as part of the context. The SVG should use the uploaded backyard inventory as the baseline, include one milestone for each month, group the tracked plants and backyard areas into clearly labeled sections, and leave dedicated placeholders for future progress updates and comparison notes.
+
+Once the SVG is complete, set up a recurring reminder every Friday of the last week of each month, starting today, so I can update it with the latest progress. Any reminder title that includes the words "backyard progress" works. I want you to include Terrence in the event as well since I want him to follow up on the progress with me.`,
+            details: `**Why this represents genuine complexity:**
+
+- Requires cross-modal reasoning across **multiple sources**:
+  - Identify the current backyard inventory: plants, structures, existing items, from uploaded content that could be photos, screenshots, or a written inventory list.
+  - Cross-reference that inventory against the uploaded design specifications to determine how sections should be grouped and labeled.
+  - Determine what counts as a "milestone" for each of the six months given the current baseline state.
+- Requires filtering and organizing:
+  - Tracked plants and backyard areas must be grouped into clearly labeled sections, not dumped as a flat list.
+  - Placeholders for future progress updates and comparison notes must be structurally present, not just implied.
+- Requires producing a specific final artifact:
+  - A polished \`backyard_timeline.svg\` that visually documents the baseline and includes one milestone per month.
+  - The SVG must follow the uploaded layout/design specifications exactly.
+- Requires an additional state/action outcome:
+  - Set up a recurring reminder for every Friday of the last week of each month, for six months, starting today.
+  - The reminder title must include the words "backyard progress", or a semantically equivalent variant.
+  - Terrence must be included on the reminder/event alongside Milek.`,
           },
         ],
       },
       {
         id: "decoys-noise",
-        title: "Every scenario needs deliberate, graded friction points",
+        title: "Decoys/noise in the multimodal input",
         kind: "guidance",
         tag: "Scenario Design",
         impact:
-          "Tasks are expected to include resolvable decoys, and every decoy must be paired with a rubric that verifies the model avoided it.",
+          "A robust task should include realistic friction points that are resolvable from the provided materials and explicitly graded in the rubric.",
         summary:
-          "Plausible-but-wrong inputs make the model verify instead of pattern-match. The decoy must be fair, realistic, and graded.",
-        body: `A strong task should not rely only on genuine complexity. It should also include deliberate friction points.
+          "Decoys should force judgment between plausible options, not random noise or formatting awareness.",
+        body: `A robust task should not fail the model only because the scenario is genuinely complex. It should also precisely place **friction points**: pieces of input that look plausible or relevant but are the wrong answer, so the model has to actively verify rather than pattern-match the first thing that fits.
 
-A friction point is a plausible but wrong path that the model must actively avoid.
+This is deliberate, meticulous design work, not random clutter. Every task in the Golden Task Viewer has a section dedicated to explaining how friction was worked into that specific scenario in a realistic way.
 
 ### What counts as a decoy
 
-Use decoys that could realistically appear in a user's files:
+- **Distractor visual** - an uploaded image that resembles the target but is not it: wrong angle, wrong color variant, wrong product, or an older photo of the same subject. The model must select the *correct* one, not just *a* plausible one.
+- **Distractor record** - a stale or superseded piece of data sitting alongside the current one, such as last quarter's price list next to this quarter's or an old address on file next to a newer one. In the Kiln & Co task, the environment contains a Virginia address the agent visually encountered and a Portland, OR address on file for the sponsor. The correct answer requires recognizing these are different and using the one on file, not the geographically salient one.
+- **Distractor communication** - an irrelevant email/message thread living in the same inbox or channel as the one that matters, which the model must correctly ignore rather than act on.
+- **Near-duplicate identity** - two people, products, or IDs with very similar names: two "Jordan"s, two SKUs one digit apart, "Kiln & Co" versus a similarly named but unrelated vendor. The model must disambiguate using context, not guess.
+- **Red herring instruction or note** - a plausible-sounding note, such as a handwritten comment or old to-do, that implies an action the rest of the context contradicts once cross-checked.
 
-- **Distractor visual:** an image that resembles the target but has the wrong angle, color variant, product, or age
-- **Distractor record:** stale data sitting next to current data
-- **Distractor communication:** an irrelevant email or message in the same inbox or channel
-- **Near-duplicate identity:** two people, products, or IDs with similar names
-- **Red herring instruction:** an old note or plausible instruction that conflicts with the rest of the context
+### Design principles
 
-### Rules for placing decoys
+- **A decoy must be resolvable from the provided materials alone.** If disambiguating it requires information nowhere in the task's universe, it is not a decoy; it is an unfair or broken task. This is the same standard as Self Containment: the correct disambiguation has to be groundable in what is given.
+- **Every decoy needs a rubric that actually checks it was avoided.** A friction point that is not graded is wasted complexity. Write a rubric that fails the model if it falls for the trap. For example, "the email does not mention the Virginia address" is precisely a rubric that verifies a decoy was *not* acted on.
+- **Do not over-stack.** Too many simultaneous decoys can bury the genuine complexity of the scenario and turn the task into a noise-filtering exercise instead of a reasoning one. Friction should sit alongside the real cross-modal reasoning chain, not replace it.
+- **A decoy tests judgment, not alertness to formatting.** It should force a real decision between two plausible options. It is not the same thing as an exists/structure trap, which only tests whether the model noticed a container exists.
 
-**Make the decoy resolvable.**
+### Where to place decoys across modalities
 
-The correct answer must be available from the provided materials. If disambiguation requires outside information, the task is unfair.
+- **Visual** - a similar-but-wrong image mixed in among several uploaded photos or video frames.
+- **Textual/data** - an outdated or conflicting record living in the same document, spreadsheet, or database table as the current one.
+- **Temporal** - a timestamp or event that superficially matches the ask but falls outside the actually requested window.
+- **Identity** - near-duplicate names, emails, or IDs that require correct matching, not just presence-checking.
 
-**Grade the decoy.**
+### Applying this to Scenario 1 and Scenario 2
 
-Every decoy needs a rubric that checks whether the model avoided it.
+**Scenario 1 (Zoe):**
 
-Example:
+- Among the uploaded exercises, include one or two that target a skill Zoe's notes say she has *already* mastered, such as shape recognition when Ms. Carter's notes flag reading and math as the actual gaps. This is a plausible-looking exercise that the model must correctly discard into \`MEMORY.md\`, exactly as the prompt already asks.
+- Include two versions of the same worksheet with near-identical filenames, such as \`addition_practice_draft.pdf\` versus \`addition_practice_final.pdf\`, where only the final one reflects Ms. Carter's actual recommendation. The model must use the current one, not just the first match.
+- Include different-level exercises that are not appropriate for a 6-year-old about to start 1st grade, such as multiplication worksheets, advanced grammar or syntax analysis, or age-inappropriate reading comprehension. The model must filter these out even if they are otherwise well-made exercises.
+- Include calendar scheduling edge cases. The event series must run for **six months starting from now, excluding the current month**, every **2 days**, **Monday through Saturday only**, with **Sundays treated as off days rather than counting toward the 2-day interval**. The model must correctly handle the schedule instead of simply adding events every other calendar day.
 
-- "The email does not mention the Virginia address."
+**Scenario 2 (Milek's backyard):**
 
-**Do not over-stack.**
-
-Too many decoys turn the task into noise filtering. Friction should support the real reasoning chain, not replace it.
-
-**Test judgment, not formatting awareness.**
-
-A good decoy forces a decision between plausible options. It is not the same as checking whether a file, column, or tab exists.
-
-### Applied examples
-
-For **Zoe**, realistic friction includes:
-
-- an exercise for a skill she already mastered
-- draft and final versions of the same worksheet
-- exercises pitched at the wrong grade level
-- the Sunday scheduling rule, where Saturday is followed by Monday, not Tuesday
-
-For **Milek**, realistic friction includes:
-
-- an older backyard inventory list that conflicts with current photos
-- garden inputs unrelated to irrigation
-- decorative elements that should not shape the baseline
-- the same calendar edge case
+- Include an older backyard inventory list from before some plants were removed or replaced alongside the current photos. The SVG baseline must reflect the *current* state shown in the photos, not the stale list.
+- Include multimodal inputs referencing parts of the garden that are not related to the irrigation process: not plants, not vegetables, just decorative elements, tables, figures, and similar items.
+- Include calendar scheduling edge cases. The event series must start **tomorrow** and continue **until August 14**, occurring **every 2 days** across **Monday through Saturday only**. **Sundays are off days and should never count toward the 2-day interval**. For example, if the previous event is on Saturday, the next one should be on Monday, not Tuesday. The model must correctly infer the schedule rather than simply adding events every other calendar day.
 
 ### Guardrail
 
-Friction has to earn its place. It should feel like something that naturally appears in real files, not something inserted only to trick the model.`,
+Friction has to earn its place in the scenario. If a decoy only makes sense because the task author inserted it, not because a real person's files would plausibly look that way, it is contrived. Every decoy above works because it is the kind of mess that shows up naturally: outdated files, near-duplicate filenames, and calendars that already have things on them, not an artificial trap dropped in just to catch the model.`,
       },
     ],
   },

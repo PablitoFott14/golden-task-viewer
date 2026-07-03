@@ -1,15 +1,88 @@
-import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
+import { useState, useRef, useEffect, useMemo, type ComponentProps } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ChevronDown, ChevronLeft, ChevronRight, History, Megaphone, Search, X } from "lucide-react";
-import { alignmentUpdates, type AlignmentTopic, type AlignmentUpdate } from "../data/alignments";
+import {
+  Search,
+  X,
+  History,
+  Megaphone,
+  Scale,
+  Eye,
+  Boxes,
+  FileCheck,
+  Shapes,
+  Crosshair,
+  ShieldAlert,
+  Compass,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Zap,
+} from "lucide-react";
+import {
+  alignmentUpdates,
+  type AlignmentKind,
+  type AlignmentTopic,
+  type AlignmentUpdate,
+} from "../data/alignments";
 import { LatestBadge } from "../components/UpdateTimeline";
 import { cx } from "../lib/assets";
 
-/* Internal markdown links go through the router so they survive the hash router
-   and sub-path hosting; external ones open in a new tab. */
+interface KindStyle {
+  label: string;
+  icon: typeof Scale;
+  bar: string;
+  chip: string;
+  iconBox: string;
+  activeCard: string;
+  callout: string;
+  calloutLabel: string;
+}
+
+const kindStyles: Record<AlignmentKind, KindStyle> = {
+  rule: {
+    label: "Fail-level rule",
+    icon: ShieldAlert,
+    bar: "from-rose-500 via-rose-400 to-amber-400",
+    chip: "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200",
+    iconBox: "bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300",
+    activeCard: "border-rose-300 bg-rose-50/70 dark:border-rose-500/40 dark:bg-rose-500/10",
+    callout: "border-rose-200 bg-rose-50/70 dark:border-rose-500/30 dark:bg-rose-500/10",
+    calloutLabel: "text-rose-700 dark:text-rose-300",
+  },
+  weighting: {
+    label: "Weighting rule",
+    icon: Scale,
+    bar: "from-brand-500 via-brand-400 to-violet-400",
+    chip: "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-200",
+    iconBox: "bg-brand-100 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300",
+    activeCard: "border-brand-300 bg-brand-50/70 dark:border-brand-500/40 dark:bg-brand-500/10",
+    callout: "border-brand-200 bg-brand-50/70 dark:border-brand-500/30 dark:bg-brand-500/10",
+    calloutLabel: "text-brand-700 dark:text-brand-300",
+  },
+  guidance: {
+    label: "Design directive",
+    icon: Compass,
+    bar: "from-amber-500 via-gold-400 to-gold-500",
+    chip: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200",
+    iconBox: "bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-300",
+    activeCard: "border-amber-300 bg-amber-50/70 dark:border-amber-500/40 dark:bg-amber-500/10",
+    callout: "border-amber-200 bg-amber-50/70 dark:border-amber-500/30 dark:bg-amber-500/10",
+    calloutLabel: "text-amber-700 dark:text-amber-300",
+  },
+};
+
+const topicIcons: Record<string, typeof Scale> = {
+  "weight-distribution": Scale,
+  "visual-understanding-weighting": Eye,
+  "exists-structure-checks": Boxes,
+  "self-containment": FileCheck,
+  "output-modality-diversity": Shapes,
+  "decoys-noise": Crosshair,
+};
+
 function MdLink(props: ComponentProps<"a">) {
   const href = props.href ?? "";
   if (href.startsWith("/")) {
@@ -41,42 +114,59 @@ function Highlight({ text, query }: { text: string; query?: string }) {
   );
 }
 
-function Hero({ update }: { update: AlignmentUpdate }) {
+function HeroStat({ value, label }: { value: number; label: string }) {
   return (
-    <section className="border-b border-ink-200/70 bg-surface">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="rounded-xl border border-white/10 bg-white/[0.07] px-4 py-2.5 backdrop-blur-sm">
+      <div className="text-xl font-black leading-none text-white">{value}</div>
+      <div className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-white/60">{label}</div>
+    </div>
+  );
+}
+
+function Hero({ update }: { update: AlignmentUpdate }) {
+  const rules = update.topics.filter((t) => t.kind === "rule").length;
+  const weighting = update.topics.filter((t) => t.kind === "weighting").length;
+  const guidance = update.topics.filter((t) => t.kind === "guidance").length;
+  return (
+    <section className="relative overflow-hidden border-b border-ink-200/70 bg-brand-950">
+      <div className="pointer-events-none absolute -top-28 right-[-8%] h-80 w-80 rounded-full bg-rose-500/25 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-36 left-[-6%] h-96 w-96 rounded-full bg-brand-500/30 blur-3xl" />
+      <div className="relative mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-100 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-glow">
             <Megaphone size={13} /> Client standards
           </span>
           <LatestBadge />
-          <span className="font-mono text-xs font-semibold text-ink-400">Updated {update.dateLabel}</span>
+          <span className="font-mono text-xs font-semibold text-white/50">updated {update.dateLabel}</span>
         </div>
-        <h1 className="mt-4 text-3xl font-black uppercase tracking-tight text-ink-900 sm:text-5xl">
-          Urgent Alignments
+        <h1 className="mt-4 text-4xl font-black uppercase tracking-tight text-white sm:text-5xl">
+          Urgent{" "}
+          <span className="bg-gradient-to-r from-rose-400 to-amber-300 bg-clip-text text-transparent">
+            Alignments
+          </span>
         </h1>
-        <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-ink-600">
-          The expectations below are in force now, and every submission is reviewed against them. The log stays
-          compact so the alignments remain the main reading path.
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
+          The expectations below are in force now, and every submission is reviewed against them. Use the compact
+          update log for dates; keep the alignment cards as the main reading path.
         </p>
+        <div className="mt-6 flex flex-wrap gap-2.5">
+          <HeroStat value={update.topics.length} label="Alignments" />
+          <HeroStat value={rules} label="Fail-level rules" />
+          <HeroStat value={weighting} label="Weighting rules" />
+          <HeroStat value={guidance} label="Design directives" />
+        </div>
       </div>
     </section>
   );
 }
 
-function UpdatesLog({
-  activeId,
-  onSelect,
-}: {
-  activeId: string;
-  onSelect: (id: string) => void;
-}) {
+function UpdatesLog({ activeId, onSelect }: { activeId: string; onSelect: (id: string) => void }) {
   return (
-    <section className="rounded-xl border border-ink-200/70 bg-surface p-3 shadow-soft">
-      <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-ink-400">
+    <section className="card p-3">
+      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">
         <History size={13} /> Updates
       </div>
-      <div className="mt-2 space-y-1">
+      <div className="mt-2 grid gap-1.5">
         {alignmentUpdates.map((u) => {
           const active = u.id === activeId;
           return (
@@ -85,19 +175,19 @@ function UpdatesLog({
               onClick={() => onSelect(u.id)}
               aria-pressed={active}
               className={cx(
-                "flex w-full items-start gap-3 rounded-lg border px-3 py-2 text-left transition",
+                "flex items-start gap-3 rounded-xl border px-3 py-2 text-left transition",
                 active
-                  ? "border-brand-300 bg-brand-50 text-brand-800 dark:border-brand-500/40 dark:bg-brand-500/10 dark:text-brand-200"
-                  : "border-transparent text-ink-600 hover:border-brand-200 hover:bg-brand-50/60 hover:text-brand-800 dark:hover:bg-brand-500/10"
+                  ? "border-brand-300 bg-brand-50 shadow-soft dark:border-brand-500/40 dark:bg-brand-500/10"
+                  : "border-transparent hover:border-ink-200 hover:bg-ink-50/70 dark:hover:bg-ink-200/40"
               )}
             >
               <span className="shrink-0 font-mono text-[11px] font-bold text-brand-600 dark:text-brand-300">
                 {u.dateLabel}
               </span>
-              <span className="min-w-0 text-[12.5px] leading-snug">
+              <span className="min-w-0 flex-1 text-[12.5px] leading-snug text-ink-600">
                 {u.logSummary ?? u.summary}
               </span>
-              {alignmentUpdates[0].id === u.id && <LatestBadge className="ml-auto shrink-0" />}
+              {u.id === alignmentUpdates[0].id && <LatestBadge className="shrink-0" />}
             </button>
           );
         })}
@@ -118,74 +208,70 @@ function TopicRail({
   dateLabel: string;
 }) {
   return (
-    <div>
-      <div className="mb-2 hidden px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400 lg:block">
-        Updates
-      </div>
-      <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-1.5 lg:overflow-visible lg:pb-0">
-        {topics.map((t, i) => {
-          const active = t.id === activeId;
-          return (
-            <button
-              key={t.id}
-              onClick={() => onSelect(t.id)}
-              aria-pressed={active}
-              className={cx(
-                "group flex w-72 shrink-0 gap-3 rounded-xl border p-3 text-left transition lg:w-full",
-                active
-                  ? "border-brand-300 bg-brand-50 text-brand-800 shadow-soft dark:border-brand-500/40 dark:bg-brand-500/10 dark:text-brand-200"
-                  : "border-transparent text-ink-600 hover:border-brand-200 hover:bg-brand-50/60 hover:text-brand-800 dark:hover:bg-brand-500/10"
-              )}
-            >
-              <span
-                className={cx(
-                  "mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg text-[11px] font-black",
-                  active
-                    ? "bg-brand-600 text-white"
-                    : "bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
-                )}
-              >
-                {i + 1}
+    <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-1.5 lg:overflow-visible lg:pb-0">
+      {topics.map((t, i) => {
+        const ks = kindStyles[t.kind];
+        const Icon = topicIcons[t.id] ?? Zap;
+        const active = t.id === activeId;
+        return (
+          <button
+            key={t.id}
+            onClick={() => onSelect(t.id)}
+            aria-pressed={active}
+            className={cx(
+              "group flex w-72 shrink-0 items-center gap-3 rounded-xl border p-3 text-left transition lg:w-full",
+              active
+                ? cx("shadow-soft", ks.activeCard)
+                : "border-transparent hover:border-ink-200 hover:bg-surface hover:shadow-soft"
+            )}
+          >
+            <span className={cx("grid h-9 w-9 shrink-0 place-items-center rounded-lg", ks.iconBox)}>
+              <Icon size={17} />
+            </span>
+            <span className="min-w-0">
+              <span className="block font-mono text-[10.5px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+                {dateLabel}
               </span>
-              <span className="min-w-0">
-                <span className="block font-mono text-[10.5px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
-                  {dateLabel}
-                </span>
-                <span className="mt-0.5 block truncate text-[12.5px] font-bold leading-tight text-ink-900 lg:whitespace-normal">
-                  {t.title}
-                </span>
+              <span className="mt-0.5 block truncate text-[12.5px] font-bold leading-tight text-ink-900 lg:whitespace-normal">
+                {i + 1}. {t.title}
               </span>
-            </button>
-          );
-        })}
-      </div>
+              <span className={cx("mt-0.5 block text-[10.5px] font-bold uppercase tracking-wide", ks.calloutLabel)}>
+                {ks.label}
+              </span>
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }
 
 function ScenarioDropdowns({ topic, query }: { topic: AlignmentTopic; query?: string }) {
   if (!topic.scenarios?.length) return null;
-
   return (
-    <div className="mt-5 space-y-2.5">
-      <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-600 dark:text-brand-300">
-        Reference scenarios
+    <div className="mt-6 space-y-3 border-t border-ink-100 pt-5">
+      <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-400">
+        Expand examples
       </div>
       {topic.scenarios.map((scenario) => (
         <details
           key={scenario.title}
-          className="group rounded-xl border border-brand-100 bg-brand-50/40 dark:border-brand-500/20 dark:bg-brand-500/10"
+          className="group overflow-hidden rounded-xl border border-brand-200 bg-brand-50/50 dark:border-brand-500/30 dark:bg-brand-500/10"
         >
-          <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-bold text-ink-900">
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-extrabold text-ink-900">
             <ChevronDown size={15} className="shrink-0 text-brand-500 transition-transform group-open:rotate-180" />
             <span>{scenario.title}</span>
           </summary>
-          <div className="border-t border-brand-100 px-4 py-3 dark:border-brand-500/20">
-            <div className="mb-1 text-[10px] font-bold uppercase tracking-wide text-ink-400">Prompt pattern</div>
-            <p className="rounded-lg bg-surface px-3 py-2 text-[13px] italic leading-relaxed text-ink-700">
-              <Highlight text={scenario.prompt} query={query} />
-            </p>
-            <div className="prose-alignment mt-3 max-w-none">
+          <div className="border-t border-brand-200/70 px-4 py-4 dark:border-brand-500/30">
+            <div className="mb-2 text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+              Prompt
+            </div>
+            <div className="prose-alignment rounded-lg border border-ink-200/70 bg-surface px-3 py-2 text-[13px] italic leading-relaxed text-ink-700">
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MdLink }}>
+                {scenario.prompt}
+              </ReactMarkdown>
+            </div>
+            <div className="prose-alignment mt-4 max-w-none">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MdLink }}>
                 {scenario.details}
               </ReactMarkdown>
@@ -197,42 +283,34 @@ function ScenarioDropdowns({ topic, query }: { topic: AlignmentTopic; query?: st
   );
 }
 
-function TopicArticle({
-  topic,
-  index,
-  dateLabel,
-  query,
-}: {
-  topic: AlignmentTopic;
-  index: number;
-  dateLabel: string;
-  query?: string;
-}) {
+function TopicArticle({ topic, query }: { topic: AlignmentTopic; query?: string }) {
+  const ks = kindStyles[topic.kind];
+  const KindIcon = ks.icon;
   return (
-    <article className="overflow-hidden rounded-2xl border border-ink-200/70 bg-surface shadow-soft">
-      <header className="border-b border-ink-100 bg-ink-50/60 p-5 sm:p-6">
-        <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold uppercase tracking-wide">
-          <span className="rounded-full bg-brand-600 px-2.5 py-1 text-white">Alignment {index + 1}</span>
-          <span className="font-mono text-brand-600 dark:text-brand-300">{dateLabel}</span>
-          <span className="rounded-full bg-surface px-2.5 py-1 text-ink-500">{topic.tag}</span>
+    <article className="card overflow-hidden">
+      <div className={cx("h-1.5 bg-gradient-to-r", ks.bar)} />
+      <div className="p-6 sm:p-7">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className={cx("chip", ks.chip)}>
+            <KindIcon size={12} /> {ks.label}
+          </span>
+          <span className="chip bg-ink-100 text-ink-500 dark:bg-ink-200/60">{topic.tag}</span>
         </div>
         <h2 className="mt-3 text-xl font-extrabold tracking-tight text-ink-900 sm:text-2xl">
           <Highlight text={topic.title} query={query} />
         </h2>
-        <p className="mt-2 max-w-3xl text-[13.5px] leading-relaxed text-ink-600">
+        <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-ink-500">
           <Highlight text={topic.summary} query={query} />
         </p>
-      </header>
-      <div className="p-5 sm:p-6">
-        <div className="rounded-xl border border-brand-100 bg-brand-50/50 p-4 dark:border-brand-500/20 dark:bg-brand-500/10">
-          <div className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-brand-700 dark:text-brand-300">
+        <div className={cx("mt-4 rounded-xl border p-4", ks.callout)}>
+          <div className={cx("mb-1 text-[11px] font-bold uppercase tracking-[0.14em]", ks.calloutLabel)}>
             What changed
           </div>
-          <p className="text-[13.5px] font-semibold leading-relaxed text-ink-800">
+          <p className="text-[13.5px] font-medium leading-relaxed text-ink-800">
             <Highlight text={topic.impact} query={query} />
           </p>
         </div>
-        <div className="prose-alignment mt-5 max-w-none">
+        <div className="prose-alignment mt-6 max-w-none border-t border-ink-100 pt-5">
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MdLink }}>
             {topic.body}
           </ReactMarkdown>
@@ -280,7 +358,7 @@ function TopicBrowser({ update }: { update: AlignmentUpdate }) {
     });
   }, [q, update]);
 
-  const activeIndex = Math.max(0, update.topics.findIndex((t) => t.id === activeId));
+  const activeIndex = update.topics.findIndex((t) => t.id === activeId);
   const activeTopic = update.topics[activeIndex] ?? update.topics[0];
   const prev = update.topics[activeIndex - 1];
   const next = update.topics[activeIndex + 1];
@@ -332,13 +410,7 @@ function TopicBrowser({ update }: { update: AlignmentUpdate }) {
           ) : (
             <div className="space-y-5">
               {matches.map((t) => (
-                <TopicArticle
-                  key={t.id}
-                  topic={t}
-                  index={update.topics.findIndex((topic) => topic.id === t.id)}
-                  dateLabel={update.dateLabel}
-                  query={query.trim()}
-                />
+                <TopicArticle key={t.id} topic={t} query={query.trim()} />
               ))}
             </div>
           )}
@@ -346,6 +418,9 @@ function TopicBrowser({ update }: { update: AlignmentUpdate }) {
       ) : (
         <div className="lg:grid lg:grid-cols-[280px_1fr] lg:items-start lg:gap-6">
           <nav className="mb-5 lg:sticky lg:top-20 lg:mb-0">
+            <div className="mb-2 hidden px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400 lg:block">
+              Updates
+            </div>
             <TopicRail topics={update.topics} activeId={activeTopic.id} onSelect={setActiveId} dateLabel={update.dateLabel} />
           </nav>
           <motion.div
@@ -355,7 +430,7 @@ function TopicBrowser({ update }: { update: AlignmentUpdate }) {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="min-w-0"
           >
-            <TopicArticle topic={activeTopic} index={activeIndex} dateLabel={update.dateLabel} />
+            <TopicArticle topic={activeTopic} />
             <div className="mt-4 flex items-center justify-between gap-3">
               {prev ? (
                 <button onClick={() => setActiveId(prev.id)} className="btn-ghost max-w-[48%]">
@@ -382,7 +457,6 @@ function TopicBrowser({ update }: { update: AlignmentUpdate }) {
 export default function Alignments() {
   const [activeUpdateId, setActiveUpdateId] = useState(alignmentUpdates[0].id);
   const update = alignmentUpdates.find((u) => u.id === activeUpdateId) ?? alignmentUpdates[0];
-  const isLatest = update.id === alignmentUpdates[0].id;
 
   return (
     <div>
@@ -391,26 +465,9 @@ export default function Alignments() {
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <UpdatesLog activeId={activeUpdateId} onSelect={setActiveUpdateId} />
 
-        <motion.div
-          key={update.id}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25 }}
-          className="mt-6"
-        >
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-xs font-bold text-brand-600 dark:text-brand-300">{update.dateLabel}</span>
-            {isLatest && <LatestBadge />}
-          </div>
-          <h2 className="mt-1.5 text-2xl font-extrabold tracking-tight text-ink-900 sm:text-[26px]">
-            {update.title}
-          </h2>
-          <p className="mt-2 max-w-3xl text-[13.5px] leading-relaxed text-ink-500">{update.summary}</p>
-
-          <div className="mt-7">
-            <TopicBrowser update={update} />
-          </div>
-        </motion.div>
+        <div className="mt-7">
+          <TopicBrowser update={update} />
+        </div>
       </div>
     </div>
   );
