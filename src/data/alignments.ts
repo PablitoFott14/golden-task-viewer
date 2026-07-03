@@ -174,6 +174,12 @@ Confirms the *shape or format* is right, without judging the content. This shoul
 - "The invoice total is formatted as a dollar amount ('$80,000')."
 - "The HTML page has a 'Low Units' tab."
 
+### Low Difficulty / Weight 1 clarification
+
+"Literal verification against a source" means the value was **authored verbatim by a human** in the prompt, an audio transcript, a source document, or a raw data file, and the model only has to copy it as-is.
+
+It does **not** mean the value merely appears in another output file, such as \`MEMORY.md\`, a summary artifact, a log, or another file that was itself produced through calculation, a verdict, a margin call, or any other reasoning step. In that case, the model still has to reproduce the underlying reasoning, so the criterion is **Medium Difficulty / weight 3**, not Low Difficulty / weight 1.
+
 Both answer *"is the container there / the right shape?"* - not *"is the answer actually correct?"* A model can satisfy them while getting the task completely wrong, for example by producing a perfectly formatted table full of hallucinated values.
 
 Because they capture almost no reasoning or task fulfillment, they must not be weighted highly. The high weights are reserved for criteria that verify the substance:
