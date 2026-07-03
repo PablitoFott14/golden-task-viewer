@@ -3,7 +3,7 @@ import { cx } from "../lib/assets";
 
 /**
  * Shared "dated updates" switcher used by both the Urgent Alignments page and
- * the Spec Change Log, so the two logs read as one system. Rendered as a slim
+ * the Spec Doc change log, so the two logs read as one system. Rendered as a slim
  * strip of date pills: supporting navigation, deliberately compact so the
  * content itself stays the focus. The newest entry (index 0 of the source
  * array) always carries the "Latest" badge.

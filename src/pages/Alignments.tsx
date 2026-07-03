@@ -210,7 +210,7 @@ function TopicRail({
   return (
     <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-1.5 lg:overflow-visible lg:pb-0">
       {topics.map((t, i) => {
-        const ks = kindStyles[t.kind];
+        const label = kindStyles[t.kind].label;
         const Icon = topicIcons[t.id] ?? Zap;
         const active = t.id === activeId;
         return (
@@ -221,11 +221,11 @@ function TopicRail({
             className={cx(
               "group flex w-72 shrink-0 items-center gap-3 rounded-xl border p-3 text-left transition lg:w-full",
               active
-                ? cx("shadow-soft", ks.activeCard)
-                : "border-transparent hover:border-ink-200 hover:bg-surface hover:shadow-soft"
+                ? "border-brand-300 bg-brand-50/80 shadow-soft dark:border-brand-500/45 dark:bg-brand-500/10"
+                : "border-transparent hover:border-brand-200 hover:bg-brand-50/50 hover:shadow-soft dark:hover:border-brand-500/30 dark:hover:bg-brand-500/10"
             )}
           >
-            <span className={cx("grid h-9 w-9 shrink-0 place-items-center rounded-lg", ks.iconBox)}>
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-100 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
               <Icon size={17} />
             </span>
             <span className="min-w-0">
@@ -235,8 +235,8 @@ function TopicRail({
               <span className="mt-0.5 block truncate text-[12.5px] font-bold leading-tight text-ink-900 lg:whitespace-normal">
                 {i + 1}. {t.title}
               </span>
-              <span className={cx("mt-0.5 block text-[10.5px] font-bold uppercase tracking-wide", ks.calloutLabel)}>
-                {ks.label}
+              <span className="mt-0.5 block text-[10.5px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+                {label}
               </span>
             </span>
           </button>

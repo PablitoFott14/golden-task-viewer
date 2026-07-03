@@ -12,7 +12,7 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "03-07-2026",
-    text: "Added the Urgent Alignments section (with an updates log and home quick access) and a Specification Change Log on the Scoring Spec page.",
+    text: "Added the Urgent Alignments section (with an updates log and home quick access) and a Spec Doc change log.",
   },
   { date: "26-06-2026", text: "Beta version launched." },
 ];

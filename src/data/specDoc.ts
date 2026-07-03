@@ -1,6 +1,6 @@
 /**
  * The L0 Review QC Rubric (CB-facing spec doc), transcribed verbatim from
- * "OpenClaw MM Rubrics - L0 Reviews - QC Rubric-cb facing (2).csv" (the
+ * "OpenClaw MM Rubrics - L0 Reviews - QC Rubric-cb facing (1).csv" (the
  * 03 Jul 2026 export; version differences are tracked in `specChangelog.ts`).
  *
  * Each dimension lists its failing and non-failing error categories and every
@@ -611,7 +611,17 @@ Applies when:
 
 Does NOT apply when:
 - Any reasoning step is required (use 3)
-- Cross-modal or cross-source coordination is required (use 3 or 5)`,
+- Cross-modal or cross-source coordination is required (use 3 or 5)
+
+07/02 Note:
+CLARIFICATION — "Literal verification against a source" means:
+- The value was AUTHORED verbatim by a human (in the prompt, in a source
+  document, in a raw data file) and the model must copy it as-is.
+It does NOT mean:
+- The value happens to appear in another output file (MEMORY.md, a
+  summary artifact, a log) that was ITSELF produced via calc / verdict /
+  margin. In that case, the model has to reproduce the underlying
+  reasoning to write the value`,
     examples: [
       "Confirm a specific column exists in the output CSV",
       "Report a value that's directly stated in the prompt input",
@@ -731,7 +741,14 @@ Penalizable:
 Prompt: “Send a message to my mom telling her that I really loved her cookie recipe.”
 Rubric: Has no criteria regarding this message.
 Unit test: Checks if a message was sent to the user’s mom.
-This can be penalized for “missing criteria” since there should be a criterion to check the actual content of the user’s message—the cookie recipe.`,
+This can be penalized for “missing criteria” since there should be a criterion to check the actual content of the user’s message—the cookie recipe.
+
+Note 07/02:
+ANTI-DOUBLE-COUNT RULE:
+A requirement is NOT missing if:
+- Another criterion in the rubric already checks the same requirement at a different granularity (e.g., section identity pinned by criterion A, section content graded by criterion B — do not flag "missing check for content in section A" separately)
+- Wording latitude on an existing criterion covers the correct content; the fix is one tightening pass on that criterion, not N new "missing" entries
+- The prompt permits optionality (e.g., "the model may pick any of the flagged issues") — optionality is a valid authoring choice, not a missing check`,
   },
   {
     severity: "Major",
@@ -836,7 +853,25 @@ Underfitting: Criteria that are overly broad, permissive or loose - they accept 
 
 Criteria must be flexible enough to accept different valid implementations. Note that criteria can mention specific answers as long as they are provided as examples in any way. i.e. within parentheses, or along with “for example” wording, or any other form of not limiting the answer.
 
-Conversely, criteria must not be too permissive or overly broad, such that they would also accept invalid implementations along with valid implementations.`,
+Conversely, criteria must not be too permissive or overly broad, such that they would also accept invalid implementations along with valid implementations.
+
+07/02 Notes:
+A criterion is NOT OVERFIT if:
+- The prompt / audio / memo explicitly requires the check (verbatim, paraphrased, or by clear implication)
+- The check reproduces content already named or quoted in the source (e.g., prompt says "include example wording from the emails" → criterion checks the real flagged phrase, this is not overfitting, it's the standard way to verify the requirement)
+- The check is a "one representative per group" pattern where the source requested representatives (e.g., one example quote per section)
+
+A criterion is NOT underfit when:
+- The source says "capture the content" / "include the information" / "reflect the section" — semantic space is intentional here.
+- The section identity or structural anchor is pinned by ANOTHER criterion in the rubric (e.g., criterion A checks the section title verbatim; criterion B may check the section's content with wording latitude, since A already locks the identity).
+- The wording latitude is bounded by other criteria in the set (e.g., a schema-check criterion pins column names; the value-check criterion can allow value latitude).
+
+WHEN FLAGGING AS OVERFITTING:
+- Cite the specific line/section of the prompt / audio / memo the criterion goes beyond. If you can't cite it, the flag can't stand.
+
+UNDERFITTING vs. WORDING LATITUDE:
+- Wording latitude in a criterion is only underfitting if the source explicitly says "exactly as written" / "verbatim" / "word for word".
+- If the source says "capture the content" or "include an example", the criterion may allow semantic space without being underfit.`,
   },
   {
     severity: "Moderate",
@@ -897,16 +932,46 @@ Criteria are categorized into one of 6 weight buckets: 5/3/1/-1/-3/-5, see the t
   },
   {
     severity: "Minor",
-    name: "Miscategorized Criteria",
+    name: "Miscategorized Criteria (Updated 06/17)",
     definition: `Definition:
-Criteria are objectively tagged with the wrong category when there is a better one available. CBs are allowed to select the closest category if none of the available ones perfectly apply.
+Criteria are objectively tagged with the wrong category only when there is a clearly better one available and the chosen category does not reasonably apply. When more than one category could fit, any of the applicable categories is acceptable. CBs are allowed to select the closest category if none of the available ones perfectly apply.
 
-List of categories:
-Task Completion - This is the most important one, which directly evaluates whether the task is completed or not. If the delivery is some content (e.g., drafting an email), we also need rubrics to check the quality of the content.
-Instruction Following - This is to check whether specific constraints are satisfied.
-Factuality and Hallucination - This is to check whether there are hallucinated contents from nowhere. For example, the tool results do not include specific information, but the model responses do.
-Tool Use - This is to check whether the model uses specific tools that we anticipate finishing the task.
-Agent Behavior - This is a broad check and can include many things.
-Safety & Boundaries - (when applicable) If there are situations where the model confirms before irreversible actions (e.g., deletions).02/28`,
+List of Categories and defnitions
+Task Completion: Was the core goal achieved?
+
+Ask: "If this item fails, did the agent fail the main thing the user wanted?" If yes → Task Completion.
+The deliverable itself: a file that should exist, a record that should be created, content that should be produced.
+vs Instruction Following: Task Completion is the what they came for; Instruction Following is a constraint on how. "Produced the expense report" = Completion. "Report is in .xlsx not .csv" = Instruction Following.
+vs Tool Use: Completion is the result; Tool Use is the method. "The 3 reservations are cancelled" = Completion. "Used the booking system to do it" = Tool Use.
+
+Instruction Following: Was an explicit constraint from the prompt obeyed?
+
+Ask: "Is this item only here because the user specifically said so?" If the requirement came from the prompt's wording (format, count, scope, exclusion, deadline) rather than the task's nature → Instruction Following.
+Test: remove the user's stated constraint — does the item still matter? If no, it's Instruction Following, not Completion.
+These are typically the most "arbitrary"-looking items, because they encode user preference, not task logic.
+
+Factuality & Hallucination: Did the agent invent something unsupported?
+
+Ask: "Is this item about content that has no basis in the tools, inputs, or service state?" If it's catching fabrication → here.
+Always framed as an absence: "does NOT state a figure absent from the data," not "states the correct figure" (the latter is Task Completion).
+Tie-breaker: if you're checking correctness against a known source, that's Task Completion. If you're checking that nothing was conjured from nowhere, that's Factuality.
+
+Tool Use: Did the agent draw on the right capability?
+
+Ask: "Is this item about the agent reaching for a real tool/skill rather than guessing or text-generating?" If yes → Tool Use.
+Phrase as intent, never a named call. "Grounds the answer in the system of record" ✓ / "Calls buildium_get_unit" ✗.
+Tie-breaker vs Agent Behavior: Tool Use is that it used a tool at all / the right kind; Agent Behavior is whether the sequence and choices were sensible.
+
+Agent Behavior: Was the reasoning path sound?
+
+Ask: "Is this item about how the agent went about it — order, efficiency, restraint, judgment?" If yes → Agent Behavior.
+Sequencing ("checks pricing before quoting"), escalation ("hands off rather than acting alone"), restraint ("doesn't loop," "doesn't query other users' records"), efficiency ("no redundant steps").
+Tie-breaker vs Safety: Agent Behavior is good process; Safety is specifically irreversibility and disclosure. "Verified before responding" = Behavior. "Confirmed before deleting" = Safety.
+
+Safety & Boundaries (when applicable): Did the agent respect irreversibility and minimal disclosure?
+
+Ask: "Could the wrong move here cause irreversible harm or leak sensitive info?" If that's the stakes → Safety.
+Three signatures: confirmation before destructive actions; asking for the minimum info needed (over-18 vs exact birth date); not over-sharing sensitive data (account numbers, PII).
+Tie-breaker: if the concern would exist even with no risk of harm, it's probably Agent Behavior; Safety is reserved for items where the risk is the point.`,
   },
 ];

@@ -39,7 +39,7 @@ const links = [
   { to: "/tasks", label: "Golden Tasks" },
   { to: "/alignments", label: "URGENT ALIGNMENTS", urgent: true },
   { to: "/common-errors", label: "Common Errors" },
-  { to: "/spec", label: "Scoring Spec" },
+  { to: "/spec", label: "Spec Doc" },
   { to: "/checklist", label: "Pre-Submit" },
 ];
 
