@@ -41,9 +41,9 @@ export const alignmentUpdates: AlignmentUpdate[] = [
     dateLabel: "03 Jul 2026",
     title: "To emphasize during training sessions",
     summary:
-      "Six urgent alignments on rubric weighting, visual understanding, exists and structure checks, self-containment, output modality diversity, and decoys in multimodal inputs.",
+      "Six urgent alignments on rubric weighting, visual understanding, exists/structure/literal-verification checks, self-containment, output modality diversity, and decoys in multimodal inputs.",
     logSummary:
-      "Covers rubric weighting, weight-5 visual checks, self-containment, richer outputs, and graded decoys.",
+      "Covers rubric weighting, weight-5 visual checks, weight-1 structural checks, self-containment, richer outputs, and graded decoys.",
     topics: [
       {
         id: "weight-distribution",
@@ -147,46 +147,45 @@ Anything that directly, not only implicitly, requires visual understanding shoul
       },
       {
         id: "exists-structure-checks",
-        title: "\"Exists\" and \"structure\" checks",
+        title: "\"Exists\", \"structure\", and literal verification checks",
         kind: "weighting",
         tag: "Rubric Weighting",
         impact:
-          "No exists or structure check can carry a weight above 1, and reviewers should usually cover these checks with unit tests.",
+          "No exists, structure, or literal-verification check can carry a weight above 1; values produced through reasoning belong at Medium Difficulty or above.",
         summary:
-          "These checks confirm that something is present or shaped correctly; they do not verify whether the answer is actually correct.",
-        body: `> For reviewers, these should be in the Unit Tests, since they are structural parts of the intent.
+          "These checks confirm presence, shape, or direct copying from a human-authored source; they do not verify whether the task is actually correct.",
+        body: `> For reviewers, these should usually live in Unit Tests because they verify structural parts of the intent.
 
-These are the two lowest-weighted kinds of criteria a rubric can contain, and they should be de-emphasized: **no exists/structure check can carry a weight above 1.**
+These are the lowest-weighted kinds of criteria a rubric can contain because they verify mechanical presence, shape, or direct copying from a human-authored source. **No exists, structure, or literal-verification check can carry a weight above 1.**
 
-### "Exists" check
+### What weight 1 can cover
 
-Confirms only that *something is present*, without judging whether it is correct.
+- **"Exists" check** - Confirms only that *something is present*, without judging whether it is correct.
+  - "A file named \`report.csv\` was created."
+  - "The response includes a table."
+  - "An email was sent to Brandon." This confirms it was sent, not that it should have been sent or said the right thing.
 
-- "A file named \`report.csv\` was created."
-- "The response includes a table."
-- "An email was sent to Brandon." This confirms it was sent, not that it should have been sent or said the right thing.
+- **"Structure" check** - Confirms the *shape or format* is right, without judging the content. This should be Unit Test coverage in the review layer.
+  - "The \`interactive_dash.html\` table contains columns 'date', 'result' and 'notes'."
+  - "The invoice total is formatted as a dollar amount ('$80,000')."
+  - "The HTML page has a 'Low Units' tab."
 
-### "Structure" check
+- **Literal verification against a source** - Confirms that the value was **authored verbatim by a human** in the prompt, an audio transcript, a source document, or a raw data file, and the model only has to copy it as-is.
+  - This can stay at weight 1 when the model is copying a human-authored value directly.
+  - This does **not** apply when the value merely appears in another output file, such as \`MEMORY.md\`, a summary artifact, a log, or another file produced through calculation, a verdict, a margin call, or any other reasoning step.
+  - In that case, the model must reproduce the underlying reasoning, so the criterion is **Medium Difficulty / weight 3**, not Low Difficulty / weight 1.
 
-Confirms the *shape or format* is right, without judging the content. This should be Unit Test coverage in the review layer.
+### Why these checks stay low
 
-- "The \`interactive_dash.html\` table contains columns 'date', 'result' and 'notes'."
-- "The invoice total is formatted as a dollar amount ('$80,000')."
-- "The HTML page has a 'Low Units' tab."
+All three answer *"is the container there / is the shape right / was a human-authored value copied directly?"* They do **not** answer *"is the task actually correct?"*
 
-### Low Difficulty / Weight 1 clarification
+A model can satisfy them while getting the task completely wrong, such as producing a perfectly formatted table full of hallucinated values.
 
-"Literal verification against a source" means the value was **authored verbatim by a human** in the prompt, an audio transcript, a source document, or a raw data file, and the model only has to copy it as-is.
+Because these checks capture almost no reasoning or task fulfillment, they must not be weighted highly. High weights are reserved for criteria that verify the substance:
 
-It does **not** mean the value merely appears in another output file, such as \`MEMORY.md\`, a summary artifact, a log, or another file that was itself produced through calculation, a verdict, a margin call, or any other reasoning step. In that case, the model still has to reproduce the underlying reasoning, so the criterion is **Medium Difficulty / weight 3**, not Low Difficulty / weight 1.
-
-Both answer *"is the container there / the right shape?"* - not *"is the answer actually correct?"* A model can satisfy them while getting the task completely wrong, for example by producing a perfectly formatted table full of hallucinated values.
-
-Because they capture almost no reasoning or task fulfillment, they must not be weighted highly. The high weights are reserved for criteria that verify the substance:
-
-- the correct value
-- the correct decision
-- the correct visual identification`,
+- The correct value
+- The correct decision
+- The correct visual identification`,
       },
       {
         id: "self-containment",
@@ -331,9 +330,9 @@ Non-self-contained rubrics fall under **Fail - 10%+ Major Rubric Errors**. In pr
 
 The difficulty should come from:
 
-- **cross-modal reasoning**, such as extracting information from one modality, using it to perform actions in another, then validating or continuing the workflow using yet another
-- richer and more interconnected reasoning chains
-- **less common output artifacts**
+- **Cross-modal reasoning**, such as extracting information from one modality, using it to perform actions in another, then validating or continuing the workflow using yet another
+- Richer and more interconnected reasoning chains
+- **Less common output artifacts**
 
 The difficulty should **not** come from making the inputs themselves harder to read, such as using more challenging handwriting.
 
@@ -348,7 +347,7 @@ The difficulty should **not** come from making the inputs themselves harder to r
 
 ### What Claude Opus 4.6 can produce
 
-- plain text (\`.txt\`)
+- Plain text (\`.txt\`)
 - Markdown (\`.md\`)
 - HTML (\`.html\`)
 - CSS (\`.css\`)
@@ -358,16 +357,16 @@ The difficulty should **not** come from making the inputs themselves harder to r
 - XML (\`.xml\`)
 - CSV (\`.csv\`)
 - SQL (\`.sql\`)
-- configuration files
-- source code in virtually any programming language
+- Configuration files
+- Source code in virtually any programming language
 - Excel workbooks (\`.xlsx\`)
 - Word documents (\`.docx\`)
 - PowerPoint presentations (\`.pptx\`)
 - PDFs (\`.pdf\`)
-- charts and visualizations (\`.png\`, \`.svg\`)
-- generated or edited images
-- multi-file projects and applications
-- other binary artifacts supported by the available libraries
+- Charts and visualizations (\`.png\`, \`.svg\`)
+- Generated or edited images
+- Multi-file projects and applications
+- Other binary artifacts supported by the available libraries
 
 Use **state changes** when the environment supports them, such as sending emails, updating databases, creating calendar events, modifying files, organizing folders, or updating project memory. This complements your scenarios in a realistic way and adds a new cross-modal reasoning layer for the model.
 

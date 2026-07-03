@@ -214,7 +214,7 @@ function TopicRail({
               <span className="block font-mono text-[10.5px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
                 {dateLabel}
               </span>
-              <span className="mt-0.5 block truncate text-[12.5px] font-bold leading-tight text-ink-900 lg:whitespace-normal">
+              <span className="mt-0.5 block text-[12.5px] font-bold leading-tight text-ink-900">
                 {i + 1}. {t.title}
               </span>
               <span className="mt-0.5 block text-[10.5px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">

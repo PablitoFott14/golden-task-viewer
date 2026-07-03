@@ -98,16 +98,19 @@ body {
   .prose-task td { @apply border border-ink-200 px-3 py-2 align-top; }
   .prose-task a { @apply text-brand-600 underline underline-offset-2 hover:text-brand-700; }
   .prose-alignment {
-    @apply text-[14px] leading-7 text-ink-700;
+    @apply text-[14px] leading-7 text-ink-700 dark:text-ink-300;
   }
   .prose-alignment h3 {
-    @apply mt-6 border-t border-ink-100 pt-5 text-[15px] font-extrabold text-ink-900;
+    @apply mt-7 border-t border-ink-100 pt-6 text-[15px] font-extrabold text-ink-900 dark:border-ink-200/50 dark:text-white;
   }
   .prose-alignment h3:first-child {
     @apply mt-0 border-t-0 pt-0;
   }
+  .prose-alignment h4 {
+    @apply mt-5 text-[12px] font-extrabold uppercase tracking-[0.14em] text-brand-600 dark:text-brand-300;
+  }
   .prose-alignment p {
-    @apply my-2.5;
+    @apply my-3;
   }
   .prose-alignment > p:first-child {
     @apply mt-0;
@@ -117,7 +120,7 @@ body {
   }
   .prose-alignment ul,
   .prose-alignment ol {
-    @apply my-3 space-y-1.5 pl-5;
+    @apply my-4 space-y-2 pl-5;
   }
   .prose-alignment ul {
     @apply list-disc;
@@ -125,14 +128,21 @@ body {
   .prose-alignment ol {
     @apply list-decimal;
   }
+  .prose-alignment li {
+    @apply pl-0.5 leading-7;
+  }
+  .prose-alignment li > ul,
+  .prose-alignment li > ol {
+    @apply mb-0 mt-2 space-y-1.5;
+  }
   .prose-alignment strong {
-    @apply font-semibold text-ink-900;
+    @apply font-semibold text-ink-900 dark:text-white;
   }
   .prose-alignment code {
     @apply rounded border border-brand-200 bg-brand-50 px-1.5 py-0.5 font-mono text-[0.85em] font-semibold text-brand-800 dark:border-brand-500/50 dark:bg-brand-500/20 dark:text-brand-100;
   }
   .prose-alignment blockquote {
-    @apply my-3 rounded-r-lg border-l-4 border-brand-300 bg-brand-50/50 px-4 py-2 text-ink-700;
+    @apply my-4 rounded-lg border-l-4 border-brand-300 bg-brand-50/70 px-4 py-3 text-ink-700 dark:border-brand-400/60 dark:bg-brand-500/15 dark:text-brand-100;
   }
   .prose-alignment a {
     @apply text-brand-600 underline underline-offset-2 hover:text-brand-700;
