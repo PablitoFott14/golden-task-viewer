@@ -152,21 +152,23 @@ Anything that directly, not only implicitly, requires visual understanding shoul
       },
       {
         id: "exists-structure-checks",
-        title: "\"Exists\", \"structure\", and literal verification checks",
+        title: "\"Exists\", \"structure\" & literal checks → Unit Test coverage (reviewer layer)",
         kind: "weighting",
-        tag: "Rubric Weighting",
+        tag: "Reviewer layer · Unit Tests",
         impact:
-          "No exists, structure, or literal-verification check can carry a weight above 1; values produced through reasoning belong at Medium Difficulty or above.",
+          "At the reviewer layer these deterministic checks belong in Unit Tests, not rubric criteria. Kept as a rubric they are a low positive weight (+1) and can never exceed +1 — they are not negative or penalty rubrics.",
         summary:
-          "Attempters must still include and satisfy these requirements in the task; reviewers should usually validate them through Unit Tests rather than turning them into rubric criteria.",
+          "Attempters must still include and satisfy every existence, structure, and literal-verification requirement; reviewers should usually validate them through Unit Tests, not rubric criteria, whenever they are deterministic and easy to verify.",
         body: `These are the lowest-weighted kinds of criteria a rubric can contain, because they verify mechanical presence, shape, or direct copying from a human-authored source.
 
-**No exists, structure, or literal-verification check can carry a weight above 1.**
+**No exists, structure, or literal-verification check can carry a weight above +1**, and a weight of **+1 is a low _positive_ weight (Low Difficulty), never a negative or penalty rubric.**
 
-> **Read this as an attempter and as a reviewer, the responsibility splits.**
+> **⚠️ Reviewer rule: route these to Unit Tests, not rubric criteria.**
 >
-> - **Attempters must still include and satisfy every one of these requirements** in the task: the required files, sections, headings, formats, and exact values. Nothing here lets you drop a requirement or leave it unmet.
-> - **Reviewers should usually cover them with Unit Tests, not rubric criteria.** When a requirement is deterministic and easy to verify, an existence check, a structure or format check, a literal verification, or a required file / section / heading / format, it belongs in the Unit Test layer. Rubric slots are reserved for substance: the correct value, the correct decision, the correct visual identification.
+> Existence, structure, and literal-verification requirements are deterministic and easy to verify, so at the **reviewer layer they belong in Unit Tests, not rubric slots.** This is **not** a licence to drop them.
+>
+> - **Attempters** still have to include and satisfy every one of them: the required files, sections, headings, formats, and exact values. None of it is optional.
+> - **Reviewers** validate them with a **Unit Test** whenever the check is deterministic — a required file / section / heading / format is present, or a human-authored value is copied verbatim. Keep rubric slots for substance: the correct value, the correct decision, the correct visual identification.
 
 ### "Exists" checks
 
@@ -188,8 +190,8 @@ Confirm the *shape or format* is right, without judging the content. These also 
 
 Confirms a value that was **authored verbatim by a human** in the prompt, an audio transcript, a source document, or a raw data file, where the model only has to copy it as-is.
 
-- **Stays at weight 1** when the model is copying a human-authored value directly.
-- **Becomes weight 3 (Medium Difficulty)** when the value only appears in another output file, such as \`MEMORY.md\`, a summary artifact, a log, or another file produced through a calculation, a verdict, a margin call, or any other reasoning step. The model must reproduce the underlying reasoning, so it is not a weight-1 copy.
+- **Stays at weight +1** when the model is copying a human-authored value directly.
+- **Becomes weight +3 (Medium Difficulty)** when the value only appears in another output file, such as \`MEMORY.md\`, a summary artifact, a log, or another file produced through a calculation, a verdict, a margin call, or any other reasoning step. The model must reproduce the underlying reasoning, so it is not a +1 copy.
 
 ### Why these checks stay low
 
