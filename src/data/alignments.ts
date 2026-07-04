@@ -25,6 +25,8 @@ export interface AlignmentTopic {
   scenarios?: AlignmentScenario[];
   /** Optional one-line lead-in shown under the "Examples" heading. */
   scenariosNote?: string;
+  /** Optional high-emphasis directive rendered as a red banner above the body. */
+  redAlert?: string;
 }
 
 export interface AlignmentUpdate {
@@ -291,12 +293,11 @@ Self-contained reframe:
         kind: "guidance",
         tag: "Scenario Design",
         impact:
-          "Stop using handwritten notes as the default way to make the model fail; difficulty should come from cross-modal workflows and richer output artifacts.",
+          "Difficulty should come from cross-modal workflows and richer output artifacts, not from making the inputs themselves harder to read.",
         summary:
           "Handwritten notes can still be part of a scenario, but the main complexity should come from coordinating modalities, producing richer artifacts, and taking realistic state-changing actions.",
-        body: `Most submitted tasks follow the typical handwritten-note scenario and produce a regular \`.csv\` or \`.pdf\` output. **Be creative.** The model can do much more than we are asking it for, and the complexity is nested in asking for other types of outputs and requiring cross-modal reasoning across different multimodal inputs.
-
-**Stop using handwritten notes as the default way to make the model fail.**
+        redAlert: "Stop using handwritten notes as the default way to make the model fail.",
+        body: `Most submitted tasks follow the typical handwritten-note scenario and produce a regular \`.csv\` or \`.pdf\` output. **Be creative.** The OpenClaw agent can do much more than we are asking it for, and the complexity is nested in asking for other types of outputs and requiring cross-modal reasoning across different multimodal inputs.
 
 The difficulty should come from:
 
@@ -306,7 +307,7 @@ The difficulty should come from:
 
 The difficulty should **not** come from making the inputs themselves harder to read, such as using more challenging handwriting.
 
-### What Claude Opus 4.6 can read
+### What the OpenClaw agent can read
 
 - **Text:** plain text (\`.txt\`), Markdown (\`.md\`), source code, logs, configuration files (\`.json\`, \`.yaml\`, \`.toml\`, \`.ini\`), XML, SQL, emails, and long reference documents.
 - **Images:** \`.png\`, \`.jpg\`, \`.jpeg\`, \`.webp\`, screenshots, photos, scanned documents, diagrams, charts, graphs, tables, UI mockups, maps, forms, and reasonably legible handwritten notes.
@@ -315,7 +316,7 @@ The difficulty should **not** come from making the inputs themselves harder to r
 - **Video:** video files such as \`.mp4\`, \`.mov\`, \`.avi\`, and \`.webm\` when processed through frame extraction or labeled frames provided by the task environment.
 - **Audio:** audio files such as \`.mp3\`, \`.wav\`, and \`.m4a\` when a transcript or supported processing path is available.
 
-### What Claude Opus 4.6 can produce
+### What the OpenClaw agent can produce
 
 - **Text and code:** plain text (\`.txt\`), Markdown (\`.md\`), HTML (\`.html\`), CSS (\`.css\`), JavaScript (\`.js\`), configuration files, and source code in virtually any programming language.
 - **Structured data:** JSON (\`.json\`), YAML (\`.yaml\`), XML (\`.xml\`), CSV (\`.csv\`), and SQL (\`.sql\`).

@@ -20,6 +20,7 @@ import {
   ChevronRight,
   ChevronDown,
   Zap,
+  Ban,
 } from "lucide-react";
 import {
   alignmentUpdates,
@@ -295,6 +296,19 @@ function TopicArticle({ topic, query }: { topic: AlignmentTopic; query?: string 
             <Highlight text={topic.impact} query={query} />
           </p>
         </div>
+        {topic.redAlert && (
+          <div className="mt-4 flex items-start gap-3 rounded-xl border-2 border-rose-400 bg-rose-50 px-4 py-3.5 shadow-soft dark:border-rose-500/60 dark:bg-rose-500/15">
+            <Ban size={20} className="mt-0.5 shrink-0 text-rose-600 dark:text-rose-400" />
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-rose-600 dark:text-rose-300">
+                Do not do this
+              </div>
+              <p className="mt-0.5 text-[15px] font-extrabold leading-snug text-rose-700 dark:text-rose-200">
+                <Highlight text={topic.redAlert} query={query} />
+              </p>
+            </div>
+          </div>
+        )}
         <div className="prose-alignment mt-6 max-w-none border-t border-ink-100 pt-5">
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MdLink }}>
             {topic.body}
@@ -346,7 +360,15 @@ function TopicBrowser({ update }: { update: AlignmentUpdate }) {
     return update.topics.filter((t) => {
       const scenarioHit =
         t.scenarios?.some((s) => has(s.title) || has(s.prompt ?? "") || has(s.details) || has(s.href ?? "")) ?? false;
-      return has(t.title) || has(t.impact) || has(t.summary) || has(t.tag) || has(t.body) || scenarioHit;
+      return (
+        has(t.title) ||
+        has(t.impact) ||
+        has(t.summary) ||
+        has(t.tag) ||
+        has(t.body) ||
+        has(t.redAlert ?? "") ||
+        scenarioHit
+      );
     });
   }, [q, update]);
 
