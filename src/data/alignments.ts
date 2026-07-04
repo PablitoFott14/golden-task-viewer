@@ -158,12 +158,15 @@ Anything that directly, not only implicitly, requires visual understanding shoul
         impact:
           "No exists, structure, or literal-verification check can carry a weight above 1; values produced through reasoning belong at Medium Difficulty or above.",
         summary:
-          "These checks confirm presence, shape, or direct copying from a human-authored source; they do not verify whether the task is actually correct.",
+          "Attempters must still include and satisfy these requirements in the task; reviewers should usually validate them through Unit Tests rather than turning them into rubric criteria.",
         body: `These are the lowest-weighted kinds of criteria a rubric can contain, because they verify mechanical presence, shape, or direct copying from a human-authored source.
 
 **No exists, structure, or literal-verification check can carry a weight above 1.**
 
-> **Reviewer rule:** "exists" and "structure" checks **must be Unit Tests, never rubric criteria**. They are weight-1 concepts because they are mechanical checks, but reviewers should place them in the Unit Test layer rather than spending rubric slots on them.
+> **Read this as an attempter and as a reviewer, the responsibility splits.**
+>
+> - **Attempters must still include and satisfy every one of these requirements** in the task: the required files, sections, headings, formats, and exact values. Nothing here lets you drop a requirement or leave it unmet.
+> - **Reviewers should usually cover them with Unit Tests, not rubric criteria.** When a requirement is deterministic and easy to verify, an existence check, a structure or format check, a literal verification, or a required file / section / heading / format, it belongs in the Unit Test layer. Rubric slots are reserved for substance: the correct value, the correct decision, the correct visual identification.
 
 ### "Exists" checks
 
