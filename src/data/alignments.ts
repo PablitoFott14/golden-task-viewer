@@ -425,7 +425,7 @@ If disambiguating it requires information nowhere in the task's universe, it is 
 A friction point that is not graded is wasted complexity, so every decoy needs a rubric that reacts to it. Which kind you write depends on what the intent tells the model to do with the decoy content.
 
 - **When the intent requires an explicit action on the unrelated content** (for example, "keep only the relevant exercises and reference the rest into \`MEMORY.md\`", or "discard any unrelated frames"), use positive rubrics: one that the correct inputs drove the expected behavior, and one that the required action on the rest was actually carried out.
-- **When the intent only asks the model to filter, taking no action on the discarded content**, pair a positive rubric that the required content is present and handled with a negative rubric that fails the model if the decoy slipped in anyway. For example, "the email does not mention the Virginia address" verifies a decoy was *not* acted on.
+- **When the intent only asks the model to filter, not to act on discarded content**, pair a positive rubric that checks the required content is present and handled correctly with a negative rubric that fails the response if the decoy is included anyway. For example, if the task asks the agent to email only the final analysis result, and that result does not include the Virginia address, then the email should fail if it mentions the Virginia address.
 
 #### Do not over-stack
 
