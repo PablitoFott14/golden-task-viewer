@@ -14,6 +14,8 @@ import {
   EyeOff,
   ExternalLink,
   Gauge,
+  Crosshair,
+  ArrowRight,
 } from "lucide-react";
 import { getTask } from "../data";
 import type { FrictionPoint } from "../data/types";
@@ -391,17 +393,25 @@ export default function TaskDetail() {
               </div>
             )}
 
-            {/* Controlled friction, integrated here */}
+            {/* Controlled friction, integrated here — the concrete decoys behind Urgent Alignment 6 */}
             <div className="mt-10">
               <div className="mb-2 flex items-center gap-2">
-                <AlertTriangle size={16} className="text-gold-500" />
+                <Crosshair size={16} className="text-brand-500" />
                 <h3 className="text-sm font-bold text-ink-900">
                   {nv.frictionTitle ?? "The controlled friction planted across these inputs"}
                 </h3>
               </div>
-              <p className="mb-4 max-w-2xl text-sm text-ink-500">
+              <p className="mb-3 max-w-2xl text-sm text-ink-500">
                 {nv.frictionBlurb ?? "Every friction point is deliberate, but each is the kind of mess a real June recovery would contain — spread across the notes, images, and caption file so no single misread decides the task. Together they cover mismatches to log, files to remove, and missing information."}
               </p>
+              <Link
+                to="/alignments#decoys-noise"
+                className="group mb-4 inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-brand-50/70 px-3 py-2 text-[12.5px] font-semibold text-brand-700 transition hover:border-brand-300 hover:bg-brand-100 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300"
+              >
+                <Crosshair size={14} className="shrink-0" />
+                These are the deliberate decoys from Urgent Alignment 6: Decoys &amp; noise in the multimodal input
+                <ArrowRight size={13} className="shrink-0 transition-transform group-hover:translate-x-0.5" />
+              </Link>
               <div className="grid gap-3 sm:grid-cols-2">
                 {task.friction.map((f) => (
                   <FrictionCard key={f.id} f={f} showType={nv.showFrictionTypes !== false} />

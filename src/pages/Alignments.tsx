@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo, type ComponentProps } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -41,37 +41,21 @@ interface KindStyle {
   calloutLabel: string;
 }
 
+// Every alignment shares the same brand-blue treatment for visual consistency;
+// only the label and icon distinguish one kind from another.
+const brandColors = {
+  bar: "from-brand-500 via-brand-400 to-violet-400",
+  chip: "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-200",
+  iconBox: "bg-brand-100 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300",
+  activeCard: "border-brand-300 bg-brand-50/70 dark:border-brand-500/40 dark:bg-brand-500/10",
+  callout: "border-brand-200 bg-brand-50/70 dark:border-brand-500/30 dark:bg-brand-500/10",
+  calloutLabel: "text-brand-700 dark:text-brand-300",
+} as const;
+
 const kindStyles: Record<AlignmentKind, KindStyle> = {
-  rule: {
-    label: "Fail-level rule",
-    icon: ShieldAlert,
-    bar: "from-rose-500 via-rose-400 to-amber-400",
-    chip: "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200",
-    iconBox: "bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300",
-    activeCard: "border-rose-300 bg-rose-50/70 dark:border-rose-500/40 dark:bg-rose-500/10",
-    callout: "border-rose-200 bg-rose-50/70 dark:border-rose-500/30 dark:bg-rose-500/10",
-    calloutLabel: "text-rose-700 dark:text-rose-300",
-  },
-  weighting: {
-    label: "Weighting rule",
-    icon: Scale,
-    bar: "from-brand-500 via-brand-400 to-violet-400",
-    chip: "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-200",
-    iconBox: "bg-brand-100 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300",
-    activeCard: "border-brand-300 bg-brand-50/70 dark:border-brand-500/40 dark:bg-brand-500/10",
-    callout: "border-brand-200 bg-brand-50/70 dark:border-brand-500/30 dark:bg-brand-500/10",
-    calloutLabel: "text-brand-700 dark:text-brand-300",
-  },
-  guidance: {
-    label: "Design directive",
-    icon: Compass,
-    bar: "from-amber-500 via-gold-400 to-gold-500",
-    chip: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200",
-    iconBox: "bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-300",
-    activeCard: "border-amber-300 bg-amber-50/70 dark:border-amber-500/40 dark:bg-amber-500/10",
-    callout: "border-amber-200 bg-amber-50/70 dark:border-amber-500/30 dark:bg-amber-500/10",
-    calloutLabel: "text-amber-700 dark:text-amber-300",
-  },
+  rule: { label: "Fail-level rule", icon: ShieldAlert, ...brandColors },
+  weighting: { label: "Weighting rule", icon: Scale, ...brandColors },
+  guidance: { label: "Design directive", icon: Compass, ...brandColors },
 };
 
 const topicIcons: Record<string, typeof Scale> = {
@@ -320,15 +304,21 @@ function TopicArticle({ topic, query }: { topic: AlignmentTopic; query?: string 
 }
 
 function TopicBrowser({ update }: { update: AlignmentUpdate }) {
-  const [activeId, setActiveId] = useState(update.topics[0].id);
+  const location = useLocation();
+  // A cross-link like /alignments#decoys-noise should open that topic directly.
+  const hashId = location.hash.replace(/^#/, "");
+  const [activeId, setActiveId] = useState(() =>
+    update.topics.some((t) => t.id === hashId) ? hashId : update.topics[0].id
+  );
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
   const searching = query.trim().length > 0;
 
   useEffect(() => {
-    setActiveId(update.topics[0].id);
+    const targetId = location.hash.replace(/^#/, "");
+    setActiveId(update.topics.some((t) => t.id === targetId) ? targetId : update.topics[0].id);
     setQuery("");
-  }, [update.id]);
+  }, [update.id, location.hash]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {

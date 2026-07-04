@@ -407,7 +407,6 @@ This is deliberate, meticulous design work, not random clutter. Every task in th
 
 - **Distractor visual** - an uploaded image that resembles the target but is not it: wrong angle, wrong color variant, wrong product, or an older photo of the same subject. The model must select the *correct* one, not just *a* plausible one.
 - **Distractor record** - a stale or superseded piece of data sitting alongside the current one, such as last quarter's price list next to this quarter's or an old address on file next to a newer one.
-  - In the Kiln & Co task, the environment contains a Virginia address the agent visually encountered and a Portland, OR address on file for the sponsor. The correct answer requires recognizing these are different and using the one on file, not the geographically salient one.
 - **Distractor communication** - an irrelevant email/message thread living in the same inbox or channel as the one that matters, which the model must correctly ignore rather than act on.
 - **Near-duplicate identity** - two people, products, or IDs with very similar names: two "Jordan"s, two SKUs one digit apart, "Kiln & Co" versus a similarly named but unrelated vendor. The model must disambiguate using context, not guess.
 - **Red herring instruction or note** - a plausible-sounding note, such as a handwritten comment or old to-do, that implies an action the rest of the context contradicts once cross-checked.
@@ -418,9 +417,9 @@ This is deliberate, meticulous design work, not random clutter. Every task in th
 
 If disambiguating it requires information nowhere in the task's universe, it is not a decoy; it is an unfair or broken task. This is the same standard as Self Containment: the correct disambiguation has to be groundable in what is given.
 
-#### Every decoy needs a rubric that actually checks it was avoided
+#### A decoy may need a negative rubric that actually checks it was avoided
 
-A friction point that is not graded is wasted complexity. Write a rubric that fails the model if it falls for the trap. For example, "the email does not mention the Virginia address" is precisely a rubric that verifies a decoy was *not* acted on.
+This depends on whether the intent is explicitly to avoid any non-related content or similar. A friction point that is not graded is wasted complexity. Write a rubric that fails the model if it falls for the trap. For example, "the email does not mention the Virginia address" is precisely a rubric that verifies a decoy was *not* acted on.
 
 #### Do not over-stack
 
@@ -428,7 +427,7 @@ Too many simultaneous decoys can bury the genuine complexity of the scenario and
 
 #### A decoy tests judgment, not alertness to formatting
 
-It should force a real decision between two plausible options. It is not the same thing as an exists/structure trap, which only tests whether the model noticed a container exists.
+It should force a real decision between two plausible options, where both could seem valid at first glance but only one actually fits the task requirements.
 
 ### Where to place decoys across modalities
 
