@@ -23,6 +23,8 @@ export interface AlignmentTopic {
   summary: string;
   body: string;
   scenarios?: AlignmentScenario[];
+  /** Optional one-line lead-in shown under the "Examples" heading. */
+  scenariosNote?: string;
 }
 
 export interface AlignmentUpdate {
@@ -436,19 +438,14 @@ It should force a real decision between two plausible options, where both could 
 - **Temporal** - a timestamp or event that superficially matches the ask but falls outside the actually requested window.
 - **Identity** - near-duplicate names, emails, or IDs that require correct matching, not just presence-checking.
 
-### Examples of friction
-
-> **Note:** these are the **same examples used in Point 5**, intentionally reused from a different angle. Point 5 explains why scenarios should not depend on handwritten notes as the main failure mode; this point shows how the same scenarios gain realistic friction, complexity, and verification pressure without becoming artificial traps.
-
-Open each example when you need the compact friction view.
-
 ### Guardrail
 
 Friction has to earn its place in the scenario. If a decoy only makes sense because the task author inserted it, not because a real person's files would plausibly look that way, it is contrived.`,
+        scenariosNote: "The same two scenarios as Point 5, seen from the friction angle.",
         scenarios: [
           {
-            title: "Same example as Point 5: Zoe's school prep",
-            details: `Read this as the friction version of the Point 5 example. The scenario should still be difficult because of the workflow, not because the handwriting is hard to read.
+            title: "Zoe's school prep",
+            details: `The scenario should still be difficult because of the workflow, not because the handwriting is hard to read.
 
 - **Skill mismatch:** Include one or two exercises that target a skill Zoe's notes say she has *already* mastered, such as shape recognition when Ms. Carter's notes flag reading and math as the actual gaps. The model must discard them into \`MEMORY.md\`, exactly as the prompt asks.
 - **Near-duplicate files:** Include two versions of the same worksheet, such as \`addition_practice_draft.pdf\` versus \`addition_practice_final.pdf\`, where only the final one reflects Ms. Carter's actual recommendation.
@@ -456,8 +453,8 @@ Friction has to earn its place in the scenario. If a decoy only makes sense beca
 - **Calendar friction:** The event series must run for **six months starting from now, excluding the current month**, every **2 days**, **Monday through Saturday only**, with **Sundays treated as off days rather than counting toward the 2-day interval**.`,
           },
           {
-            title: "Same example as Point 5: Milek's backyard timeline",
-            details: `Read this as the friction version of the Point 5 example. The SVG and reminder workflow should carry the complexity; the decoys should force verification, not act like random traps.
+            title: "Milek's backyard timeline",
+            details: `The SVG and reminder workflow should carry the complexity; the decoys should force verification, not act like random traps.
 
 - **Stale inventory:** Include an older backyard inventory list from before some plants were removed or replaced. The SVG baseline must reflect the *current* state shown in the photos, not the stale list.
 - **Irrelevant garden content:** Include multimodal inputs referencing decorative elements, tables, figures, or other garden content unrelated to the irrigation process. The model must filter those out instead of treating every visible item as relevant.

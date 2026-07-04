@@ -219,6 +219,9 @@ function ScenarioDropdowns({ topic, query }: { topic: AlignmentTopic; query?: st
       <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-400">
         Examples
       </div>
+      {topic.scenariosNote && (
+        <p className="text-[12.5px] italic leading-relaxed text-ink-500">{topic.scenariosNote}</p>
+      )}
       {topic.scenarios.map((scenario) => (
         <details
           key={scenario.title}
