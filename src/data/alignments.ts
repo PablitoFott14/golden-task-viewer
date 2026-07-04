@@ -40,7 +40,7 @@ export const alignmentUpdates: AlignmentUpdate[] = [
     id: "2026-07-03",
     date: "2026-07-03",
     dateLabel: "03 Jul 2026",
-    title: "To emphasize during training sessions",
+    title: "To adjust before continuing tasking",
     summary:
       "Six urgent alignments on rubric weighting, visual understanding, exists/structure/literal-verification checks, self-containment, output modality diversity, and decoys in multimodal inputs.",
     logSummary:
@@ -155,28 +155,34 @@ Anything that directly, not only implicitly, requires visual understanding shoul
           "No exists, structure, or literal-verification check can carry a weight above 1; values produced through reasoning belong at Medium Difficulty or above.",
         summary:
           "These checks confirm presence, shape, or direct copying from a human-authored source; they do not verify whether the task is actually correct.",
-        body: `> For reviewers, these should usually live in Unit Tests because they verify structural parts of the intent.
+        body: `These are the lowest-weighted kinds of criteria a rubric can contain, because they verify mechanical presence, shape, or direct copying from a human-authored source.
 
-These are the lowest-weighted kinds of criteria a rubric can contain because they verify mechanical presence, shape, or direct copying from a human-authored source. **No exists, structure, or literal-verification check can carry a weight above 1.**
+**No exists, structure, or literal-verification check can carry a weight above 1.**
 
-### What should weight 1 cover
+> **Reviewer rule:** "exists" and "structure" checks **must be Unit Tests, never rubric criteria**. They are weight-1 concepts because they are mechanical checks, but reviewers should place them in the Unit Test layer rather than spending rubric slots on them.
 
-> **Reviewer rule:** "Exists" and "structure" checks **must be Unit Tests, never rubric criteria**. They are weight-1 concepts because they are mechanical checks, but reviewers should place them in the Unit Test layer rather than spending rubric slots on them.
+### "Exists" checks
 
-- **"Exists" check** - Confirms only that *something is present*, without judging whether it is correct.
-  - "A file named \`report.csv\` was created."
-  - "The response includes a table."
-  - "An email was sent to Brandon." This confirms it was sent, not that it should have been sent or said the right thing.
+Confirm only that *something is present*, without judging whether it is correct.
 
-- **"Structure" check** - Confirms the *shape or format* is right, without judging the content. This also belongs in Unit Tests, not rubrics.
-  - "The \`interactive_dash.html\` table contains columns 'date', 'result' and 'notes'."
-  - "The invoice total is formatted as a dollar amount ('$80,000')."
-  - "The HTML page has a 'Low Units' tab."
+- "A file named \`report.csv\` was created."
+- "The response includes a table."
+- "An email was sent to Brandon." This confirms it was sent, not that it should have been sent or said the right thing.
 
-- **Literal verification against a source** - Confirms that the value was **authored verbatim by a human** in the prompt, an audio transcript, a source document, or a raw data file, and the model only has to copy it as-is.
-  - This can stay at weight 1 when the model is copying a human-authored value directly.
-  - This does **not** apply when the value merely appears in another output file, such as \`MEMORY.md\`, a summary artifact, a log, or another file produced through calculation, a verdict, a margin call, or any other reasoning step.
-  - In that case, the model must reproduce the underlying reasoning, so the criterion is **Medium Difficulty / weight 3**, not Low Difficulty / weight 1.
+### "Structure" checks
+
+Confirm the *shape or format* is right, without judging the content. These also belong in Unit Tests, not rubrics.
+
+- "The \`interactive_dash.html\` table contains columns 'date', 'result' and 'notes'."
+- "The invoice total is formatted as a dollar amount ('$80,000')."
+- "The HTML page has a 'Low Units' tab."
+
+### Literal verification against a source
+
+Confirms a value that was **authored verbatim by a human** in the prompt, an audio transcript, a source document, or a raw data file, where the model only has to copy it as-is.
+
+- **Stays at weight 1** when the model is copying a human-authored value directly.
+- **Becomes weight 3 (Medium Difficulty)** when the value only appears in another output file, such as \`MEMORY.md\`, a summary artifact, a log, or another file produced through a calculation, a verdict, a margin call, or any other reasoning step. The model must reproduce the underlying reasoning, so it is not a weight-1 copy.
 
 ### Why these checks stay low
 
@@ -209,7 +215,8 @@ This applies to Amazon listing prices, web-search-specific results, specific day
 
 Example:
 
-- "Give me in the final message the cheapest Amazon listing for each one of the matching products" -> "The final user-facing message reports the price shown in the selected 'XPG CORE REACTOR II 850W Gold' Amazon listing (e.g., '$129.99')."
+- **Prompt:** "Give me in the final message the cheapest Amazon listing for each one of the matching products"
+- **Valid criterion:** "The final user-facing message reports the price shown in the selected 'XPG CORE REACTOR II 850W Gold' Amazon listing (e.g., '$129.99')."
 
 ### Rubrics implying visual references
 
@@ -308,26 +315,11 @@ The difficulty should **not** come from making the inputs themselves harder to r
 
 ### What Claude Opus 4.6 can produce
 
-- Plain text (\`.txt\`)
-- Markdown (\`.md\`)
-- HTML (\`.html\`)
-- CSS (\`.css\`)
-- JavaScript (\`.js\`)
-- JSON (\`.json\`)
-- YAML (\`.yaml\`)
-- XML (\`.xml\`)
-- CSV (\`.csv\`)
-- SQL (\`.sql\`)
-- Configuration files
-- Source code in virtually any programming language
-- Excel workbooks (\`.xlsx\`)
-- Word documents (\`.docx\`)
-- PowerPoint presentations (\`.pptx\`)
-- PDFs (\`.pdf\`)
-- Charts and visualizations (\`.png\`, \`.svg\`)
-- Generated or edited images
-- Multi-file projects and applications
-- Other binary artifacts supported by the available libraries
+- **Text and code:** plain text (\`.txt\`), Markdown (\`.md\`), HTML (\`.html\`), CSS (\`.css\`), JavaScript (\`.js\`), configuration files, and source code in virtually any programming language.
+- **Structured data:** JSON (\`.json\`), YAML (\`.yaml\`), XML (\`.xml\`), CSV (\`.csv\`), and SQL (\`.sql\`).
+- **Office documents:** Excel workbooks (\`.xlsx\`), Word documents (\`.docx\`), PowerPoint presentations (\`.pptx\`), and PDFs (\`.pdf\`).
+- **Visuals:** charts and visualizations (\`.png\`, \`.svg\`) and generated or edited images.
+- **Larger builds:** multi-file projects and applications, plus other binary artifacts supported by the available libraries.
 
 Use **state changes** when the environment supports them, such as sending emails, updating databases, creating calendar events, modifying files, organizing folders, or updating project memory. This complements your scenarios in a realistic way and adds a new cross-modal reasoning layer for the model.
 
@@ -340,11 +332,13 @@ Use **state changes** when the environment supports them, such as sending emails
 - Prefer the richer artifact when the scenario allows it: \`.pptx\`, \`.xlsx\`, a rendered chart, or \`.webm\` over a plain \`.csv\` or \`.pdf\` dump.
 - Keep the visual identification load-bearing so the task genuinely cannot be solved text-only.
 
-Examples of scenarios with genuine complexity beyond handwritten notes can be found in the Golden Task Viewer. In particular, Scenarios 2 and 3 use handwritten notes as **just one component of a broader workflow**, rather than making them the primary source of difficulty. The handwritten content supports the overall intent instead of serving as a shortcut or trap to force the model to fail.
+Examples of scenarios with genuine complexity beyond handwritten notes can be found in the Golden Task Viewer. In particular, Scenarios 2 and 3 use handwritten notes as **just one component of a broader workflow**, rather than making them the primary source of difficulty.
 
-The examples below are intentionally reused in **Point 6**. Here in Point 5, read them from the perspective of handwritten notes and scenario design: the note or document can contribute to the scenario, but the real difficulty should come from the workflow, artifact, state change, and cross-modal reasoning. Point 6 uses the same examples from the friction angle.
+The handwritten content supports the overall intent instead of serving as a shortcut or trap to force the model to fail.
 
-**Remember:** handwritten notes should contribute naturally to the scenario, not become the sole challenge. The complexity should come from the overall reasoning, workflow, and interactions across multiple modalities.`,
+> **Note:** the two examples below are intentionally the same ones reused in **Point 6**. Read them here through the scenario-design lens: the note or document can contribute to the scenario, but the real difficulty should come from the workflow, artifact, state change, and cross-modal reasoning. Point 6 revisits them from the friction angle.
+
+> **Remember:** handwritten notes should contribute naturally to the scenario, not become the sole challenge. The complexity should come from the overall reasoning, workflow, and interactions across multiple modalities.`,
         scenarios: [
           {
             title: "Scenario 1: Zoe's school prep",
@@ -412,17 +406,29 @@ This is deliberate, meticulous design work, not random clutter. Every task in th
 ### What counts as a decoy
 
 - **Distractor visual** - an uploaded image that resembles the target but is not it: wrong angle, wrong color variant, wrong product, or an older photo of the same subject. The model must select the *correct* one, not just *a* plausible one.
-- **Distractor record** - a stale or superseded piece of data sitting alongside the current one, such as last quarter's price list next to this quarter's or an old address on file next to a newer one. In the Kiln & Co task, the environment contains a Virginia address the agent visually encountered and a Portland, OR address on file for the sponsor. The correct answer requires recognizing these are different and using the one on file, not the geographically salient one.
+- **Distractor record** - a stale or superseded piece of data sitting alongside the current one, such as last quarter's price list next to this quarter's or an old address on file next to a newer one.
+  - In the Kiln & Co task, the environment contains a Virginia address the agent visually encountered and a Portland, OR address on file for the sponsor. The correct answer requires recognizing these are different and using the one on file, not the geographically salient one.
 - **Distractor communication** - an irrelevant email/message thread living in the same inbox or channel as the one that matters, which the model must correctly ignore rather than act on.
 - **Near-duplicate identity** - two people, products, or IDs with very similar names: two "Jordan"s, two SKUs one digit apart, "Kiln & Co" versus a similarly named but unrelated vendor. The model must disambiguate using context, not guess.
 - **Red herring instruction or note** - a plausible-sounding note, such as a handwritten comment or old to-do, that implies an action the rest of the context contradicts once cross-checked.
 
 ### Design principles
 
-- **A decoy must be resolvable from the provided materials alone.** If disambiguating it requires information nowhere in the task's universe, it is not a decoy; it is an unfair or broken task. This is the same standard as Self Containment: the correct disambiguation has to be groundable in what is given.
-- **Every decoy needs a rubric that actually checks it was avoided.** A friction point that is not graded is wasted complexity. Write a rubric that fails the model if it falls for the trap. For example, "the email does not mention the Virginia address" is precisely a rubric that verifies a decoy was *not* acted on.
-- **Do not over-stack.** Too many simultaneous decoys can bury the genuine complexity of the scenario and turn the task into a noise-filtering exercise instead of a reasoning one. Friction should sit alongside the real cross-modal reasoning chain, not replace it.
-- **A decoy tests judgment, not alertness to formatting.** It should force a real decision between two plausible options. It is not the same thing as an exists/structure trap, which only tests whether the model noticed a container exists.
+#### A decoy must be resolvable from the provided materials alone
+
+If disambiguating it requires information nowhere in the task's universe, it is not a decoy; it is an unfair or broken task. This is the same standard as Self Containment: the correct disambiguation has to be groundable in what is given.
+
+#### Every decoy needs a rubric that actually checks it was avoided
+
+A friction point that is not graded is wasted complexity. Write a rubric that fails the model if it falls for the trap. For example, "the email does not mention the Virginia address" is precisely a rubric that verifies a decoy was *not* acted on.
+
+#### Do not over-stack
+
+Too many simultaneous decoys can bury the genuine complexity of the scenario and turn the task into a noise-filtering exercise instead of a reasoning one. Friction should sit alongside the real cross-modal reasoning chain, not replace it.
+
+#### A decoy tests judgment, not alertness to formatting
+
+It should force a real decision between two plausible options. It is not the same thing as an exists/structure trap, which only tests whether the model noticed a container exists.
 
 ### Where to place decoys across modalities
 
@@ -433,7 +439,7 @@ This is deliberate, meticulous design work, not random clutter. Every task in th
 
 ### Examples of friction
 
-The examples below are the **same examples used in Point 5**, intentionally reused here from a different angle. Point 5 explains why the scenarios should not depend on handwritten notes as the main failure mode. Point 6 explains how the same scenarios can include realistic friction, complexity, and verification pressure without becoming artificial traps.
+> **Note:** these are the **same examples used in Point 5**, intentionally reused from a different angle. Point 5 explains why scenarios should not depend on handwritten notes as the main failure mode; this point shows how the same scenarios gain realistic friction, complexity, and verification pressure without becoming artificial traps.
 
 Open each example when you need the compact friction view.
 
