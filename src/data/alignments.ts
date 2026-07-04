@@ -420,9 +420,12 @@ This is deliberate, meticulous design work, not random clutter. Every task in th
 
 If disambiguating it requires information nowhere in the task's universe, it is not a decoy; it is an unfair or broken task. This is the same standard as Self Containment: the correct disambiguation has to be groundable in what is given.
 
-#### A decoy may need a negative rubric that actually checks it was avoided
+#### Decoys still need rubric coverage, positive or negative
 
-This depends on whether the intent is explicitly to avoid any non-related content or similar. A friction point that is not graded is wasted complexity. Write a rubric that fails the model if it falls for the trap. For example, "the email does not mention the Virginia address" is precisely a rubric that verifies a decoy was *not* acted on.
+A friction point that is not graded is wasted complexity, so every decoy needs a rubric that reacts to it. Which kind you write depends on what the intent tells the model to do with the decoy content.
+
+- **When the intent requires an explicit action on the unrelated content** (for example, "keep only the relevant exercises and reference the rest into \`MEMORY.md\`", or "discard any unrelated frames"), use positive rubrics: one that the correct inputs drove the expected behavior, and one that the required action on the rest was actually carried out.
+- **When the intent only asks the model to filter, taking no action on the discarded content**, pair a positive rubric that the required content is present and handled with a negative rubric that fails the model if the decoy slipped in anyway. For example, "the email does not mention the Virginia address" verifies a decoy was *not* acted on.
 
 #### Do not over-stack
 
