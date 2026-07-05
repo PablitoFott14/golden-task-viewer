@@ -147,6 +147,10 @@ body {
   .prose-alignment a {
     @apply text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-200 dark:hover:text-brand-100;
   }
+  /* Yellow "for reviewers" disclaimers in the exists/structure alignment. */
+  .prose-alignment.reviewer-disclaimers blockquote {
+    @apply border-amber-400 bg-amber-50 text-amber-900 dark:border-amber-500/60 dark:bg-amber-500/15 dark:text-amber-100;
+  }
 }
 
 .bg-grid {

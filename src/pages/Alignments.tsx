@@ -309,7 +309,13 @@ function TopicArticle({ topic, query }: { topic: AlignmentTopic; query?: string 
             </div>
           </div>
         )}
-        <div className="prose-alignment mt-6 max-w-none border-t border-ink-100 pt-5">
+        <div
+          className={cx(
+            "prose-alignment mt-6 max-w-none border-t border-ink-100 pt-5",
+            // Renders the "For reviewers" blockquotes in this topic as yellow disclaimers.
+            topic.id === "exists-structure-checks" && "reviewer-disclaimers"
+          )}
+        >
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MdLink }}>
             {topic.body}
           </ReactMarkdown>

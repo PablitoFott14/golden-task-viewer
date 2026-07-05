@@ -152,23 +152,16 @@ Anything that directly, not only implicitly, requires visual understanding shoul
       },
       {
         id: "exists-structure-checks",
-        title: "\"Exists\", \"structure\" & literal checks → Unit Test coverage (reviewer layer)",
+        title: "\"Exists\", \"structure\", and literal verification checks",
         kind: "weighting",
-        tag: "Reviewer layer · Unit Tests",
+        tag: "Rubric Weighting",
         impact:
-          "At the reviewer layer these deterministic checks belong in Unit Tests, not rubric criteria. Kept as a rubric they are a low positive weight (+1) and can never exceed +1 — they are not negative or penalty rubrics.",
+          "No exists, structure, or literal-verification check can carry a weight above +1; values produced through reasoning belong at Medium Difficulty (+3) or above.",
         summary:
-          "Attempters must still include and satisfy every existence, structure, and literal-verification requirement; reviewers should usually validate them through Unit Tests, not rubric criteria, whenever they are deterministic and easy to verify.",
+          "These checks confirm presence, shape, or direct copying from a human-authored source; for reviewers they must be covered through unit tests, not rubric criteria.",
         body: `These are the lowest-weighted kinds of criteria a rubric can contain, because they verify mechanical presence, shape, or direct copying from a human-authored source.
 
-**No exists, structure, or literal-verification check can carry a weight above +1**, and a weight of **+1 is a low _positive_ weight (Low Difficulty), never a negative or penalty rubric.**
-
-> **⚠️ Reviewer rule: route these to Unit Tests, not rubric criteria.**
->
-> Existence, structure, and literal-verification requirements are deterministic and easy to verify, so at the **reviewer layer they belong in Unit Tests, not rubric slots.** This is **not** a licence to drop them.
->
-> - **Attempters** still have to include and satisfy every one of them: the required files, sections, headings, formats, and exact values. None of it is optional.
-> - **Reviewers** validate them with a **Unit Test** whenever the check is deterministic — a required file / section / heading / format is present, or a human-authored value is copied verbatim. Keep rubric slots for substance: the correct value, the correct decision, the correct visual identification.
+**No exists, structure, or literal-verification check can carry a weight above +1.**
 
 ### "Exists" checks
 
@@ -178,13 +171,17 @@ Confirm only that *something is present*, without judging whether it is correct.
 - "The response includes a table."
 - "An email was sent to Brandon." This confirms it was sent, not that it should have been sent or said the right thing.
 
+> ⚠️ **For reviewers:** these checks must be covered through unit tests, not rubric criteria.
+
 ### "Structure" checks
 
-Confirm the *shape or format* is right, without judging the content. These also belong in Unit Tests, not rubrics.
+Confirm the *shape or format* is right, without judging the content.
 
 - "The \`interactive_dash.html\` table contains columns 'date', 'result' and 'notes'."
 - "The invoice total is formatted as a dollar amount ('$80,000')."
 - "The HTML page has a 'Low Units' tab."
+
+> ⚠️ **For reviewers:** these checks must be covered through unit tests, not rubric criteria.
 
 ### Literal verification against a source
 
