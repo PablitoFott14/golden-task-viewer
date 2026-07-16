@@ -112,6 +112,13 @@ export interface ActualRun {
   producedTree?: FolderNode;
   /** Grounded observations of what happened. */
   observations: RunObservation[];
+  /**
+   * Real output files pulled straight from the seed run's workspace (e.g. the
+   * actual generated SVG, the actual MEMORY.md) — stronger, more direct
+   * evidence than a reconstruction. Rendered as an inline image ("image") or
+   * an expandable raw-text dropdown ("text"), sourced from artifacts/.
+   */
+  producedFiles?: { label: string; file: string; kind: "image" | "text"; note?: string }[];
 }
 
 /** A deck-shaped GTFA view: a slide storyboard plus the state changes it drives. */

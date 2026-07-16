@@ -519,6 +519,36 @@ export default function TaskDetail() {
             ) : (
               <TrajectoryReport run={task.actualRun} />
             )}
+
+            {task.actualRun.producedFiles && task.actualRun.producedFiles.length > 0 && (
+              <div className="mt-6">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-ink-900">
+                  <FileText size={16} className="text-brand-500" /> Real output, straight from the seed run
+                </h3>
+                <div className="space-y-4">
+                  {task.actualRun.producedFiles.map((f) =>
+                    f.kind === "image" ? (
+                      <div key={f.file} className="overflow-hidden rounded-2xl border border-ink-200/70 bg-surface shadow-soft">
+                        <div className="bg-[#0b0e16] p-3">
+                          <img
+                            src={docUrl(task.assetRoot, f.file)}
+                            alt={f.label}
+                            className="mx-auto max-h-[500px] w-auto rounded-lg object-contain"
+                          />
+                        </div>
+                        <div className="p-3.5">
+                          <div className="font-mono text-[11px] text-ink-400">{f.file}</div>
+                          <p className="mt-1 text-[13px] leading-relaxed text-ink-600">{f.label}</p>
+                          {f.note && <p className="mt-1 text-[12px] leading-relaxed text-ink-400">{f.note}</p>}
+                        </div>
+                      </div>
+                    ) : (
+                      <ExpandableDoc key={f.file} label={f.label} file={f.file} url={docUrl(task.assetRoot, f.file)} />
+                    )
+                  )}
+                </div>
+              </div>
+            )}
           </Section>
 
           {/* ===== Silver ===== */}

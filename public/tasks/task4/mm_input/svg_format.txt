@@ -1,0 +1,31 @@
+SVG REPORTS — FORMATTING INSTRUCTIONS
+
+
+SHAPES
+- Start node: one rectangle labeled exactly: Refund Module - Nexbridge
+- Issue nodes: One per issue, each unsolved one labeled with its ticket issue key.
+- Decision nodes: one diamond per issue, each labeled exactly: Is resolved?
+- Note box: one rectangle placed in the top-right corner, labeled exactly:
+  Some issue tickets may not have been created yet, but they will be created in the
+  next few minutes.
+
+CONNECTIONS (arrows)
+- From the start node (Refund Module - Nexbridge), draw one arrow to each of the
+  issue rectangles.
+- From each issue rectangle, draw one arrow to its own "Is resolved?" diamond.
+- From each `Is resolved?` diamond, draw one outgoing arrow from the rightmost vertex, 
+centered on the diamond, ending in a terminal label of either `Yes` or `No`:
+    -`Yes` if that issue was resolved.
+    -`No` if that issue was not resolved.
+
+COLORS:
+Only allowed colors are:
+#ff4733 — issue nodes
+#2c55d4 — start node
+#158a52 — Yes outcomes
+#c23b3b — No outcomes
+#1b2338 — text and arrows
+#ffffff — fills / background
+
+
+

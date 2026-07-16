@@ -24,7 +24,7 @@ From the team tracker email notification, only two bugs already carry an officia
 - `NEXB-442` → Partial refund timeout
 - `NEXB-443` → Incorrect tax — international funds (VAT 20%)
 
-`NEXB-443` is the latest registered key, so every other bug (9 remaining, including Safari) gets a newly generated key continuing the sequence: `NEXB-444` through `NEXB-452`. Safari may use its own already-known key or one from that generated range — both read as correct.
+`NEXB-443` is the latest registered key, so every other bug (9 remaining, including Safari) gets a newly generated key continuing the sequence: `NEXB-444` through `NEXB-452`.
 
 | Jira name | Issue key |
 |---|---|
@@ -38,17 +38,19 @@ From the team tracker email notification, only two bugs already carry an officia
 | Dup refund | `NEXB-449` |
 | Refund mobile view misrendered | `NEXB-450` |
 | Fake refund success | `NEXB-451` |
-| Safari mobile login timeout | `NEXB-398` (existing) or `NEXB-452` |
+| Safari mobile login timeout | `NEXB-452` |
 
 ### 3. `refund_mod_QA_results.svg`
 
-Following `svg_format.txt` exactly:
-- One rectangle start node, centered in the view, labeled `Refund Module - Nexbridge`.
+Following `svg_format.txt`:
+- One rectangle start node, labeled `Refund Module - Nexbridge`.
 - One issue rectangle per bug (11 total), each unsolved one labeled with its issue key, in `#ff4733`.
 - One diamond decision node per issue, each labeled exactly `Is resolved?`.
 - One arrow from each diamond's rightmost vertex to a `Yes` (`#158a52`) or `No` (`#c23b3b`) terminal label — `Yes` for the 7 resolved bugs, `No` for the 4 unresolved ones.
 - One rectangular note box, top-right corner, labeled exactly `Some issue tickets may not have been created yet, but they will be created in the next few minutes`.
 - Only the six palette colors from `svg_format.txt` are used anywhere in the file.
+
+`svg_format.txt` does not itself say the start node must be centered — nothing in the spec calls out its position. Rubric 32 still penalizes an off-center start node as a negative, because in the actual run it produced a genuine, visually obvious layout defect (the node pinned hard against the left edge of a wide canvas). It is a judgment call scoped to this run's concrete failure, not a restated formatting requirement — a model that centers the node isn't following an instruction it was given, and one that doesn't isn't violating one either, in the abstract. See the Rubrics section for the full framing.
 
 ### 4. `MEMORY.md`
 
@@ -60,7 +62,7 @@ Following `svg_format.txt` exactly:
 - Refund reason mandatory to proceed [NEXB-446]
 - Confirmation screen (matching destination card number) [NEXB-447]
 - Dup refund [NEXB-449]
-- Safari mobile login timeout - Kai tackled [NEXB-398]
+- Safari mobile login timeout - Kai tackled [NEXB-452]
 
 ## UNSOLVED
 - Partial refund timeout [NEXB-442]
