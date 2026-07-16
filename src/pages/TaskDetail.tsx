@@ -27,6 +27,7 @@ import ReferenceGallery from "../components/ReferenceGallery";
 import FolderTree from "../components/FolderTree";
 import DeckOutline from "../components/DeckOutline";
 import CalcTracks from "../components/CalcTracks";
+import IssueBoard from "../components/IssueBoard";
 import RubricExplorer from "../components/RubricExplorer";
 import TrajectoryReport from "../components/TrajectoryReport";
 import RunComparison from "../components/RunComparison";
@@ -468,9 +469,11 @@ export default function TaskDetail() {
             kicker="Step 7: GTFA"
             sub={nv.gtfaSub ?? "The one correct deliverable, built by hand before the prompt — the solution a correct agent should produce."}
           >
-            <div className={task.gtfaView || task.gtfaCalc ? "space-y-8" : "grid gap-6 lg:grid-cols-[1.2fr_1fr]"}>
+            <div className={task.gtfaView || task.gtfaCalc || task.gtfaIssues ? "space-y-8" : "grid gap-6 lg:grid-cols-[1.2fr_1fr]"}>
               <div>
-                {task.gtfaCalc ? (
+                {task.gtfaIssues ? (
+                  <IssueBoard view={task.gtfaIssues} />
+                ) : task.gtfaCalc ? (
                   <CalcTracks view={task.gtfaCalc} />
                 ) : task.gtfaView ? (
                   <DeckOutline view={task.gtfaView} />

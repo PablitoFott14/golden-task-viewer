@@ -135,6 +135,23 @@ export interface GtfaCalcView {
   }[];
 }
 
+/**
+ * An issue-board GTFA view: a flat list of independently-graded status
+ * determinations (e.g. "is this bug resolved?"), each pinned to one piece of
+ * evidence. Natural for QA/audit tasks whose deliverable is a per-item status
+ * report rather than a folder tree, a slide deck, or a dependent calc chain.
+ */
+export interface GtfaIssueView {
+  artifactName: string;
+  issues: {
+    key: string;
+    name: string;
+    resolved: boolean;
+    evidence: string;
+    reason: string;
+  }[];
+}
+
 export interface RubricDesignNote {
   title: string;
   body: string;
@@ -196,6 +213,7 @@ export interface Task {
   /** Optional task-native GTFA visualizations; when present they replace the folder tree. */
   gtfaView?: GtfaDeckView;
   gtfaCalc?: GtfaCalcView;
+  gtfaIssues?: GtfaIssueView;
   memory: MemoryEntry[];
   removed: { item: string; why: string }[];
   email: { to: string[]; points: string[] };
