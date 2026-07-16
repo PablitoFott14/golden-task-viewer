@@ -75,7 +75,9 @@ Focus this portion on the logical, outcome-oriented decisions the model makes al
 - Include specific visual identifications required to reach the correct solution.
 - Include universe or context checks needed to gather the information required for the expected output.
 - Relevant categories: **Agent Behavior**, **Tool Use**, and **Safety and Boundaries**.
-- Relevant evaluation target: **Trajectory**.`,
+- Relevant evaluation target: **Trajectory**.
+
+> **Applied example:** [Refund Module QA Status Report](/tasks/task4) puts its 11 heaviest rubrics (+5 each) on Agent Behavior / Trajectory — did the model actually open each RC screenshot and reconcile it against the stale Jira note — while the SVG/MEMORY.md restatements of those same conclusions sit at Task Completion +1. The split mirrors this rule directly: the reasoning act is where the weight lives, not its mechanical restatement downstream.`,
       },
       {
         id: "visual-understanding-weighting",
@@ -148,7 +150,9 @@ Weighting approach:
 - Use one **Instruction Following / Final Answer Artifact** rubric weighted as 5: "The model reports 'screw 1' as having 15 units in the 'Low Units' of the \`inventory_control.html\`."
 - This works because the complexity of the visual identification is nested inside the final artifact rubric.
 
-Anything that directly, not only implicitly, requires visual understanding should get a weight of 5.`,
+Anything that directly, not only implicitly, requires visual understanding should get a weight of 5.
+
+> **Applied example:** every one of [Refund Module QA Status Report](/tasks/task4)'s eleven bug-status rubrics is direct/explicit visual understanding — the model cannot correctly report a single bug as resolved or unresolved without actually reading its release-candidate screenshot (a stack trace, a VAT computation, a disabled button, a status/gateway mismatch). Each is weighted 5 for exactly that reason.`,
       },
       {
         id: "exists-structure-checks",
@@ -446,7 +450,9 @@ It should force a real decision between two plausible options, where both could 
 
 ### Guardrail
 
-Friction has to earn its place in the scenario. If a decoy only makes sense because the task author inserted it, not because a real person's files would plausibly look that way, it is contrived.`,
+Friction has to earn its place in the scenario. If a decoy only makes sense because the task author inserted it, not because a real person's files would plausibly look that way, it is contrived.
+
+> **Applied example:** [Refund Module QA Status Report](/tasks/task4) plants two distractor screenshots in the same shared folder as the real evidence — a Payouts & Settlements dashboard (plausible-looking payments data) and the contributor's own personal calendar (obviously unrelated) — neither tied to any bug in her Jira notes. Since the prompt only asks the model to *filter* them out rather than act on them, the decoy is covered by a single negative rubric (-5) that fails the response if either gets treated as a bug, exactly the pairing this alignment calls for.`,
         scenariosNote: "The same two scenarios as Point 5, seen from the friction angle.",
         scenarios: [
           {

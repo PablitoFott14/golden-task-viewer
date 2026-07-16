@@ -150,6 +150,29 @@ function UrgentAlignmentsBanner() {
   );
 }
 
+function AppliedAlignmentsBanner() {
+  return (
+    <Link
+      to="/tasks/task4"
+      className="group block border-b border-brand-200/70 bg-gradient-to-r from-brand-50 via-violet-50/50 to-brand-50 transition hover:from-brand-100/80 hover:to-brand-100/80 dark:border-brand-500/25 dark:from-brand-500/10 dark:via-violet-500/5 dark:to-brand-500/10"
+    >
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 sm:px-6 lg:px-8">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-brand-600 text-white shadow-soft">
+          <Sparkles size={15} />
+        </span>
+        <p className="min-w-0 flex-1 truncate text-[13px] text-ink-700">
+          See a Golden Task applying these alignments!
+          <span className="mx-2 text-ink-300">·</span>
+          <span className="font-semibold text-ink-900">Refund Module QA Status Report</span>
+        </p>
+        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white transition group-hover:bg-brand-700">
+          View task <ChevronRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
 export default function Home() {
   const [activeStep, setActiveStep] = useState(1);
   const step = methodSteps.find((s) => s.n === activeStep)!;
@@ -157,6 +180,7 @@ export default function Home() {
   return (
     <div>
       <UrgentAlignmentsBanner />
+      <AppliedAlignmentsBanner />
 
       {/* Hero */}
       <section className="border-b border-ink-200/70 bg-surface">

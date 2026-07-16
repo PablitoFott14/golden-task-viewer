@@ -11,6 +11,10 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: "16-07-2026",
+    text: "Added Golden Task 4 (Refund Module QA Status Report), a QA/Operations task on cross-referencing a stale personal tracker against release-candidate evidence, and linked it from the Urgent Alignments section as a real applied example.",
+  },
+  {
     date: "03-07-2026",
     text: "Added the Urgent Alignments section (with an updates log and home quick access) and a Spec Doc change log.",
   },

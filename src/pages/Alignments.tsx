@@ -122,6 +122,14 @@ function Hero({ update }: { update: AlignmentUpdate }) {
           The expectations below are in force now, and every submission is reviewed against them. Use the compact
           update log for dates; keep the alignment cards as the main reading path.
         </p>
+        <Link
+          to="/tasks/task4"
+          className="group mt-5 inline-flex items-center gap-2.5 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-[13.5px] font-semibold text-white backdrop-blur transition hover:border-white/40 hover:bg-white/15"
+        >
+          <Zap size={15} className="shrink-0 text-amber-300" />
+          See a Golden Task applying these alignments! — Refund Module QA Status Report
+          <ChevronRight size={14} className="shrink-0 transition-transform group-hover:translate-x-0.5" />
+        </Link>
       </div>
     </section>
   );

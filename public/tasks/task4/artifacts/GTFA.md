@@ -20,11 +20,12 @@ Rebecca's personal Jira notes (`Screenshot 2026-07-03 000152.png`) log 11 bugs, 
 
 ### 2. Issue keys
 
-From the team tracker email notification, only two bugs already carry an official key:
+From the team tracker email notifications, three bugs already carry an official key:
 - `NEXB-442` → Partial refund timeout
 - `NEXB-443` → Incorrect tax — international funds (VAT 20%)
+- `NEXB-398` → Login timeout mobile Safari (referenced separately in the same notification thread; this is the bug Kai already fixed)
 
-`NEXB-443` is the latest registered key, so every other bug (9 remaining, including Safari) gets a newly generated key continuing the sequence: `NEXB-444` through `NEXB-452`.
+`NEXB-443` is the latest *generated-sequence* key on record, so every other bug (8 remaining) gets a newly generated key continuing the sequence: `NEXB-444` through `NEXB-451`. Safari is not part of that generated range — it already has its own real key, and a model that misses the email reference and generates a ninth key for it (e.g. `NEXB-452`) is labeling it incorrectly, even though the resolved/unresolved status itself is still right.
 
 | Jira name | Issue key |
 |---|---|
@@ -38,7 +39,7 @@ From the team tracker email notification, only two bugs already carry an officia
 | Dup refund | `NEXB-449` |
 | Refund mobile view misrendered | `NEXB-450` |
 | Fake refund success | `NEXB-451` |
-| Safari mobile login timeout | `NEXB-452` |
+| Safari mobile login timeout | `NEXB-398` (existing — not part of the generated range) |
 
 ### 3. `refund_mod_QA_results.svg`
 
@@ -62,7 +63,7 @@ Following `svg_format.txt`:
 - Refund reason mandatory to proceed [NEXB-446]
 - Confirmation screen (matching destination card number) [NEXB-447]
 - Dup refund [NEXB-449]
-- Safari mobile login timeout - Kai tackled [NEXB-452]
+- Safari mobile login timeout - Kai tackled [NEXB-398]
 
 ## UNSOLVED
 - Partial refund timeout [NEXB-442]
