@@ -302,7 +302,7 @@ function SpecUpdateLogPanel() {
         {latest.items && latest.items.length > 0 && (
           <div>
             <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-200">
-              Individual changes in this revision
+              Individual changes in the last Spec Doc revision
             </div>
             <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
               {latest.items.map((item, i) => (
