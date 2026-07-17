@@ -271,6 +271,7 @@ function SideButton({ item, active, onClick }: { item: NavItem; active: boolean;
 
 function SpecUpdateLogPanel() {
   const [latest, ...older] = specUpdateLog;
+  const totalLoggedChanges = specUpdateLog.reduce((n, e) => n + (e.items?.length ?? 1), 0);
   return (
     <details className="group mt-4 rounded-2xl border border-brand-200/80 bg-brand-50/70 p-4 dark:border-brand-500/30 dark:bg-brand-500/10">
       <summary className="flex cursor-pointer list-none flex-wrap items-start gap-3">
@@ -282,31 +283,61 @@ function SpecUpdateLogPanel() {
             <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-200">
               Update Log
             </span>
-            <span className="font-mono text-[11px] font-bold text-ink-400">{specUpdateLog.length} dated notes</span>
+            <span className="font-mono text-[11px] font-bold text-ink-400">{totalLoggedChanges} logged changes</span>
             <span className="rounded-md bg-brand-600 px-2 py-0.5 font-mono text-[10px] font-bold text-white">
               {latest.dateLabel}
             </span>
+            {latest.items && latest.items.length > 1 && (
+              <span className="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-[10px] font-bold text-ink-500 dark:bg-ink-200/60">
+                {latest.items.length} requirements updated
+              </span>
+            )}
           </div>
           <h3 className="mt-1 text-sm font-extrabold text-ink-900">{latest.title}</h3>
           <p className="mt-1 max-w-3xl text-[12.5px] leading-relaxed text-ink-600">{latest.summary}</p>
         </div>
         <ChevronDown size={18} className="mt-2 shrink-0 text-brand-500 transition-transform group-open:rotate-180" />
       </summary>
-      <div className="mt-3 grid gap-2 border-t border-brand-200/70 pt-3 md:grid-cols-2 xl:grid-cols-3 dark:border-brand-500/30">
-        {older.map((entry) => (
-          <div key={entry.id} className="rounded-xl border border-brand-200/70 bg-surface/80 p-3 dark:border-brand-500/25">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-md bg-brand-600 px-2 py-0.5 font-mono text-[10px] font-bold text-white">
-                {entry.dateLabel}
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
-                {entry.scope}
-              </span>
+      <div className="mt-3 space-y-4 border-t border-brand-200/70 pt-3 dark:border-brand-500/30">
+        {latest.items && latest.items.length > 0 && (
+          <div>
+            <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-200">
+              Individual changes in this revision
             </div>
-            <div className="mt-2 text-[12px] font-bold leading-snug text-ink-900">{entry.title}</div>
-            <p className="mt-1 text-[11.5px] leading-relaxed text-ink-500">{entry.summary}</p>
+            <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+              {latest.items.map((item, i) => (
+                <div key={i} className="rounded-xl border border-brand-200/70 bg-surface/80 p-3 dark:border-brand-500/25">
+                  <span className="text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+                    {item.scope}
+                  </span>
+                  <div className="mt-2 text-[12px] font-bold leading-snug text-ink-900">{item.title}</div>
+                  <p className="mt-1 text-[11.5px] leading-relaxed text-ink-500">{item.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+        )}
+        {older.length > 0 && (
+          <div>
+            <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">Earlier updates</div>
+            <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+              {older.map((entry) => (
+                <div key={entry.id} className="rounded-xl border border-brand-200/70 bg-surface/80 p-3 dark:border-brand-500/25">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-md bg-brand-600 px-2 py-0.5 font-mono text-[10px] font-bold text-white">
+                      {entry.dateLabel}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+                      {entry.scope}
+                    </span>
+                  </div>
+                  <div className="mt-2 text-[12px] font-bold leading-snug text-ink-900">{entry.title}</div>
+                  <p className="mt-1 text-[11.5px] leading-relaxed text-ink-500">{entry.summary}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </details>
   );

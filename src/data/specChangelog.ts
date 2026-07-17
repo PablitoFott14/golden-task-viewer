@@ -24,6 +24,12 @@ export interface SpecVersion {
   changes: SpecChange[];
 }
 
+export interface SpecUpdateLogItem {
+  title: string;
+  description: string;
+  scope: string;
+}
+
 export interface SpecUpdateLogEntry {
   id: string;
   date: string;
@@ -31,53 +37,58 @@ export interface SpecUpdateLogEntry {
   title: string;
   summary: string;
   scope: string;
+  /**
+   * When a single dated revision bundles multiple independent changes, list
+   * each one here. The panel shows `title`/`summary` as one consolidated
+   * notice and reveals `items` individually inside its dropdown, so a
+   * multi-part revision never reads as several unrelated log entries.
+   */
+  items?: SpecUpdateLogItem[];
 }
 
 export const specUpdateLog: SpecUpdateLogEntry[] = [
   {
-    id: "2026-07-17-weight-agreement",
+    id: "2026-07-17",
     date: "2026-07-17",
     dateLabel: "17 Jul 2026",
-    title: "Weight Agreement dimension added",
+    title: "Weight agreement, Universe Viewer check, and rubric-wide option labels",
     summary:
-      "New Rubric Criteria dimension scores off-by-one weight disagreements only (1 vs 3, or 3 vs 5); off-by-two disagreements still route to the Rubric Quality Definitions appendix.",
-    scope: "Rubric Criteria - Weight Agreement",
-  },
-  {
-    id: "2026-07-17-universe-viewer",
-    date: "2026-07-17",
-    dateLabel: "17 Jul 2026",
-    title: "Universe Viewer Consistency dimension added",
-    summary:
-      "New Universe group flags cases where the Universe Viewer shows data inconsistent with the universe data the agent actually queried (seen on MyFitnessPal, AppleHealth, and LogisticsTracking so far).",
-    scope: "Universe - Universe Viewer Consistency",
-  },
-  {
-    id: "2026-07-17-coverage-split",
-    date: "2026-07-17",
-    dateLabel: "17 Jul 2026",
-    title: "Incorrectly-covered-by-rubric split into its own option",
-    summary:
-      "[Non-Fail - Incorrectly Covered by Rubric] is now a formal error category with its own score-3 answer option, no longer folded into the same block as [Non-Fail - Test Coverage].",
-    scope: "Tests - Coverage",
-  },
-  {
-    id: "2026-07-17-underfitted-note",
-    date: "2026-07-17",
-    dateLabel: "17 Jul 2026",
-    title: "Underfitted-tests latitude note added",
-    summary:
-      "Clarifies that wider tests may be appropriate for artifacts that can't be easily validated or requests fulfillable multiple ways — check whether the corresponding rubric criterion already bounds the test before flagging it as underfitted.",
-    scope: "Tests - Underfitted Tests",
-  },
-  {
-    id: "2026-07-17-option-labels",
-    date: "2026-07-17",
-    dateLabel: "17 Jul 2026",
-    title: "Answer options labeled with their error category",
-    summary:
-      "Most Fail/Non-Fail answer options across the doc now open with a [Category Name] tag so the option maps unambiguously back to its error category. No scoring or wording changed beyond the added label.",
-    scope: "Leak Prevention, Verifiers - Safety, Category and Subcategory, Overall Rubric Quality (all three), Rubric Structure, Rubric Spot Checks, Architectural Depth & Friction Exposure, Tests - Redundancy, Failed Rubric/Unit Test - Justification",
+      "Five changes landed together in this revision: two new scoring dimensions (Weight Agreement, Universe Viewer Consistency), a restructured Tests - Coverage rubric, an Underfitted Tests clarification, and [Category Name] labels added to Fail/Non-Fail answer options across most of the doc.",
+    scope:
+      "Rubric Criteria, Universe, Tests, Trajectory, Silver Trajectory, Input Artifacts, Verifiers, Failed Rubric/Unit Test",
+    items: [
+      {
+        title: "Rubric Criteria - Weight Agreement added",
+        description:
+          "New dimension scores off-by-one weight disagreements only (1 vs 3, or 3 vs 5); off-by-two disagreements still route to the Rubric Quality Definitions appendix.",
+        scope: "Rubric Criteria - Weight Agreement",
+      },
+      {
+        title: "Universe - Universe Viewer Consistency added",
+        description:
+          "New group flags cases where the Universe Viewer shows data inconsistent with the universe data the agent actually queried (seen on MyFitnessPal, AppleHealth, and LogisticsTracking so far).",
+        scope: "Universe - Universe Viewer Consistency",
+      },
+      {
+        title: "Tests - Coverage: rubric-overlap split into its own option",
+        description:
+          "[Non-Fail - Incorrectly Covered by Rubric] is now a formal error category with its own score-3 answer option, no longer folded into the same block as [Non-Fail - Test Coverage].",
+        scope: "Tests - Coverage",
+      },
+      {
+        title: "Tests - Underfitted Tests: latitude note added",
+        description:
+          "Clarifies that wider tests may be appropriate for artifacts that can't be easily validated or requests fulfillable multiple ways — check whether the corresponding rubric criterion already bounds the test before flagging it as underfitted.",
+        scope: "Tests - Underfitted Tests",
+      },
+      {
+        title: "Answer options labeled with their error category",
+        description:
+          "Most Fail/Non-Fail answer options across the doc (Leak Prevention, Verifiers - Safety, Category and Subcategory, Overall Rubric Quality x3, Rubric Structure, Rubric Spot Checks, Architectural Depth & Friction Exposure, Tests - Redundancy, Failed Rubric/Unit Test - Justification) now open with a [Category Name] tag. No scoring or wording changed beyond the added label.",
+        scope:
+          "Leak Prevention, Verifiers - Safety, Category and Subcategory, Overall Rubric Quality (all three), Rubric Structure, Rubric Spot Checks, Architectural Depth & Friction Exposure, Tests - Redundancy, Failed Rubric/Unit Test - Justification",
+      },
+    ],
   },
   {
     id: "2026-07-02",

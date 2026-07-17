@@ -11,6 +11,10 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: "17-07-2026",
+    text: "Updated the Spec Doc to the latest QC Rubric-cb facing export — added the Rubric Criteria - Weight Agreement and Universe - Universe Viewer Consistency dimensions, restructured the Tests - Coverage rubric, and labeled Fail/Non-Fail answer options with their error category across most dimensions. Full breakdown in the Spec Doc's own Update Log.",
+  },
+  {
     date: "16-07-2026",
     text: "Added Golden Task 4 (Refund Module QA Status Report), a QA/Operations task on cross-referencing a stale personal tracker against release-candidate evidence, and linked it from the Urgent Alignments section as a real applied example.",
   },
