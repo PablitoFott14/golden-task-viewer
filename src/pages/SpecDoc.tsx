@@ -21,6 +21,7 @@ import {
   X,
   History,
   PenLine,
+  Globe,
 } from "lucide-react";
 import {
   specGroups,
@@ -48,6 +49,7 @@ const groupIcons: Record<string, typeof ClipboardCheck> = {
   "Rubric Criteria": ScrollText,
   Tests: FlaskConical,
   "Failed Rubric/Unit Test": Gavel,
+  Universe: Globe,
 };
 
 const slug = (s: string) => s.replace(/[^a-z0-9]/gi, "-").toLowerCase();

@@ -137,6 +137,57 @@ export const specUpdateLog: SpecUpdateLogEntry[] = [
 
 export const specVersions: SpecVersion[] = [
   {
+    id: "2026-07-17",
+    date: "2026-07-17",
+    dateLabel: "17 Jul 2026",
+    version: "v3",
+    title: "Weight agreement, Universe Viewer check, and answer-option labels",
+    summary:
+      "The new export (`QC Rubric-cb facing - new.csv`) adds two scoring dimensions — Rubric Criteria - Weight Agreement and Universe - Universe Viewer Consistency — splits the Tests - Coverage rubric-overlap option into its own row, expands the Tests - Underfitted Tests and Tests - Coverage guidance, drops the MEMORY.md conditional's trailing boilerplate sentence, and prefixes almost every Fail/Non-Fail answer option across the doc with its `[Category Name]` label so the option maps unambiguously back to its error category.",
+    changes: [
+      {
+        dimension: "Rubric Criteria - Weight Agreement",
+        kind: "added",
+        description:
+          "New dimension scoring off-by-one weight disagreements only (1 vs 3, or 3 vs 5); off-by-two disagreements stay with the Rubric Quality Definitions appendix. Fail at 30%+ disagreement, Non-Fail under 30%, Pass on full agreement.",
+      },
+      {
+        dimension: "Universe - Universe Viewer Consistency",
+        kind: "added",
+        description:
+          "New group and dimension flagging cases where the Universe Viewer shows data that doesn't match the universe data the agent actually queried (seen so far on MyFitnessPal, AppleHealth, and LogisticsTracking servers). Non-Fail at 3 for any misalignment, Pass at 5 when the viewer is fully consistent with tool-call/database evidence.",
+      },
+      {
+        dimension: "Tests - Coverage",
+        kind: "updated",
+        description:
+          "The rubric-quality guidance was restructured with explicit `// NOTE` / `// Examples` call-outs, and [Non-Fail - Incorrectly Covered by Rubric] is now its own formal error category and its own answer-option row (previously folded into the same score-3 option as [Non-Fail - Test Coverage]). The redundant 'do not penalize omissions...' sentence was consolidated into the description instead of being repeated in both fail/non-fail options.",
+        before:
+          "Single score-3 option combined [Non-Fail - Test Coverage] and [Non-Fail - Incorrectly Covered by Rubric] guidance in one block; [Non-Fail - Incorrectly Covered by Rubric] was not listed as a formal error category.",
+        after:
+          "[Non-Fail - Test Coverage] and [Non-Fail - Incorrectly Covered by Rubric] are two separate score-3 answer options, and the latter is listed alongside [Non-Fail - Test Coverage] and [Fail - Test Coverage] as a formal error category.",
+      },
+      {
+        dimension: "Tests - Underfitted Tests",
+        kind: "updated",
+        description:
+          "Adds a note clarifying that wider tests may be appropriate for artifacts that can't be easily validated, more general prompt requests, or requests fulfillable multiple ways — in those cases, check whether the corresponding rubric criterion already bounds the test before calling it underfitted.",
+      },
+      {
+        dimension: "Trajectory - Architectural Depth & Friction Exposure",
+        kind: "updated",
+        description:
+          "The MEMORY.md usage guidance was reformatted into a dash-bulleted list (was blank-line-separated quote examples), and the trailing 'See the spec doc for examples...' boilerplate sentence was dropped from the end of the description.",
+      },
+      {
+        dimension: "Answer-option error-category labels",
+        kind: "updated",
+        description:
+          "Nearly every Fail/Non-Fail answer option across the doc (Leak Prevention, Verifiers - Safety, Silver Trajectory - Category and Subcategory, all three Overall Rubric Quality dimensions, Rubric Structure, Rubric Spot Checks, Tests - Redundancy, Failed Rubric/Unit Test - Justification, and the Architectural Depth & Friction Exposure Fail/Non-Fail options) now opens with its `[Category Name]` label, matching the convention already used on Input Artifacts - Leak Prevention and Silver Trajectory - Cross-Modal & Cross-Service Synthesis. No scoring or wording changed beyond the added label.",
+      },
+    ],
+  },
+  {
     id: "2026-07-03",
     date: "2026-07-03",
     dateLabel: "03 Jul 2026",
