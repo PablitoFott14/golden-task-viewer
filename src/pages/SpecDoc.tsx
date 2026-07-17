@@ -22,6 +22,7 @@ import {
   History,
   PenLine,
   Globe,
+  ArrowUpRight,
 } from "lucide-react";
 import {
   specGroups,
@@ -34,7 +35,7 @@ import {
   type WeightBucket,
   type RubricQualityIssue,
 } from "../data/specDoc";
-import { specUpdateLog } from "../data/specChangelog";
+import { specUpdateLog, type SpecUpdateLogItem, type SpecUpdateLogTarget } from "../data/specChangelog";
 import { Reveal, SectionHeading } from "../components/ui";
 import { cx } from "../lib/assets";
 
@@ -53,6 +54,9 @@ const groupIcons: Record<string, typeof ClipboardCheck> = {
 };
 
 const slug = (s: string) => s.replace(/[^a-z0-9]/gi, "-").toLowerCase();
+
+/** DOM id for a single dimension card, used to jump/scroll straight to it from the Update Log. */
+const dimAnchorId = (group: string, dimension: string) => `dim-${slug(group)}--${slug(dimension)}`;
 
 interface NavItem {
   id: string;
@@ -122,10 +126,31 @@ function scoreStyle(score: number) {
 export default function SpecDoc() {
   const [active, setActive] = useState<string>(dimensionNav[0].id);
   const [query, setQuery] = useState("");
+  const [highlightId, setHighlightId] = useState<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const dimensionCount = specGroups.reduce((n, g) => n + g.dimensions.length, 0);
   const activeGroup = specGroups.find((g) => slug(g.group) === active);
   const searching = query.trim().length > 0;
+
+  // Jump from an Update Log item straight to the dimension card it describes:
+  // switch tabs (if needed), then scroll to and briefly highlight the card.
+  const jumpToDimension = (target: SpecUpdateLogTarget) => {
+    setQuery("");
+    setActive(slug(target.group));
+    setHighlightId(dimAnchorId(target.group, target.dimension));
+  };
+
+  useEffect(() => {
+    if (!highlightId) return;
+    const t1 = setTimeout(() => {
+      document.getElementById(highlightId)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 60);
+    const t2 = setTimeout(() => setHighlightId(null), 2200);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [highlightId]);
 
   // "/" focuses search, Escape clears it — a Ctrl+F feel scoped to this tab.
   useEffect(() => {
@@ -190,7 +215,7 @@ export default function SpecDoc() {
 
       {!searching && (
         <Reveal>
-          <SpecUpdateLogPanel />
+          <SpecUpdateLogPanel onJump={jumpToDimension} />
         </Reveal>
       )}
 
@@ -220,7 +245,7 @@ export default function SpecDoc() {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="min-w-0"
           >
-            {activeGroup && <GroupSection group={activeGroup} />}
+            {activeGroup && <GroupSection group={activeGroup} highlightId={highlightId} />}
             {active === "weights" && <WeightSection />}
             {active === "rubric-quality" && <RubricQualitySection />}
           </motion.div>
@@ -269,7 +294,7 @@ function SideButton({ item, active, onClick }: { item: NavItem; active: boolean;
   );
 }
 
-function SpecUpdateLogPanel() {
+function SpecUpdateLogPanel({ onJump }: { onJump: (target: SpecUpdateLogTarget) => void }) {
   const [latest, ...older] = specUpdateLog;
   const totalLoggedChanges = specUpdateLog.reduce((n, e) => n + (e.items?.length ?? 1), 0);
   return (
@@ -306,13 +331,7 @@ function SpecUpdateLogPanel() {
             </div>
             <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
               {latest.items.map((item, i) => (
-                <div key={i} className="rounded-xl border border-brand-200/70 bg-surface/80 p-3 dark:border-brand-500/25">
-                  <span className="text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
-                    {item.scope}
-                  </span>
-                  <div className="mt-2 text-[12px] font-bold leading-snug text-ink-900">{item.title}</div>
-                  <p className="mt-1 text-[11.5px] leading-relaxed text-ink-500">{item.description}</p>
-                </div>
+                <UpdateLogItemCard key={i} item={item} onJump={onJump} />
               ))}
             </div>
           </div>
@@ -340,6 +359,69 @@ function SpecUpdateLogPanel() {
         )}
       </div>
     </details>
+  );
+}
+
+function UpdateLogItemCard({
+  item,
+  onJump,
+}: {
+  item: SpecUpdateLogItem;
+  onJump: (target: SpecUpdateLogTarget) => void;
+}) {
+  const targets = item.targets ?? [];
+  const singleTarget = targets.length === 1 ? targets[0] : null;
+
+  const body = (
+    <>
+      <div className="flex items-start justify-between gap-2">
+        <span className="text-[10px] font-bold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+          {item.scope}
+        </span>
+        {singleTarget && (
+          <ArrowUpRight
+            size={14}
+            className="mt-0.5 shrink-0 text-brand-500 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          />
+        )}
+      </div>
+      <div className="mt-2 text-[12px] font-bold leading-snug text-ink-900">{item.title}</div>
+      <p className="mt-1 text-[11.5px] leading-relaxed text-ink-500">{item.description}</p>
+    </>
+  );
+
+  if (singleTarget) {
+    return (
+      <button
+        type="button"
+        onClick={() => onJump(singleTarget)}
+        title={`Jump to ${singleTarget.group} → ${singleTarget.dimension}`}
+        className="group rounded-xl border border-brand-200/70 bg-surface/80 p-3 text-left transition hover:border-brand-400 hover:bg-brand-50 dark:border-brand-500/25 dark:hover:bg-brand-500/10"
+      >
+        {body}
+      </button>
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-brand-200/70 bg-surface/80 p-3 dark:border-brand-500/25">
+      {body}
+      {targets.length > 1 && (
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          {targets.map((t, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => onJump(t)}
+              title={`Jump to ${t.group} → ${t.dimension}`}
+              className="inline-flex items-center gap-1 rounded-full border border-brand-300/80 bg-brand-50 px-2 py-0.5 text-[10px] font-semibold text-brand-700 transition hover:bg-brand-100 dark:border-brand-500/40 dark:bg-brand-500/10 dark:text-brand-200 dark:hover:bg-brand-500/20"
+            >
+              {t.dimension} <ArrowUpRight size={10} />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -383,7 +465,13 @@ function Legend() {
   );
 }
 
-function GroupSection({ group }: { group: { group: string; dimensions: SpecDimension[] } }) {
+function GroupSection({
+  group,
+  highlightId,
+}: {
+  group: { group: string; dimensions: SpecDimension[] };
+  highlightId?: string | null;
+}) {
   const Icon = groupIcons[group.group] ?? ClipboardCheck;
   return (
     <section>
@@ -394,9 +482,21 @@ function GroupSection({ group }: { group: { group: string; dimensions: SpecDimen
       />
       <Legend />
       <div className="space-y-5">
-        {group.dimensions.map((dim) => (
-          <DimensionCard key={dim.name} dim={dim} />
-        ))}
+        {group.dimensions.map((dim) => {
+          const anchorId = dimAnchorId(group.group, dim.name);
+          return (
+            <div
+              key={dim.name}
+              id={anchorId}
+              className={cx(
+                "scroll-mt-24 rounded-2xl transition-shadow duration-500",
+                highlightId === anchorId && "ring-2 ring-brand-400 ring-offset-2 ring-offset-surface dark:ring-offset-ink-900"
+              )}
+            >
+              <DimensionCard dim={dim} />
+            </div>
+          );
+        })}
       </div>
     </section>
   );

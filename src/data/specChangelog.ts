@@ -24,10 +24,19 @@ export interface SpecVersion {
   changes: SpecChange[];
 }
 
+export interface SpecUpdateLogTarget {
+  /** Must match a `specGroups[].group` value exactly. */
+  group: string;
+  /** Must match that group's `dimensions[].name` value exactly. */
+  dimension: string;
+}
+
 export interface SpecUpdateLogItem {
   title: string;
   description: string;
   scope: string;
+  /** Where this change lives in the Spec Doc tab; renders as jump links. */
+  targets?: SpecUpdateLogTarget[];
 }
 
 export interface SpecUpdateLogEntry {
@@ -62,24 +71,28 @@ export const specUpdateLog: SpecUpdateLogEntry[] = [
         description:
           "New dimension scores off-by-one weight disagreements only (1 vs 3, or 3 vs 5); off-by-two disagreements still route to the Rubric Quality Definitions appendix.",
         scope: "Rubric Criteria - Weight Agreement",
+        targets: [{ group: "Rubric Criteria", dimension: "Weight Agreement" }],
       },
       {
         title: "Universe - Universe Viewer Consistency added",
         description:
           "New group flags cases where the Universe Viewer shows data inconsistent with the universe data the agent actually queried (seen on MyFitnessPal, AppleHealth, and LogisticsTracking so far).",
         scope: "Universe - Universe Viewer Consistency",
+        targets: [{ group: "Universe", dimension: "Universe Viewer Consistency" }],
       },
       {
         title: "Tests - Coverage: rubric-overlap split into its own option",
         description:
           "[Non-Fail - Incorrectly Covered by Rubric] is now a formal error category with its own score-3 answer option, no longer folded into the same block as [Non-Fail - Test Coverage].",
         scope: "Tests - Coverage",
+        targets: [{ group: "Tests", dimension: "Coverage" }],
       },
       {
         title: "Tests - Underfitted Tests: latitude note added",
         description:
           "Clarifies that wider tests may be appropriate for artifacts that can't be easily validated or requests fulfillable multiple ways — check whether the corresponding rubric criterion already bounds the test before flagging it as underfitted.",
         scope: "Tests - Underfitted Tests",
+        targets: [{ group: "Tests", dimension: "Underfitted Tests" }],
       },
       {
         title: "Answer options labeled with their error category",
@@ -87,6 +100,19 @@ export const specUpdateLog: SpecUpdateLogEntry[] = [
           "Most Fail/Non-Fail answer options across the doc (Leak Prevention, Verifiers - Safety, Category and Subcategory, Overall Rubric Quality x3, Rubric Structure, Rubric Spot Checks, Architectural Depth & Friction Exposure, Tests - Redundancy, Failed Rubric/Unit Test - Justification) now open with a [Category Name] tag. No scoring or wording changed beyond the added label.",
         scope:
           "Leak Prevention, Verifiers - Safety, Category and Subcategory, Overall Rubric Quality (all three), Rubric Structure, Rubric Spot Checks, Architectural Depth & Friction Exposure, Tests - Redundancy, Failed Rubric/Unit Test - Justification",
+        targets: [
+          { group: "Input Artifacts", dimension: "Leak Prevention" },
+          { group: "Verifiers", dimension: "Safety" },
+          { group: "Silver Trajectory", dimension: "Category and Subcategory" },
+          { group: "Rubric Criteria", dimension: "Overall Rubric Quality - Major" },
+          { group: "Rubric Criteria", dimension: "Overall Rubric Quality - Major/Moderate" },
+          { group: "Rubric Criteria", dimension: "Overall Rubric Quality - Major/Moderate/Minor" },
+          { group: "Rubric Criteria", dimension: "Rubric Structure" },
+          { group: "Rubric Criteria", dimension: "Rubric Spot Checks" },
+          { group: "Trajectory", dimension: "Architectural Depth & Friction Exposure" },
+          { group: "Tests", dimension: "Redundancy" },
+          { group: "Failed Rubric/Unit Test", dimension: "Justification" },
+        ],
       },
     ],
   },
