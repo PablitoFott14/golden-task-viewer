@@ -85,12 +85,12 @@ Focus this portion on the logical, outcome-oriented decisions the model makes al
         kind: "weighting",
         tag: "Rubric Weighting",
         impact:
-          "Any rubric that directly evaluates load-bearing visual identification should usually be weighted as 5, and the spec now requires at least 40 percent visual understanding.",
+          "Any rubric that directly evaluates load-bearing visual identification should usually be weighted as 5.",
         summary:
           "The key distinction is explicit versus implicit visual understanding: only visual reasoning that the task truly depends on should receive top weight.",
         body: `Increase how much of the overall rubric score depends on visual understanding. Our tasks should include enough complexity to require cross-modal reasoning with visual identification. When a rubric directly evaluates that visual identification, it should usually be weighted as a **5**.
 
-The spec has been updated to require at least **40% visual understanding**.
+Visual criteria should receive appropriate weight whenever the task genuinely depends on interpreting visual evidence — this isn't a fixed proportion applied uniformly across every task. Reviewers should make sure visual references are properly covered whenever the scenario requires them.
 
 ### Implicit vs. explicit direct visual understanding
 
