@@ -1,6 +1,6 @@
 1. The model identifies that the `Full refund complete` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is resolved because `rc-refund-build-01.png` shows the same amount for `Order total` and `Total refund`. (+5) -> Agent Behavior - Trajectory | Not Present
 
-2. The model identifies that the `Partial refund timeout` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `RC_refund_0712_06.png` shows a raw `HTTP 500 - Internal Server Error` with a Java stack trace (gateway read timed out after 30000ms). (+5) -> Agent Behavior - Trajectory | Present
+2. The model identifies that the `Partial refund timeout` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `RC_refund_0712_06.png` shows a raw `HTTP 500 - Internal Server Error` with a Java stack trace (gateway read timed out after 30000ms). (+5) -> Agent Behavior - Trajectory | Not Present
 
 3. The model identifies that the `Incorrect tax - international funds (VAT 20%)` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is resolved because `rc-refund-build-03.png` shows the correct VAT 20% refund for the presented `€142.90` subtotal, which is `€28.58`. (+5) -> Agent Behavior - Trajectory | Not Present
 
@@ -10,13 +10,13 @@
 
 6. The model identifies that the `Confirmation screen (matching destination card number)` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is resolved because `Screenshot 2026-07-03 at 15.58.21.png` shows the confirmation screen with the `$92.86` refund amount, destination card ending in `6341`, and status `Completed` all matching. (+5) -> Agent Behavior - Trajectory | Not Present
 
-7. The model identifies that the `No refund cap` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `rc-refund-build-07.png` shows a `$163.45` refund amount being accepted against an order total of `$92.86`, producing a negative remaining balance of `-$76.05`. (+5) -> Agent Behavior - Trajectory | Present
+7. The model identifies that the `No refund cap` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `rc-refund-build-07.png` shows a `$163.45` refund amount being accepted against an order total of `$92.86`, producing a negative remaining balance of `-$76.05`. (+5) -> Agent Behavior - Trajectory | Not Present
 
 8. The model identifies that the `Dup refund` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is resolved because `IMG_4471.png` shows the transaction already fully refunded (`RFND-20260702-7731`) with the `Process Refund` button correctly disabled, preventing a second refund. (+5) -> Agent Behavior - Trajectory | Not Present
 
-9. The model identifies that the `Refund mobile view misrendered` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `RC_refund_0712_09.png` shows the refund screen at a mobile viewport with the top bar overflowing and the two-column fields clipping. (+5) -> Agent Behavior - Trajectory | Present
+9. The model identifies that the `Refund mobile view misrendered` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `RC_refund_0712_09.png` shows the refund screen at a mobile viewport with the top bar overflowing and the two-column fields clipping. (+5) -> Agent Behavior - Trajectory | Not Present
 
-10. The model identifies that the `Fake refund success` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `RC_refund_0712_10.png` shows a `Refund Processed / Completed` status of `$92.86` despite the gateway response reading `DECLINED` and settlement `Failed`, meaning no funds actually moved. (+5) -> Agent Behavior - Trajectory | Present
+10. The model identifies that the `Fake refund success` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `RC_refund_0712_10.png` shows a `Refund Processed / Completed` status of `$92.86` despite the gateway response reading `DECLINED` and settlement `Failed`, meaning no funds actually moved. (+5) -> Agent Behavior - Trajectory | Not Present
 
 11. The model identifies the `Login timeout mobile Safari` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) as resolved, either because `rc-refund-build-11.png` shows a successful `Signed in` state on Safari (iOS) with the session labeled `Secure session established`, or because this is the only issue marked as solved in the prompt context through the email tracks or the user's Jira notes. (+5) -> Agent Behavior - Trajectory | Present
 
@@ -42,7 +42,7 @@
 
 22. `refund_mod_QA_results.svg` reports the `Fake refund success` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is resolved?` -> `No`) under a valid, non-duplicated issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-451`. (+1) -> Task Completion - Final answer/artifact | Present
 
-23. The model determines from the user's email that `NEXB-398`, `NEXB-442`, and `NEXB-443` are the three existing Jira issue keys, with `NEXB-443` being the latest. (+3) -> Agent Behavior - Trajectory | Not Present
+23. The model determines from the user's email that `NEXB-398`, `NEXB-442`, and `NEXB-443` are the three existing Jira issue keys, with `NEXB-443` being the latest. (+3) -> Agent Behavior - Trajectory | Present
 
 24. `MEMORY.md` reports under the `SOLVED` section the issues `Full refund renders complete`, `Incorrect tax - international (VAT 20%)`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, `Dup refund`, and `Safari mobile login timeout - Kai tackled`. (+1) -> Task Completion - Final answer/artifact | Not Present
 
