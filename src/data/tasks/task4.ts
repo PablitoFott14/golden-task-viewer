@@ -317,7 +317,7 @@ Finally, send an update in our qa team slack channel stating the bugs solved and
       group: "SVG",
       weight: 1,
       covers:
-        "The prompt names one file by name — refund_mod_QA_results.svg. Existence is the most 1:1 check in the whole task: the file is either there or it isn't, and there is exactly one acceptable filename. Nothing about the report's content is asserted here, so there is no wording to overfit to.",
+        "The prompt names one file, refund_mod_QA_results.svg. Existence is the most 1:1 check in the whole task: the file is either there or it isn't, and only one filename is acceptable. Nothing about the report's content is asserted here, so there is no wording to overfit to.",
       code: `def test_svg_report_exists():
     """refund_mod_QA_results.svg must exist in the workspace and be non-empty."""
     p = _find_svg()
@@ -330,7 +330,7 @@ Finally, send an update in our qa team slack channel stating the bugs solved and
       group: "SVG",
       weight: 3,
       covers:
-        "svg_format.txt fixes the palette and ties each hex to one role: #ff4733 on issue nodes, #2c55d4 on the single start node, #158a52 on Yes terminals, #c23b3b on No terminals. Because the spec is given to the model before it acts, the mapping is explicit and structural rather than stylistic — and the counts (11 / 1 / 7 / 4) come straight from the GTFA, not from any wording choice the model gets to make.",
+        "svg_format.txt fixes the palette and ties each hex to one role: #ff4733 on issue nodes, #2c55d4 on the single start node, #158a52 on Yes terminals, #c23b3b on No terminals. Because the spec is given to the model before it acts, the mapping is explicit and structural rather than stylistic. The counts (11 / 1 / 7 / 4) come straight from the GTFA, not from any wording choice the model gets to make.",
       code: `_EXPECTED_ISSUE_NODES = 11
 _EXPECTED_START_NODES = 1
 _EXPECTED_YES_TERMINALS = 7
@@ -372,11 +372,11 @@ def test_svg_colors_used_on_correct_elements():
     },
     {
       ref: "test_svg_each_issue_node_has_one_terminal",
-      logic: "Every individual issue node owns exactly one Yes/No terminal — not just a correct global total.",
+      logic: "Every individual issue node owns exactly one Yes/No terminal, not just a correct global total.",
       group: "SVG",
       weight: 3,
       covers:
-        "The test above only checks totals, so a report could sum to 7 Yes / 4 No while one issue carries two terminals and another none. The spec's rule — one decision path per issue — is per-issue and 1:1, so it is checkable structurally. It deliberately does not assert how the diamond is drawn (no <polygon> requirement), because svg_format.txt requires a diamond shape without prescribing the markup; asserting a tag would be overfitting to one valid implementation.",
+        "The test above only checks totals, so a report could sum to 7 Yes / 4 No while one issue carries two terminals and another none. The spec's rule is one decision path per issue, which makes it both per-issue and 1:1, so it is checkable structurally. It deliberately does not assert how the diamond is drawn (no <polygon> requirement), because svg_format.txt requires a diamond shape without prescribing the markup; asserting a tag would be overfitting to one valid implementation.",
       code: `def test_svg_each_issue_node_has_one_terminal():
     """test_svg_colors_used_on_correct_elements only checks GLOBAL totals, so an SVG could
     have the right overall count of Yes/No terminals while some issue node has two
@@ -417,7 +417,7 @@ def test_svg_colors_used_on_correct_elements():
       group: "State change",
       weight: 3,
       covers:
-        "This is the textbook 1:1 case. The prompt names the recipient (Colton), the subject (`current refund module QA status`), and the attachment (refund_mod_QA_results.svg) before the model acts, so there is exactly one correct value for each. The test asserts only those three facts and the SENT state — it never inspects the body, because 'explain the status' is a 1:n requirement that many different wordings would satisfy, and that part is left to the rubrics.",
+        "This is the textbook 1:1 case. The prompt names the recipient (Colton), the subject (`current refund module QA status`), and the attachment (refund_mod_QA_results.svg) before the model acts, so exactly one correct value exists for each. The test asserts only those three facts and the SENT state. It never inspects the body, because 'explain the status' is a 1:n requirement that many different wordings would satisfy, and that part is left to the rubrics.",
       code: `def test_email_sent_to_colton():
     """Verify email sent to Colton with correct subject and attachment."""
     snapshot_path = _find_snapshot()
@@ -450,7 +450,7 @@ def test_svg_colors_used_on_correct_elements():
       group: "MEMORY.md",
       weight: 1,
       covers:
-        "The prompt names both section labels verbatim, so the required structure is 1:1 — there is one SOLVED section and one UNSOLVED section, and no alternative label satisfies the instruction. The regex deliberately accepts any Markdown decoration around the word (#, **, -, :) rather than demanding a heading level, since the prompt asks for sections, not for a particular Markdown style. Which bugs land in each section is not checked here; that is a reasoning outcome and belongs to the rubrics.",
+        "The prompt names both section labels verbatim, so the required structure is 1:1. There is one SOLVED section and one UNSOLVED section, and no alternative label satisfies the instruction. The regex deliberately accepts any Markdown decoration around the word (#, **, -, :) rather than demanding a heading level, since the prompt asks for sections, not for a particular Markdown style. Which bugs land in each section is not checked here; that is a reasoning outcome and belongs to the rubrics.",
       code: `def test_memory_md_has_solved_unsolved_sections():
     """MEMORY.md must label two distinct sections, SOLVED and UNSOLVED, each as its own
     line. Markdown decoration (#, **, -, :) is accepted but not required."""
@@ -473,7 +473,7 @@ def test_svg_colors_used_on_correct_elements():
       group: "MEMORY.md",
       weight: 3,
       covers:
-        "The prompt requires each issue to be 'referenced with its matching issue key', and the key format (NEXB-###) is fixed by the tracker email the model reads. The test asserts only the two objective properties: presence of a key on every entry, and uniqueness across entries. It does not assert which key goes with which bug — that mapping is a reasoning result the rubrics grade — and it does not require brackets or any particular decoration around the key, which would overfit to one formatting choice.",
+        "The prompt requires each issue to be 'referenced with its matching issue key', and the key format (NEXB-###) is fixed by the tracker email the model reads. The test asserts only the two objective properties: presence of a key on every entry, and uniqueness across entries. It does not assert which key goes with which bug, since that mapping is a reasoning result the rubrics grade. Nor does it require brackets or any particular decoration around the key, which would overfit to one formatting choice.",
       code: `_MEMORY_HEADER_RE = re.compile(r'(?im)^[\\s>#*_\`\\-]*(SOLVED|UNSOLVED)[\\s:*_\`]*$')
 _MEMORY_BULLET_RE = re.compile(r'^\\s*[-*]\\s+\\S')
 
@@ -522,22 +522,22 @@ def test_memory_md_entries_have_issue_keys():
     {
       title: "The line this task draws: 1:1 rules to tests, 1:n rules to rubrics",
       body:
-        "A requirement belongs in a unit test when the prompt pins it down to exactly one acceptable value before the model acts. Here that is true of the deliverable's filename, the email's recipient, subject and attachment, MEMORY.md's two section labels, the NEXB-### key format, and every shape/color binding in svg_format.txt. Each has one correct answer, so a test can check it without either underfitting (accepting a wrong answer) or overfitting (rejecting a valid one).",
+        "A requirement belongs in a unit test when the prompt pins it down to exactly one acceptable value before the model acts. Here that is true of the deliverable's filename, the email's recipient, subject and attachment, MEMORY.md's two section labels, the NEXB-### key format, and every shape or color binding in svg_format.txt. Each has one correct answer, so a test can check it without either underfitting (accepting a wrong answer) or overfitting (rejecting a valid one).",
     },
     {
-      title: "What is deliberately left out — and why",
+      title: "What is deliberately left out, and why",
       body:
-        "No test inspects the email body, the Slack wording, or the phrasing of a MEMORY.md entry. 'Report the resolved and unresolved bugs' is a 1:n requirement: many different wordings communicate the same information equally well, so an exact-content assertion would be an overfit. That does not make the expected result non-deterministic — it means the check belongs to the rubrics, which is where the 11 status determinations and the Slack message are graded.",
+        "No test inspects the email body, the Slack wording, or the phrasing of a MEMORY.md entry. 'Report the resolved and unresolved bugs' is a 1:n requirement: many different wordings communicate the same information equally well, so an exact-content assertion would be an overfit. That does not make the expected result non-deterministic. It means the check belongs to the rubrics, which is where the 11 status determinations and the Slack message are graded.",
     },
     {
       title: "Tests cover state changes and artifact structure",
       body:
-        "The set splits cleanly along that line. test_email_sent_to_colton is the state-change check — an email either exists in SENT with that recipient, subject and attachment, or it doesn't. The five remaining tests check the structural requirements of the two final artifacts: the SVG exists, its palette is bound to the right element roles in the right counts, every issue owns exactly one terminal, and MEMORY.md carries both required sections with a unique issue key on every entry.",
+        "The set splits cleanly along that line. test_email_sent_to_colton is the state-change check: an email either exists in SENT with that recipient, subject and attachment, or it doesn't. The five remaining tests check the structural requirements of the two final artifacts, namely that the SVG exists, that its palette is bound to the right element roles in the right counts, that every issue owns exactly one terminal, and that MEMORY.md carries both required sections with a unique issue key on every entry.",
     },
     {
       title: "Structure without prescribing implementation",
       body:
-        "Where the spec fixes a property but not a way of expressing it, the tests stop at the property. test_svg_each_issue_node_has_one_terminal never asserts a <polygon> tag, because svg_format.txt requires a diamond shape and not a specific markup for drawing one. test_memory_md_has_solved_unsolved_sections accepts any Markdown decoration around SOLVED/UNSOLVED. And no test asserts which bug maps to which key — only that keys are present and unique — because the mapping itself is the reasoning the rubrics exist to grade.",
+        "Where the spec fixes a property but not a way of expressing it, the tests stop at the property. test_svg_each_issue_node_has_one_terminal never asserts a <polygon> tag, because svg_format.txt requires a diamond shape and not a specific markup for drawing one. test_memory_md_has_solved_unsolved_sections accepts any Markdown decoration around SOLVED/UNSOLVED. And no test asserts which bug maps to which key, only that keys are present and unique, because the mapping itself is the reasoning the rubrics exist to grade.",
     },
   ],
 
@@ -848,7 +848,7 @@ def _find_snapshot():
       ["Team notified correctly", "Slack and the email to Colton both report the corrected 7/4 split."],
     ],
     testsSub:
-      "6 tests, Σ weight = 14. Reviewer-only checks on state changes and artifact structure — only the elements the prompt and svg_format.txt pin down to exactly one acceptable value. Each test stands alone; shared scaffolding is in the Template dropdown.",
+      "6 tests, Σ weight = 14. Reviewer-only checks on state changes and artifact structure, covering only the elements the prompt and svg_format.txt pin down to exactly one acceptable value. Each test stands alone; shared scaffolding is in the Template dropdown.",
     unitTestGroups: ["SVG", "MEMORY.md", "State change"],
   },
 };

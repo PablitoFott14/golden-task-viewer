@@ -681,7 +681,7 @@ export default function TaskDetail() {
                   Why this is the right coverage for this scenario
                 </h3>
                 <p className="mb-4 max-w-3xl text-[13px] text-ink-500">
-                  A unit test should validate objective, structural elements that can be checked precisely — without
+                  A unit test should validate objective, structural elements that can be checked precisely, without
                   overfitting or underfitting. The boundary is where a requirement stops being 1:1.
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
