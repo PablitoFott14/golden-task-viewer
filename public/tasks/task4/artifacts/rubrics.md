@@ -20,44 +20,44 @@
 
 11. The model identifies the `Login timeout mobile Safari` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) as resolved, either because `rc-refund-build-11.png` shows a successful `Signed in` state on Safari (iOS) with the session labeled `Secure session established`, or because this is the only issue marked as solved in the prompt context through the email tracks or the user's Jira notes. (+5) -> Agent Behavior - Trajectory | Present
 
-12. `refund_mod_QA_results.svg` reports the `Full refund renders complete` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
+12. `refund_mod_QA_results.svg` reports the `Full refund renders complete` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
 
-13. `refund_mod_QA_results.svg` reports the `Partial refund balance update` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
+13. `refund_mod_QA_results.svg` reports the `Partial refund balance update` bug or a semantically equivalent reference to the same issue as resolved (`Is resolved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
 
-14. `refund_mod_QA_results.svg` reports the `Incorrect tax - international funds (VAT 20%)` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
+14. `refund_mod_QA_results.svg` reports the `Incorrect tax - international funds (VAT 20%)` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
 
-15. `refund_mod_QA_results.svg` reports the `Refound reason mandatory to proceed` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
+15. `refund_mod_QA_results.svg` reports the `Refound reason mandatory to proceed` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
 
-16. `refund_mod_QA_results.svg` reports the `Dup refund` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
+16. `refund_mod_QA_results.svg` reports the `Dup refund` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
 
-17. `refund_mod_QA_results.svg` reports the `Confirmation screen (matching destination card number)` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
+17. `refund_mod_QA_results.svg` reports the `Confirmation screen (matching destination card number)` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Not Present
 
-18. `refund_mod_QA_results.svg` reports the `Login timeout mobile Safari` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Present
+18. `refund_mod_QA_results.svg` reports the `Login timeout mobile Safari` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`). (+1) -> Task Completion - Final answer/artifact | Present
 
-19. `refund_mod_QA_results.svg` reports the `Partial refund timeout` bug as unsolved under its matching official issue key from the company Jira tracker notification (`NEXB-442` -> `Is solved?` -> `No`). (+1) -> Task Completion - Final answer/artifact | Present
+19. `refund_mod_QA_results.svg` reports the `Partial refund timeout` bug as unsolved under its matching official issue key from the company Jira tracker notification (`NEXB-442` -> `Is resolved?` -> `No`). (+1) -> Task Completion - Final answer/artifact | Present
 
-20. `refund_mod_QA_results.svg` reports the `No refund cap` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is solved?` -> `No`) under a valid unique issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-448`. (+1) -> Task Completion - Final answer/artifact | Present
+20. `refund_mod_QA_results.svg` reports the `No refund cap` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is resolved?` -> `No`) under a valid unique issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-448`. (+1) -> Task Completion - Final answer/artifact | Present
 
-21. `refund_mod_QA_results.svg` reports the `Refund mobile view misrendered` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is solved?` -> `No`) under a valid unique issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-450`. (+1) -> Task Completion - Final answer/artifact | Present
+21. `refund_mod_QA_results.svg` reports the `Refund mobile view misrendered` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is resolved?` -> `No`) under a valid unique issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-450`. (+1) -> Task Completion - Final answer/artifact | Present
 
-22. `refund_mod_QA_results.svg` reports the `Fake refund success` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is solved?` -> `No`) under a valid, non-duplicated issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-451`. (+1) -> Task Completion - Final answer/artifact | Present
+22. `refund_mod_QA_results.svg` reports the `Fake refund success` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is resolved?` -> `No`) under a valid, non-duplicated issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-451`. (+1) -> Task Completion - Final answer/artifact | Present
 
-23. `MEMORY.md` reports under the `SOLVED` section the issues `Full refund renders complete`, `Incorrect tax - international (VAT 20%)`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, `Dup refund`, and `Safari mobile login timeout - Kai tackled`, with each issue labeled using either its matching issue key from the company Jira tracker notification or a valid, unique generated issue key from the `NEXB-444` to `NEXB-451` range, both included. (+1) -> Task Completion - Final answer/artifact | Not Present
+23. The model determines from the user's email that `NEXB-398`, `NEXB-442`, and `NEXB-443` are the three existing Jira issue keys, with `NEXB-443` being the latest. (+3) -> Agent Behavior - Trajectory | Not Present
 
-24. `MEMORY.md` reports under the `UNSOLVED` section the issues `Partial refund timeout`, `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success`, with each issue labeled using either its matching issue key from the company Jira tracker notification or a valid, unique generated issue key from the `NEXB-444` to `NEXB-451` range, both included. (+1) -> Task Completion - Final answer/artifact | Present
+24. `MEMORY.md` reports under the `SOLVED` section the issues `Full refund renders complete`, `Incorrect tax - international (VAT 20%)`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, `Dup refund`, and `Safari mobile login timeout - Kai tackled`. (+1) -> Task Completion - Final answer/artifact | Not Present
 
-25. The model determines from the user's email that the latest registered issue key is `NEXB-443`, so the newly generated issue keys start at `NEXB-444` and continue through `NEXB-451`, both included, to cover the 8 bugs that do not already have existing issue keys, excluding `NEXB-442`, `NEXB-443`, and `NEXB-398`. (+3) -> Agent Behavior - Trajectory | Present
+25. The `SOLVED` section of `MEMORY.md` labels `Incorrect tax - international (VAT 20%)` with the company Jira tracker key `NEXB-443` and `Safari mobile login timeout - Kai tackled` with `NEXB-398`, while `Full refund renders complete`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, and `Dup refund` are each labeled with a unique generated Jira key within the inclusive range `NEXB-444` to `NEXB-451`. (+3) -> Task Completion - Final answer/artifact | Not Present
 
-26. The model identifies `Safari mobile login timeout - Kai tackled` was referenced in the uer's email issue key notifications as `NEXB-398`. (+1) -> Agent Behavior - Trajectory | Not Present
+26. `MEMORY.md` reports under the `UNSOLVED` section the issues `Partial refund timeout`, `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success`. (+1) -> Task Completion - Final answer/artifact | Present
 
-27. The model sends a Slack message in the `qa-team` channel stating the solved issues using the user's Jira reference names (`Full refund renders complete`, `Incorrect tax - international (VAT 20%)`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, `Dup refund`, and `Safari mobile login timeout - Kai tackled`) and the unsolved issues using the user's Jira reference names (`Partial refund timeout`, `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success`), while asking Kai and Amara to follow up on the unsolved ones. (+1) -> Instruction Following - State change | Not Present
+27. The `UNSOLVED` section of `MEMORY.md` labels `Partial refund timeout` with the company Jira tracker key `NEXB-442`, while `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success` are each labeled with a unique generated Jira key within the inclusive range `NEXB-444` to `NEXB-451`. (+1) -> Task Completion - Final answer/artifact | Present
 
-28. The start node (`Refund Module - Nexbridge`) in `refund_mod_QA_results.svg` is rectangle-shaped. (+1) -> Instruction Following - Final answer/artifact | Present
+28. The model sends a Slack message in the `qa-team` channel stating the solved issues using the user's Jira reference names (`Full refund renders complete`, `Incorrect tax - international (VAT 20%)`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, `Dup refund`, and `Safari mobile login timeout - Kai tackled`) and the unsolved issues using the user's Jira reference names (`Partial refund timeout`, `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success`), while asking Kai and Amara to follow up on the unsolved ones. (+3) -> Instruction Following - State change | Not Present
 
-29. `refund_mod_QA_results.svg` includes a rectangular note box in the top-right corner labeled exactly `Some issue tickets may not have been created yet, but they will be created in the next few minutes`. (+1) -> Instruction Following - Final answer/artifact | Present
+29. The start node in `refund_mod_QA_results.svg` is a rectangle exactly labeled `Refund Module - Nexbridge`. (+3) -> Instruction Following - Final answer/artifact | Present
 
-30. `refund_mod_QA_results.svg` includes one diamond-shaped decision node per issue, each labeled exactly `Is resolved?`. (+1) -> Instruction Following - Final answer/artifact | Present
+30. `refund_mod_QA_results.svg` includes a rectangular note box in the top-right corner labeled exactly `Some issue tickets may not have been created yet, but they will be created in the next few minutes`. (+3) -> Instruction Following - Final answer/artifact | Present
 
-31. The model considers `Screenshot 2026-07-02 at 09.14.06.png` and `IMG_2093.png` as bugs to check, even though they are not referenced in the user's personal Jira notes. (-5) -> Agent Behavior - Trajectory | Not Present
+31. `refund_mod_QA_results.svg` includes one diamond-shaped decision node per issue, each labeled exactly `Is resolved?`. (+3) -> Instruction Following - Final answer/artifact | Present
 
-32. The model places the start node `Refund Module - Nexbridge` in `refund_mod_QA_results.svg` anywhere other than centered within the view. (-1) -> Task Completion - Final answer/artifact | Present
+32. The model considers `Screenshot 2026-07-02 at 09.14.06.png` and `IMG_2093.png` as bugs to check, even though they are not referenced in the user's personal Jira notes. (-5) -> Agent Behavior - Trajectory | Not Present

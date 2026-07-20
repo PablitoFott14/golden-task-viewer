@@ -502,7 +502,15 @@ function GroupSection({
   );
 }
 
-function DimensionCard({ dim, query, openGuidance }: { dim: SpecDimension; query?: string; openGuidance?: boolean }) {
+function DimensionCard({
+  dim,
+  query,
+  openGuidance = true,
+}: {
+  dim: SpecDimension;
+  query?: string;
+  openGuidance?: boolean;
+}) {
   return (
     <div className="card overflow-hidden">
       <div className="border-b border-ink-100 p-5">

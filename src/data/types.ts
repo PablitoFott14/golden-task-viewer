@@ -175,6 +175,10 @@ export interface UnitTest {
   ref: string;
   logic: string;
   group: string;
+  /** Weight the test carries in the verifier's score. */
+  weight?: number;
+  /** Why this specific check is safe to automate — the 1:1 / structural justification. */
+  covers?: string;
   /** The pytest code revealed when the test's container is expanded. */
   code: string;
 }
@@ -226,6 +230,8 @@ export interface Task {
   email: { to: string[]; points: string[] };
   silver: SilverStep[];
   unitTests: UnitTest[];
+  /** Why this particular set of unit tests is the right coverage boundary for this scenario. */
+  unitTestRationale?: { title: string; body: string }[];
   rubricDesign: RubricDesignNote[];
   rubrics: Rubric[];
   friction: FrictionPoint[];

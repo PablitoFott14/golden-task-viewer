@@ -51,7 +51,7 @@ Following `svg_format.txt`:
 - One rectangular note box, top-right corner, labeled exactly `Some issue tickets may not have been created yet, but they will be created in the next few minutes`.
 - Only the six palette colors from `svg_format.txt` are used anywhere in the file.
 
-`svg_format.txt` does not itself say the start node must be centered — nothing in the spec calls out its position. Rubric 32 still penalizes an off-center start node as a negative, because in the actual run it produced a genuine, visually obvious layout defect (the node pinned hard against the left edge of a wide canvas). It is a judgment call scoped to this run's concrete failure, not a restated formatting requirement — a model that centers the node isn't following an instruction it was given, and one that doesn't isn't violating one either, in the abstract. See the Rubrics section for the full framing.
+`svg_format.txt` does not say anything about where the start node sits, and no rubric grades its position. The SVG criteria stay inside what the spec actually pins down — shape, exact label text, one diamond per issue, and the palette-to-role binding — because those are the only formatting requirements the model was given before it acted. Elements the task never asked for aren't in scope for grading. See the Rubrics section for the full framing.
 
 ### 4. `MEMORY.md`
 

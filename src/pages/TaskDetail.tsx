@@ -652,12 +652,48 @@ export default function TaskDetail() {
                     {task.unitTests
                       .filter((t) => t.group === group)
                       .map((t) => (
-                        <CodeReveal key={t.ref} label={t.ref} code={t.code} />
+                        <div
+                          key={t.ref}
+                          className="rounded-xl border border-ink-200/70 bg-ink-50/40 p-3 dark:bg-ink-100/20"
+                        >
+                          <div className="mb-2 flex items-start gap-2">
+                            <p className="mr-auto text-[13px] font-semibold leading-snug text-ink-800">{t.logic}</p>
+                            {t.weight != null && (
+                              <span className="shrink-0 rounded-md bg-brand-100 px-1.5 py-0.5 text-[11px] font-bold text-brand-700 dark:bg-brand-500/20 dark:text-brand-200">
+                                weight {t.weight}
+                              </span>
+                            )}
+                          </div>
+                          {t.covers && (
+                            <p className="mb-2.5 text-[12.5px] leading-relaxed text-ink-500">{t.covers}</p>
+                          )}
+                          <CodeReveal label={t.ref} code={t.code} />
+                        </div>
                       ))}
                   </div>
                 </div>
               ))}
             </div>
+
+            {task.unitTestRationale && task.unitTestRationale.length > 0 && (
+              <div className="mt-8">
+                <h3 className="mb-1 text-sm font-bold text-ink-900">
+                  Why this is the right coverage for this scenario
+                </h3>
+                <p className="mb-4 max-w-3xl text-[13px] text-ink-500">
+                  A unit test should validate objective, structural elements that can be checked precisely — without
+                  overfitting or underfitting. The boundary is where a requirement stops being 1:1.
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {task.unitTestRationale.map((r) => (
+                    <div key={r.title} className="rounded-xl border border-ink-200/70 bg-surface p-4 shadow-soft">
+                      <h4 className="mb-1.5 text-[13px] font-bold text-ink-900">{r.title}</h4>
+                      <p className="text-[13px] leading-relaxed text-ink-600">{r.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="mt-6 flex gap-3 rounded-xl border border-amber-300 bg-amber-50/70 p-4 dark:border-amber-500/40 dark:bg-amber-500/10">
               <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />

@@ -313,93 +313,231 @@ Finally, send an update in our qa team slack channel stating the bugs solved and
   unitTests: [
     {
       ref: "test_svg_report_exists",
-      logic: "Verifies refund_mod_QA_results.svg exists and is non-empty, not just present.",
+      logic: "The deliverable file exists in the workspace and is non-empty.",
       group: "SVG",
+      weight: 1,
+      covers:
+        "The prompt names one file by name — refund_mod_QA_results.svg. Existence is the most 1:1 check in the whole task: the file is either there or it isn't, and there is exactly one acceptable filename. Nothing about the report's content is asserted here, so there is no wording to overfit to.",
       code: `def test_svg_report_exists():
-    """refund_mod_QA_results.svg must exist and contain real SVG content, not an empty file."""
-    path = _find_workspace_file("refund_mod_QA_results.svg")
-    assert path is not None, "refund_mod_QA_results.svg not found in workspace"
-    content = path.read_text(encoding="utf-8", errors="replace")
-    assert "<svg" in content, "File exists but does not contain an <svg> root element"
-    assert len(content.strip()) > 200, "SVG file is suspiciously small / likely empty of real content"`,
+    """refund_mod_QA_results.svg must exist in the workspace and be non-empty."""
+    p = _find_svg()
+    assert p is not None, f"{SVG_NAME} not found in workspace"
+    assert p.stat().st_size > 0, f"{SVG_NAME} exists but is empty"`,
     },
     {
-      ref: "test_svg_required_labels",
-      logic: "Verifies the start node, note box, and all 11 decision-diamond labels match the format spec exactly.",
+      ref: "test_svg_colors_used_on_correct_elements",
+      logic: "Each palette color is bound to the element role svg_format.txt assigns it, in the ground-truth counts.",
       group: "SVG",
-      code: `def test_svg_required_labels():
-    """Start node, note box, and every decision diamond must carry their exact required labels."""
-    content = _read_svg()
-    assert "Refund Module - Nexbridge" in content, "Start node label missing or altered"
-    assert "Some issue tickets may not have been created yet" in content, "Note box label missing or altered"
-    diamond_count = content.count("Is") and content.lower().count("resolved?")
-    assert diamond_count >= 11, f"Expected 11 'Is resolved?' decision labels, found signal for {diamond_count}"`,
-    },
-    {
-      ref: "test_svg_allowed_colors_only",
-      logic: "Verifies every fill/stroke color in the SVG belongs to the six-color palette in svg_format.txt.",
-      group: "SVG",
-      code: `_ALLOWED_COLORS = {"#ff4733", "#2c55d4", "#158a52", "#c23b3b", "#1b2338", "#ffffff"}
+      weight: 3,
+      covers:
+        "svg_format.txt fixes the palette and ties each hex to one role: #ff4733 on issue nodes, #2c55d4 on the single start node, #158a52 on Yes terminals, #c23b3b on No terminals. Because the spec is given to the model before it acts, the mapping is explicit and structural rather than stylistic — and the counts (11 / 1 / 7 / 4) come straight from the GTFA, not from any wording choice the model gets to make.",
+      code: `_EXPECTED_ISSUE_NODES = 11
+_EXPECTED_START_NODES = 1
+_EXPECTED_YES_TERMINALS = 7
+_EXPECTED_NO_TERMINALS = 4
 
-def test_svg_allowed_colors_only():
-    """Every hex color used in the SVG must be one of the six allowed palette colors."""
-    content = _read_svg()
-    used = set(re.findall(r"#[0-9a-fA-F]{6}", content))
-    disallowed = {c for c in used if c.lower() not in _ALLOWED_COLORS}
-    assert not disallowed, f"SVG uses colors outside the allowed palette: {disallowed}"`,
+
+def test_svg_colors_used_on_correct_elements():
+    """svg_format.txt ties each palette color to a specific role: #ff4733 on every issue
+    node, #2c55d4 on the (single) start node, #158a52 on Yes terminals, #c23b3b on No
+    terminals. test_svg_allowed_colors_only only rejects colors outside the palette - it
+    doesn't check that the required colors are actually applied to the right elements or
+    the right number of times, so this checks the binding directly against the
+    ground-truth counts."""
+    p = _find_svg()
+    assert p is not None, f"{SVG_NAME} not found in workspace"
+    raw = p.read_text(encoding="utf-8", errors="replace")
+
+    n_issue_nodes = len(re.findall(r'<rect[^>]*fill="#ff4733"', raw, re.IGNORECASE))
+    n_start_nodes = len(re.findall(r'<rect[^>]*fill="#2c55d4"', raw, re.IGNORECASE))
+    n_yes = len(re.findall(r'<text[^>]*fill="#158a52"[^>]*>\\s*Yes\\s*<', raw, re.IGNORECASE))
+    n_no = len(re.findall(r'<text[^>]*fill="#c23b3b"[^>]*>\\s*No\\s*<', raw, re.IGNORECASE))
+
+    assert n_issue_nodes == _EXPECTED_ISSUE_NODES, (
+        f"{SVG_NAME} has {n_issue_nodes} issue node(s) filled #ff4733; "
+        f"expected {_EXPECTED_ISSUE_NODES}"
+    )
+    assert n_start_nodes == _EXPECTED_START_NODES, (
+        f"{SVG_NAME} has {n_start_nodes} start node(s) filled #2c55d4; "
+        f"expected {_EXPECTED_START_NODES}"
+    )
+    assert n_yes == _EXPECTED_YES_TERMINALS, (
+        f"{SVG_NAME} has {n_yes} 'Yes' terminal(s) filled #158a52; "
+        f"expected {_EXPECTED_YES_TERMINALS}"
+    )
+    assert n_no == _EXPECTED_NO_TERMINALS, (
+        f"{SVG_NAME} has {n_no} 'No' terminal(s) filled #c23b3b; "
+        f"expected {_EXPECTED_NO_TERMINALS}"
+    )`,
+    },
+    {
+      ref: "test_svg_each_issue_node_has_one_terminal",
+      logic: "Every individual issue node owns exactly one Yes/No terminal — not just a correct global total.",
+      group: "SVG",
+      weight: 3,
+      covers:
+        "The test above only checks totals, so a report could sum to 7 Yes / 4 No while one issue carries two terminals and another none. The spec's rule — one decision path per issue — is per-issue and 1:1, so it is checkable structurally. It deliberately does not assert how the diamond is drawn (no <polygon> requirement), because svg_format.txt requires a diamond shape without prescribing the markup; asserting a tag would be overfitting to one valid implementation.",
+      code: `def test_svg_each_issue_node_has_one_terminal():
+    """test_svg_colors_used_on_correct_elements only checks GLOBAL totals, so an SVG could
+    have the right overall count of Yes/No terminals while some issue node has two
+    terminals (or none) and another has none (or two) - a correct sum built from an
+    incorrect per-issue assignment. This walks the SVG issue-by-issue (splitting on each
+    #ff4733 issue-node rect) and requires every single issue to have exactly one Yes/No
+    terminal of its own. It intentionally doesn't check for a specific decision-diamond
+    tag (e.g. <polygon>), since svg_format.txt requires a diamond shape but not any
+    particular way of drawing one."""
+    p = _find_svg()
+    assert p is not None, f"{SVG_NAME} not found in workspace"
+    raw = p.read_text(encoding="utf-8", errors="replace")
+
+    issue_rect_re = re.compile(r'<rect[^>]*fill="#ff4733"', re.IGNORECASE)
+    starts = [m.start() for m in issue_rect_re.finditer(raw)]
+    assert starts, f"No issue nodes (fill=#ff4733) found in {SVG_NAME}"
+
+    bounds = starts + [len(raw)]
+    blocks = [raw[bounds[i]:bounds[i + 1]] for i in range(len(starts))]
+
+    yes_re = re.compile(r'<text[^>]*fill="#158a52"[^>]*>\\s*Yes\\s*<', re.IGNORECASE)
+    no_re = re.compile(r'<text[^>]*fill="#c23b3b"[^>]*>\\s*No\\s*<', re.IGNORECASE)
+
+    bad = []
+    for i, block in enumerate(blocks, start=1):
+        n_terminals = len(yes_re.findall(block)) + len(no_re.findall(block))
+        if n_terminals != 1:
+            bad.append(f"issue #{i}: {n_terminals} Yes/No terminal(s)")
+
+    assert not bad, (
+        f"{SVG_NAME} has issue node(s) without exactly one Yes/No terminal of "
+        f"their own: {bad}"
+    )`,
     },
     {
       ref: "test_email_sent_to_colton",
-      logic: "Verifies an email was sent to colton.park@nexbridge.io with the exact required subject and the SVG attached.",
+      logic: "A sent email to colton.park@nexbridge.io carries the exact required subject and the SVG attachment.",
       group: "State change",
+      weight: 3,
+      covers:
+        "This is the textbook 1:1 case. The prompt names the recipient (Colton), the subject (`current refund module QA status`), and the attachment (refund_mod_QA_results.svg) before the model acts, so there is exactly one correct value for each. The test asserts only those three facts and the SENT state — it never inspects the body, because 'explain the status' is a 1:n requirement that many different wordings would satisfy, and that part is left to the rubrics.",
       code: `def test_email_sent_to_colton():
-    """An email must be sent to Colton with the exact subject and the SVG attached."""
-    sent = _load_sent_emails()
-    match = [
-        e for e in sent
-        if "colton.park@nexbridge.io" in e.get("recipients", [])
-        and e.get("subject", "").strip() == "current refund module QA status"
-    ]
-    assert match, "No email to colton.park@nexbridge.io with the exact required subject"
-    attachments = match[0].get("attachment_paths", [])
-    assert any("refund_mod_QA_results.svg" in a for a in attachments), "SVG not attached to the email"`,
-    },
-    {
-      ref: "test_slack_message_posted",
-      logic: "Verifies a message was posted to #qa-team tagging Kai and Amara.",
-      group: "State change",
-      code: `def test_slack_message_posted():
-    """A Slack message must be posted to #qa-team mentioning both Kai and Amara."""
-    messages = _load_slack_messages(channel="qa-team")
-    assert messages, "No message posted to #qa-team"
-    text = messages[-1].get("text", "")
-    assert "Kai" in text and "Amara" in text, "Message does not ask both Kai and Amara for follow-up"`,
+    """Verify email sent to Colton with correct subject and attachment."""
+    snapshot_path = _find_snapshot()
+    assert snapshot_path is not None, "snapshots.json not found"
+
+    with open(snapshot_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    assert "email" in data, "email service missing from snapshots"
+    emails = data["email"].get("emails", [])
+
+    sent_email = None
+    for email in emails:
+        if (email.get("folder") == "SENT"
+                and email.get("subject") == "current refund module QA status"
+                and "colton.park@nexbridge.io" in email.get("recipients", [])):
+            sent_email = email
+            break
+
+    assert sent_email is not None, (
+        "No sent email to Colton with subject 'current refund module QA status' found"
+    )
+
+    attachments = sent_email.get("attachments", {})
+    assert SVG_NAME in attachments, f"{SVG_NAME} not attached to email"`,
     },
     {
       ref: "test_memory_md_has_solved_unsolved_sections",
-      logic: "Verifies MEMORY.md contains both a SOLVED and an UNSOLVED heading.",
+      logic: "MEMORY.md labels two distinct sections, SOLVED and UNSOLVED, each on its own line.",
       group: "MEMORY.md",
+      weight: 1,
+      covers:
+        "The prompt names both section labels verbatim, so the required structure is 1:1 — there is one SOLVED section and one UNSOLVED section, and no alternative label satisfies the instruction. The regex deliberately accepts any Markdown decoration around the word (#, **, -, :) rather than demanding a heading level, since the prompt asks for sections, not for a particular Markdown style. Which bugs land in each section is not checked here; that is a reasoning outcome and belongs to the rubrics.",
       code: `def test_memory_md_has_solved_unsolved_sections():
-    """MEMORY.md must contain both a SOLVED and an UNSOLVED section heading."""
-    content = _read_memory_md()
-    assert re.search(r"^#+\\s*SOLVED", content, re.MULTILINE), "SOLVED section heading not found"
-    assert re.search(r"^#+\\s*UNSOLVED", content, re.MULTILINE), "UNSOLVED section heading not found"`,
+    """MEMORY.md must label two distinct sections, SOLVED and UNSOLVED, each as its own
+    line. Markdown decoration (#, **, -, :) is accepted but not required."""
+    memory_path = _find_memory_md()
+    assert memory_path is not None, "MEMORY.md not found"
+
+    with open(memory_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert re.search(r'(?im)^[\\s>#*_\`\\-]*SOLVED[\\s:*_\`]*$', content), (
+        "MEMORY.md has no standalone 'SOLVED' section label"
+    )
+    assert re.search(r'(?im)^[\\s>#*_\`\\-]*UNSOLVED[\\s:*_\`]*$', content), (
+        "MEMORY.md has no standalone 'UNSOLVED' section label"
+    )`,
     },
     {
       ref: "test_memory_md_entries_have_issue_keys",
-      logic: "Verifies every bug entry in MEMORY.md carries a bracketed issue key.",
+      logic: "Every bug entry under SOLVED/UNSOLVED carries a NEXB-XXX key, and no key is reused.",
       group: "MEMORY.md",
-      code: `_ENTRY_RE = re.compile(r"^-\\s+.+\\[(NEXB-\\d{3,4})\\]\\s*$", re.MULTILINE)
+      weight: 3,
+      covers:
+        "The prompt requires each issue to be 'referenced with its matching issue key', and the key format (NEXB-###) is fixed by the tracker email the model reads. The test asserts only the two objective properties: presence of a key on every entry, and uniqueness across entries. It does not assert which key goes with which bug — that mapping is a reasoning result the rubrics grade — and it does not require brackets or any particular decoration around the key, which would overfit to one formatting choice.",
+      code: `_MEMORY_HEADER_RE = re.compile(r'(?im)^[\\s>#*_\`\\-]*(SOLVED|UNSOLVED)[\\s:*_\`]*$')
+_MEMORY_BULLET_RE = re.compile(r'^\\s*[-*]\\s+\\S')
+
+
+def _memory_sections():
+    """Bullet lines under each of MEMORY.md's SOLVED / UNSOLVED headers (a bullet belongs
+    to whichever header was last seen above it)."""
+    memory_path = _find_memory_md()
+    assert memory_path is not None, "MEMORY.md not found"
+
+    with open(memory_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    sections = {"solved": [], "unsolved": []}
+    current = None
+    for line in content.splitlines():
+        header = _MEMORY_HEADER_RE.match(line)
+        if header:
+            current = header.group(1).lower()
+            continue
+        if current in sections and _MEMORY_BULLET_RE.match(line):
+            sections[current].append(line.strip())
+    return sections
+
 
 def test_memory_md_entries_have_issue_keys():
-    """Every bullet entry under SOLVED/UNSOLVED must carry a bracketed NEXB-### issue key."""
-    content = _read_memory_md()
-    bullets = [l for l in content.splitlines() if l.strip().startswith("-")]
-    assert bullets, "No bullet entries found in MEMORY.md"
-    tagged = _ENTRY_RE.findall(content)
-    assert len(tagged) == len(bullets), (
-        f"{len(bullets) - len(tagged)} of {len(bullets)} entries are missing a bracketed issue key"
-    )`,
+    """Every bug entry (bullet line) under SOLVED/UNSOLVED must reference an issue key in
+    NEXB-XXX format, per the prompt's "referenced ... with its matching issue key"
+    requirement - and each key must be used for only one entry."""
+    sections = _memory_sections()
+    bullets = sections["solved"] + sections["unsolved"]
+    assert bullets, "MEMORY.md has no bug entries under SOLVED/UNSOLVED"
+
+    missing = [l for l in bullets if not re.search(r'NEXB-\\d+', l)]
+    assert not missing, (
+        f"{len(missing)} MEMORY.md entr(y/ies) lack a NEXB-XXX issue key: {missing}"
+    )
+
+    keys = [re.search(r'NEXB-\\d+', l).group(0) for l in bullets]
+    dupes = sorted({k for k in keys if keys.count(k) > 1})
+    assert not dupes, f"MEMORY.md reuses the same issue key for multiple entries: {dupes}"`,
+    },
+  ],
+
+  unitTestRationale: [
+    {
+      title: "The line this task draws: 1:1 rules to tests, 1:n rules to rubrics",
+      body:
+        "A requirement belongs in a unit test when the prompt pins it down to exactly one acceptable value before the model acts. Here that is true of the deliverable's filename, the email's recipient, subject and attachment, MEMORY.md's two section labels, the NEXB-### key format, and every shape/color binding in svg_format.txt. Each has one correct answer, so a test can check it without either underfitting (accepting a wrong answer) or overfitting (rejecting a valid one).",
+    },
+    {
+      title: "What is deliberately left out — and why",
+      body:
+        "No test inspects the email body, the Slack wording, or the phrasing of a MEMORY.md entry. 'Report the resolved and unresolved bugs' is a 1:n requirement: many different wordings communicate the same information equally well, so an exact-content assertion would be an overfit. That does not make the expected result non-deterministic — it means the check belongs to the rubrics, which is where the 11 status determinations and the Slack message are graded.",
+    },
+    {
+      title: "Tests cover state changes and artifact structure",
+      body:
+        "The set splits cleanly along that line. test_email_sent_to_colton is the state-change check — an email either exists in SENT with that recipient, subject and attachment, or it doesn't. The five remaining tests check the structural requirements of the two final artifacts: the SVG exists, its palette is bound to the right element roles in the right counts, every issue owns exactly one terminal, and MEMORY.md carries both required sections with a unique issue key on every entry.",
+    },
+    {
+      title: "Structure without prescribing implementation",
+      body:
+        "Where the spec fixes a property but not a way of expressing it, the tests stop at the property. test_svg_each_issue_node_has_one_terminal never asserts a <polygon> tag, because svg_format.txt requires a diamond shape and not a specific markup for drawing one. test_memory_md_has_solved_unsolved_sections accepts any Markdown decoration around SOLVED/UNSOLVED. And no test asserts which bug maps to which key — only that keys are present and unique — because the mapping itself is the reasoning the rubrics exist to grade.",
     },
   ],
 
@@ -420,9 +558,14 @@ def test_memory_md_entries_have_issue_keys():
         "Trusting the stale Jira board instead of verifying against RC evidence is a single behavior, but it corrupts four separate deliverables (the SVG, MEMORY.md, Slack, and the email). Rather than collapse that into one criterion, it's graded once per surface it reaches, so the rubric set reflects the real blast radius without double-counting the same reasoning step.",
     },
     {
-      title: "Negatives target the two genuine failure modes, not stylistic nitpicks",
+      title: "Membership and issue-key mapping are graded apart",
       body:
-        "The negative on scope (addressing bugs outside Rebecca's own Jira notes, -5) targets an actual instruction. The negative on start-node placement (-1) is different in kind: svg_format.txt never says the start node must be centered, so this isn't a restated spec requirement. It earns a place in the rubric set only because, in this specific run, the node ended up rendered hard against the edge of a wide canvas — a plainly visible layout defect with real impact on how the report reads. It's graded because the concrete failure was severe and obvious here, not because centering is a standing rule for this deliverable; elements the prompt never actually asked for shouldn't normally be in scope for grading.",
+        "MEMORY.md is graded as four criteria rather than two. Listing the right bugs under SOLVED/UNSOLVED (+1 each) restates status conclusions already credited upstream, so it stays cheap. Labeling each of them with the correct key is its own reasoning result and gets its own criterion — +3 on the solved side, where two recovered keys must land on the right two bugs across seven entries, and +1 on the unsolved side, where only NEXB-442 is at stake across four. A model can get membership right and mapping wrong, or the reverse, and the score should show which.",
+    },
+    {
+      title: "One negative, aimed at an actual instruction",
+      body:
+        "The rubric set carries a single negative: treating the two out-of-scope screenshots as bugs (-5). It targets an explicit prompt boundary — 'Do not address bugs not logged in my jira' — and is weighted to match a full status determination, because inventing a twelfth bug corrupts all four deliverables at once. Nothing in the set penalizes choices the prompt and svg_format.txt never constrained; elements the task never asked for aren't in scope for grading, however imperfect they look in a given run.",
     },
   ],
 
@@ -438,27 +581,27 @@ def test_memory_md_entries_have_issue_keys():
     { n: 9, text: "The model identifies that the `Refund mobile view misrendered` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `RC_refund_0712_09.png` shows the refund screen at a mobile viewport with the top bar overflowing and the two-column fields clipping.", points: 5, category: "Agent Behavior — Trajectory", evalTarget: "Trajectory", enforces: "GTFA: bug-by-bug ground truth table, row 9.", status: "present", observed: "The model correctly read the mobile layout defect and reported the bug as unresolved.", rationale: "A visual-layout read; weighted +5." },
     { n: 10, text: "The model identifies that the `Fake refund success` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) is unresolved because `RC_refund_0712_10.png` shows a `Refund Processed / Completed` status of `$92.86` despite the gateway response reading `DECLINED` and settlement `Failed`, meaning no funds actually moved.", points: 5, category: "Agent Behavior — Trajectory", evalTarget: "Trajectory", enforces: "GTFA: bug-by-bug ground truth table, row 10.", status: "present", observed: "The model correctly reconciled the friendly status label against the underlying gateway response and reported the bug as unresolved.", rationale: "The one status check requiring two contradictory labels in the same screenshot to be reconciled; weighted +5." },
     { n: 11, text: "The model identifies the `Login timeout mobile Safari` bug shown in the user's Jira notes (`Screenshot 2026-07-03 000152.png`) as resolved, either because `rc-refund-build-11.png` shows a successful `Signed in` state on Safari (iOS) with the session labeled `Secure session established`, or because this is the only issue marked as solved in the prompt context through the email tracks or the user's Jira notes.", points: 5, category: "Agent Behavior — Trajectory", evalTarget: "Trajectory", enforces: "GTFA: bug-by-bug ground truth table, row 11.", status: "present", observed: "The model correctly reported Safari login as the one resolved bug.", rationale: "The only status the model got right by default from context, so it's the baseline the other ten status checks are measured against; weighted +5 for consistency." },
-    { n: 12, text: "`refund_mod_QA_results.svg` reports the `Full refund renders complete` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 1).", rationale: "A mechanical restatement of a status already determined elsewhere; weighted +1 while the underlying reasoning is credited once in rubric 1." },
-    { n: 13, text: "`refund_mod_QA_results.svg` reports the `Partial refund balance update` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 4).", rationale: "Mechanical restatement; weighted +1." },
-    { n: 14, text: "`refund_mod_QA_results.svg` reports the `Incorrect tax - international funds (VAT 20%)` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 3).", rationale: "Mechanical restatement; weighted +1." },
-    { n: 15, text: "`refund_mod_QA_results.svg` reports the `Refound reason mandatory to proceed` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 5).", rationale: "Mechanical restatement; weighted +1." },
-    { n: 16, text: "`refund_mod_QA_results.svg` reports the `Dup refund` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 8).", rationale: "Mechanical restatement; weighted +1." },
-    { n: 17, text: "`refund_mod_QA_results.svg` reports the `Confirmation screen (matching destination card number)` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 6).", rationale: "Mechanical restatement; weighted +1." },
-    { n: 18, text: "`refund_mod_QA_results.svg` reports the `Login timeout mobile Safari` bug or a semantically equivalent reference to the same issue as solved (`Is solved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "present", observed: "The SVG correctly marks Safari login `Yes`.", rationale: "Mechanical restatement of the one status the model got right; weighted +1." },
-    { n: 19, text: "`refund_mod_QA_results.svg` reports the `Partial refund timeout` bug as unsolved under its matching official issue key from the company Jira tracker notification (`NEXB-442` -> `Is solved?` -> `No`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping.", status: "present", observed: "The SVG labels this issue `NEXB-442` and marks it `No`.", rationale: "Confirms both the status and the recovered issue key landed in the artifact together; weighted +1." },
-    { n: 20, text: "`refund_mod_QA_results.svg` reports the `No refund cap` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is solved?` -> `No`) under a valid unique issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-448`.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping.", status: "present", observed: "The SVG labels this issue `NEXB-448` and marks it `No`.", rationale: "Mechanical restatement of a correctly generated key; weighted +1." },
-    { n: 21, text: "`refund_mod_QA_results.svg` reports the `Refund mobile view misrendered` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is solved?` -> `No`) under a valid unique issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-450`.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping.", status: "present", observed: "The SVG labels this issue `NEXB-450` and marks it `No`.", rationale: "Mechanical restatement of a correctly generated key; weighted +1." },
-    { n: 22, text: "`refund_mod_QA_results.svg` reports the `Fake refund success` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is solved?` -> `No`) under a valid, non-duplicated issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-451`.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping.", status: "present", observed: "The SVG labels this issue `NEXB-451` and marks it `No`.", rationale: "Mechanical restatement of a correctly generated key; weighted +1." },
-    { n: 23, text: "`MEMORY.md` reports under the `SOLVED` section the issues `Full refund renders complete`, `Incorrect tax - international (VAT 20%)`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, `Dup refund`, and `Safari mobile login timeout - Kai tackled`, with each issue labeled using either its matching issue key from the company Jira tracker notification or a valid, unique generated issue key from the `NEXB-444` to `NEXB-451` range, both included.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "Prompt: MEMORY.md SOLVED/UNSOLVED sections.", status: "not-present", observed: "MEMORY.md's SOLVED section lists only Safari mobile login timeout; the other six resolved bugs are missing entirely.", rationale: "Confirms the full solved set reached the shared memory file; weighted +1 as a restatement of upstream status conclusions." },
-    { n: 24, text: "`MEMORY.md` reports under the `UNSOLVED` section the issues `Partial refund timeout`, `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success`, with each issue labeled using either its matching issue key from the company Jira tracker notification or a valid, unique generated issue key from the `NEXB-444` to `NEXB-451` range, both included.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "Prompt: MEMORY.md SOLVED/UNSOLVED sections.", status: "present", observed: "MEMORY.md's UNSOLVED section correctly lists all four genuinely-unresolved bugs with their issue keys, alongside the six mistakenly-unresolved ones.", rationale: "The required four unresolved bugs are all present and correctly keyed; weighted +1." },
-    { n: 25, text: "The model determines from the user's email that the latest registered issue key is `NEXB-443`, so the newly generated issue keys start at `NEXB-444` and continue through `NEXB-451`, both included, to cover the 8 bugs that do not already have existing issue keys, excluding `NEXB-442`, `NEXB-443`, and `NEXB-398`.", points: 3, category: "Agent Behavior — Trajectory", evalTarget: "Trajectory", enforces: "Prompt: 'generate them continuing the count from the latest registered one.'", status: "present", observed: "The model correctly matched NEXB-442 and NEXB-443 from the tracker email and generated NEXB-444 through NEXB-451 for the remaining eight bugs that genuinely lacked a key.", rationale: "A real reconciliation step across two ticket systems and a correct sequential continuation; weighted +3, independent of whether the status determinations above it were right." },
-    { n: 26, text: "The model identifies `Safari mobile login timeout - Kai tackled` was referenced in the user's email issue key notifications as `NEXB-398`.", points: 1, category: "Agent Behavior — Trajectory", evalTarget: "Trajectory", enforces: "GTFA: issue-key mapping — Safari has its own pre-existing key from a separate email reference, not a slot in the generated range.", status: "not-present", observed: "The model treated Safari as needing a generated key too, labeling it 'NEXB-452' in MEMORY.md instead of finding the real NEXB-398 reference in the email.", rationale: "Isolates the Safari key specifically: it's evaluated against the trajectory, since finding the second email reference is its own reasoning/retrieval step, independent of the (already-correct) Safari resolved/unresolved call and the (already-correct) reconciliation for the other eight bugs; weighted +1." },
-    { n: 27, text: "The model sends a Slack message in the `qa-team` channel stating the solved issues using the user's Jira reference names (`Full refund renders complete`, `Incorrect tax - international (VAT 20%)`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, `Dup refund`, and `Safari mobile login timeout - Kai tackled`) and the unsolved issues using the user's Jira reference names (`Partial refund timeout`, `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success`), while asking Kai and Amara to follow up on the unsolved ones.", points: 1, category: "Instruction Following — State change", evalTarget: "State change", enforces: "Prompt: qa-team Slack update, Jira names only, ask Kai and Amara for help.", status: "not-present", observed: "The Slack message was posted and correctly tags Kai and Amara, but reports the same wrong 1-solved / 10-unsolved split as the SVG and MEMORY.md.", rationale: "A state-changing message to the whole team, so a wrong split here is highly visible; weighted +1 as a restatement of the same upstream status conclusions." },
-    { n: 28, text: "The start node (`Refund Module - Nexbridge`) in `refund_mod_QA_results.svg` is rectangle-shaped.", points: 1, category: "Instruction Following — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: 'Start node: one rectangle.'", status: "present", observed: "The generated SVG renders the start node as a <rect>.", rationale: "A single fixed formatting requirement; weighted +1." },
-    { n: 29, text: "`refund_mod_QA_results.svg` includes a rectangular note box in the top-right corner labeled exactly `Some issue tickets may not have been created yet, but they will be created in the next few minutes`.", points: 1, category: "Instruction Following — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: note box, top-right, exact label.", status: "present", observed: "The generated SVG includes the note box in the top-right corner with the exact required text.", rationale: "A single fixed formatting requirement; weighted +1." },
-    { n: 30, text: "`refund_mod_QA_results.svg` includes one diamond-shaped decision node per issue, each labeled exactly `Is resolved?`.", points: 1, category: "Instruction Following — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: 'Decision nodes: one diamond per issue.'", status: "present", observed: "The generated SVG includes 11 diamond decision nodes, each labeled 'Is resolved?'.", rationale: "A single fixed formatting requirement, repeated 11 times but graded once structurally; weighted +1." },
-    { n: 31, text: "The model considers `Screenshot 2026-07-02 at 09.14.06.png` and `IMG_2093.png` as bugs to check, even though they are not referenced in the user's personal Jira notes.", points: -5, category: "Agent Behavior — Trajectory", evalTarget: "Trajectory", enforces: "Negative: prompt scope boundary — 'Do not address bugs not logged in my jira.'", status: "not-present", observed: "The model opened both distractor screenshots (a Payouts & Settlements dashboard, and Rebecca's own personal calendar) but correctly excluded both from the bug list — the final 11 issues all trace back to the Jira board.", rationale: "The scope violation the task is designed to tempt, evaluated against the trajectory since it's about what the agent chose to act on; weighted -5 as the most costly possible mistake, though it was avoided here." },
-    { n: 32, text: "The model places the start node `Refund Module - Nexbridge` in `refund_mod_QA_results.svg` anywhere other than centered within the view.", points: -1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "Negative: not a restated spec rule — svg_format.txt never requires centering. Scoped to this run because the resulting layout defect was concrete and visually severe.", status: "present", observed: "The generated SVG places the start node hard against the left edge (x=50 of a 1400-wide canvas), not centered in the view.", rationale: "A judgment call specific to this run's own output, not a general formatting standard: nothing in the prompt or svg_format.txt asks for centering, so this is graded only because the actual layout produced here was a clear, high-impact visual defect worth flagging — not because off-center placement is inherently wrong. Weighted -1, the lightest penalty in the set." },
+    { n: 12, text: "`refund_mod_QA_results.svg` reports the `Full refund renders complete` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 1).", rationale: "A mechanical restatement of a status already determined elsewhere; weighted +1 while the underlying reasoning is credited once in rubric 1." },
+    { n: 13, text: "`refund_mod_QA_results.svg` reports the `Partial refund balance update` bug or a semantically equivalent reference to the same issue as resolved (`Is resolved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 4).", rationale: "Mechanical restatement; weighted +1." },
+    { n: 14, text: "`refund_mod_QA_results.svg` reports the `Incorrect tax - international funds (VAT 20%)` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 3).", rationale: "Mechanical restatement; weighted +1." },
+    { n: 15, text: "`refund_mod_QA_results.svg` reports the `Refound reason mandatory to proceed` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 5).", rationale: "Mechanical restatement; weighted +1." },
+    { n: 16, text: "`refund_mod_QA_results.svg` reports the `Dup refund` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 8).", rationale: "Mechanical restatement; weighted +1." },
+    { n: 17, text: "`refund_mod_QA_results.svg` reports the `Confirmation screen (matching destination card number)` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "not-present", observed: "The SVG marks this bug `No`, propagating the upstream status miss (rubric 6).", rationale: "Mechanical restatement; weighted +1." },
+    { n: 18, text: "`refund_mod_QA_results.svg` reports the `Login timeout mobile Safari` bug or a semantically equivalent reference to the same issue as solved (`Is resolved?` -> `Yes`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: Yes/No terminal per decision diamond.", status: "present", observed: "The SVG correctly marks Safari login `Yes`.", rationale: "Mechanical restatement of the one status the model got right; weighted +1." },
+    { n: 19, text: "`refund_mod_QA_results.svg` reports the `Partial refund timeout` bug as unsolved under its matching official issue key from the company Jira tracker notification (`NEXB-442` -> `Is resolved?` -> `No`).", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping.", status: "present", observed: "The SVG labels this issue `NEXB-442` and marks it `No`.", rationale: "Confirms both the status and the recovered issue key landed in the artifact together; weighted +1." },
+    { n: 20, text: "`refund_mod_QA_results.svg` reports the `No refund cap` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is resolved?` -> `No`) under a valid unique issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-448`.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping.", status: "present", observed: "The SVG labels this issue `NEXB-448` and marks it `No`.", rationale: "Mechanical restatement of a correctly generated key; weighted +1." },
+    { n: 21, text: "`refund_mod_QA_results.svg` reports the `Refund mobile view misrendered` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is resolved?` -> `No`) under a valid unique issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-450`.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping.", status: "present", observed: "The SVG labels this issue `NEXB-450` and marks it `No`.", rationale: "Mechanical restatement of a correctly generated key; weighted +1." },
+    { n: 22, text: "`refund_mod_QA_results.svg` reports the `Fake refund success` bug, or a semantically equivalent reference to the same issue, as unsolved (`Is resolved?` -> `No`) under a valid, non-duplicated issue key in the `NEXB-444` to `NEXB-451` range, such as `NEXB-451`.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping.", status: "present", observed: "The SVG labels this issue `NEXB-451` and marks it `No`.", rationale: "Mechanical restatement of a correctly generated key; weighted +1." },
+    { n: 23, text: "The model determines from the user's email that `NEXB-398`, `NEXB-442`, and `NEXB-443` are the three existing Jira issue keys, with `NEXB-443` being the latest.", points: 3, category: "Agent Behavior — Trajectory", evalTarget: "Trajectory", enforces: "Prompt: 'generate them continuing the count from the latest registered one' — which requires knowing every key that already exists.", status: "not-present", observed: "The model recovered NEXB-442 and NEXB-443 and correctly took NEXB-443 as the latest, but never found the email's separate NEXB-398 reference for Safari, folding that bug into the generated range as 'NEXB-452' instead.", rationale: "The whole two-ticket-system reconciliation graded as one trajectory act: all three pre-existing keys have to be recovered from the email before the generated sequence can start in the right place. Weighted +3 — a real retrieval-and-reasoning step, well above the +1 restatements that carry its result into the artifacts." },
+    { n: 24, text: "`MEMORY.md` reports under the `SOLVED` section the issues `Full refund renders complete`, `Incorrect tax - international (VAT 20%)`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, `Dup refund`, and `Safari mobile login timeout - Kai tackled`.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "Prompt: MEMORY.md SOLVED section.", status: "not-present", observed: "MEMORY.md's SOLVED section lists only Safari mobile login timeout; the other six resolved bugs are missing entirely.", rationale: "Membership only — does the right set of seven bugs appear under SOLVED. Weighted +1 as a mechanical restatement of status conclusions already credited in rubrics 1–11; the key labeling is graded separately in rubric 25." },
+    { n: 25, text: "The `SOLVED` section of `MEMORY.md` labels `Incorrect tax - international (VAT 20%)` with the company Jira tracker key `NEXB-443` and `Safari mobile login timeout - Kai tackled` with `NEXB-398`, while `Full refund renders complete`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, and `Dup refund` are each labeled with a unique generated Jira key within the inclusive range `NEXB-444` to `NEXB-451`.", points: 3, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping for the solved set.", status: "not-present", observed: "Six of the seven solved bugs never reached the SOLVED section at all, and the one that did (Safari) was labeled NEXB-452 rather than its real NEXB-398.", rationale: "Split out from rubric 24 and weighted +3 rather than +1, because it isn't a restatement: it requires the two recovered keys to land on the correct two bugs while the remaining five draw unique keys from the generated range. Getting the SOLVED membership right and the key mapping wrong is a real, separable failure." },
+    { n: 26, text: "`MEMORY.md` reports under the `UNSOLVED` section the issues `Partial refund timeout`, `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success`.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "Prompt: MEMORY.md UNSOLVED section.", status: "present", observed: "MEMORY.md's UNSOLVED section lists all four genuinely-unresolved bugs, alongside the six that were mistakenly carried over as unresolved.", rationale: "The membership counterpart to rubric 24, on the unsolved side; weighted +1 for the same reason — a restatement, with key labeling graded separately in rubric 27." },
+    { n: 27, text: "The `UNSOLVED` section of `MEMORY.md` labels `Partial refund timeout` with the company Jira tracker key `NEXB-442`, while `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success` are each labeled with a unique generated Jira key within the inclusive range `NEXB-444` to `NEXB-451`.", points: 1, category: "Task Completion — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "GTFA: issue-key mapping for the unsolved set.", status: "present", observed: "Partial refund timeout carries NEXB-442, and the other three unsolved bugs carry unique keys from the generated NEXB-444–451 range.", rationale: "The unsolved-side key mapping. Weighted +1 rather than the +3 of rubric 25 because only one pre-existing key (NEXB-442) has to land correctly here, against two in the solved set, over four entries instead of seven." },
+    { n: 28, text: "The model sends a Slack message in the `qa-team` channel stating the solved issues using the user's Jira reference names (`Full refund renders complete`, `Incorrect tax - international (VAT 20%)`, `Partial refund balance update`, `Refund reason mandatory to proceed`, `Confirmation screen (matching destination card number)`, `Dup refund`, and `Safari mobile login timeout - Kai tackled`) and the unsolved issues using the user's Jira reference names (`Partial refund timeout`, `No refund cap`, `Refund mobile view misrendered`, and `Fake refund success`), while asking Kai and Amara to follow up on the unsolved ones.", points: 3, category: "Instruction Following — State change", evalTarget: "State change", enforces: "Prompt: qa-team Slack update, Jira reference names only, ask Kai and Amara for help.", status: "not-present", observed: "The Slack message was posted and correctly tags Kai and Amara, but reports the same wrong 1-solved / 10-unsolved split as the SVG and MEMORY.md.", rationale: "The only state change made to a shared team surface, and the one deliverable that also constrains naming (Rebecca's Jira reference names, not the NEXB keys) and demands a specific follow-up ask. Weighted +3 — irreversible and visible to the whole channel, unlike the +1 file restatements." },
+    { n: 29, text: "The start node in `refund_mod_QA_results.svg` is a rectangle exactly labeled `Refund Module - Nexbridge`.", points: 3, category: "Instruction Following — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: 'Start node: one rectangle', with its exact label.", status: "present", observed: "The generated SVG renders the start node as a <rect> carrying the exact required label.", rationale: "A fixed spec requirement covering both the shape and the exact string; weighted +3 alongside the other two svg_format.txt rules, since the spec file is handed to the model and leaves no room for interpretation." },
+    { n: 30, text: "`refund_mod_QA_results.svg` includes a rectangular note box in the top-right corner labeled exactly `Some issue tickets may not have been created yet, but they will be created in the next few minutes`.", points: 3, category: "Instruction Following — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: note box, top-right, exact label.", status: "present", observed: "The generated SVG includes the note box in the top-right corner with the exact required text.", rationale: "Shape, placement, and a verbatim string all fixed by the spec; weighted +3 for parity with the other two format rules." },
+    { n: 31, text: "`refund_mod_QA_results.svg` includes one diamond-shaped decision node per issue, each labeled exactly `Is resolved?`.", points: 3, category: "Instruction Following — Final answer/artifact", evalTarget: "Final answer/artifact", enforces: "svg_format.txt: 'Decision nodes: one diamond per issue.'", status: "present", observed: "The generated SVG includes 11 diamond decision nodes, each labeled 'Is resolved?'.", rationale: "A per-issue structural rule graded once across all eleven; weighted +3 for parity with the other two format rules." },
+    { n: 32, text: "The model considers `Screenshot 2026-07-02 at 09.14.06.png` and `IMG_2093.png` as bugs to check, even though they are not referenced in the user's personal Jira notes.", points: -5, category: "Agent Behavior — Trajectory", evalTarget: "Trajectory", enforces: "Negative: prompt scope boundary — 'Do not address bugs not logged in my jira.'", status: "not-present", observed: "The model opened both distractor screenshots (a Payouts & Settlements dashboard, and Rebecca's own personal calendar) but correctly excluded both from the bug list — the final 11 issues all trace back to the Jira board.", rationale: "The one negative in the set, and the scope violation the task is designed to tempt. Evaluated against the trajectory since it's about what the agent chose to act on; weighted -5, matching a full status determination, because inventing a twelfth bug corrupts every deliverable at once." },
   ],
 
   friction: [
@@ -531,7 +674,7 @@ def test_memory_md_entries_have_issue_keys():
         title: "SVG marks six resolved bugs as unresolved",
         outcome: "fail",
         rubrics: [12, 13, 14, 15, 16, 17],
-        expected: "`Is solved?` → `Yes` for all seven resolved bugs.",
+        expected: "`Is resolved?` → `Yes` for all seven resolved bugs.",
         what: "refund_mod_QA_results.svg marks only Safari `Yes`; the other six resolved bugs all render `No`.",
         evidence: "Generated SVG (real output, below): 10 of 11 issue rows terminate in a red `No` outcome.",
       },
@@ -539,8 +682,8 @@ def test_memory_md_entries_have_issue_keys():
         id: "memory-solved-incomplete",
         title: "MEMORY.md SOLVED section lists only one bug",
         outcome: "fail",
-        rubrics: [23],
-        expected: "SOLVED section lists all seven resolved bugs with their issue keys.",
+        rubrics: [24, 25],
+        expected: "SOLVED section lists all seven resolved bugs, each carrying its correct issue key.",
         what: "MEMORY.md's SOLVED section lists only 'Safari mobile login timeout - Kai tackled (NEXB-452)'.",
         evidence: "MEMORY.md (real output, below): SOLVED section contains a single bullet.",
       },
@@ -548,7 +691,7 @@ def test_memory_md_entries_have_issue_keys():
         id: "slack-email-propagation",
         title: "Slack and email both restate the wrong split",
         outcome: "fail",
-        rubrics: [27],
+        rubrics: [28],
         expected: "Both messages report 7 solved / 4 unsolved.",
         what: "The Slack post to #qa-team and the email to Colton both state 1 issue resolved and 10 still open, correctly formatted but carrying the wrong underlying conclusion to the whole team and to Colton.",
         evidence: "Slack post: 'Solved: Safari mobile login timeout... Unsolved (10 remaining): ...'. Email body: '1 issue resolved so far... The remaining 10 are still open.'",
@@ -575,7 +718,7 @@ def test_memory_md_entries_have_issue_keys():
         id: "distractors-ignored",
         title: "Distractor screenshots opened, then correctly left out of scope",
         outcome: "pass",
-        rubrics: [31],
+        rubrics: [32],
         expected: "Screenshot 2026-07-02 at 09.14.06.png and IMG_2093.png are not treated as bugs.",
         what: "The model opened both images (describing the Payouts & Settlements dashboard and Rebecca's personal calendar in full) but its final bug list stayed at exactly the 11 issues from the Jira board — neither distractor appears in any deliverable.",
         evidence: "Trajectory: an image-analysis call includes both distractor files, but the final status mapping and every deliverable list only the 11 Jira-sourced bugs.",
@@ -584,7 +727,7 @@ def test_memory_md_entries_have_issue_keys():
         id: "issue-keys-correct",
         title: "Issue-key reconciliation and sequential generation correct",
         outcome: "pass",
-        rubrics: [19, 20, 21, 22, 24, 25],
+        rubrics: [19, 20, 21, 22, 26, 27],
         expected: "NEXB-442/443 recovered from the tracker email; NEXB-444–451 generated sequentially for the eight bugs that genuinely lack a key.",
         what: "The model correctly matched NEXB-442 and NEXB-443 from the tracker email, determined NEXB-443 as the latest registered key, and generated NEXB-444 through NEXB-451 for the eight remaining bugs.",
         evidence: "Trajectory: 'Matched from email notifications: KAN-3 → NEXB-442, KAN-4 → NEXB-443. Generated (continuing from NEXB-443): KAN-1 → NEXB-444, ...'.",
@@ -593,7 +736,7 @@ def test_memory_md_entries_have_issue_keys():
         id: "safari-key-wrong",
         title: "Safari's own email-referenced key was missed",
         outcome: "fail",
-        rubrics: [26],
+        rubrics: [23],
         expected: "Find the email's separate reference to NEXB-398 for Safari, rather than treating it as a ninth bug needing a generated key.",
         what: "The model folded Safari into the generated sequence instead, labeling it 'NEXB-452' in MEMORY.md — a labeling miss independent of the (correct) resolved/unresolved call for that bug.",
         evidence: "Trajectory: 'Generated (continuing from NEXB-443): ..., KAN-13 → NEXB-452'; MEMORY.md: 'Safari mobile login timeout - Kai tackled (NEXB-452)'.",
@@ -602,19 +745,10 @@ def test_memory_md_entries_have_issue_keys():
         id: "svg-format-correct",
         title: "SVG shape/label formatting followed",
         outcome: "pass",
-        rubrics: [28, 29, 30],
+        rubrics: [29, 30, 31],
         expected: "Rectangle start node, top-right note box with exact text, one diamond per issue labeled 'Is resolved?'.",
         what: "The generated SVG correctly implements all three fixed formatting requirements from svg_format.txt.",
         evidence: "Generated refund_mod_QA_results.svg (real output, below): <rect> start node, note box text matches exactly, 11 diamond decision nodes each labeled 'Is resolved?'.",
-      },
-      {
-        id: "start-node-offcenter",
-        title: "Start node placed off-center",
-        outcome: "fail",
-        rubrics: [32],
-        expected: "No specific position is required by svg_format.txt, but the actual placement produced a genuine, visually obvious layout defect worth flagging.",
-        what: "The start node is placed at x=50 on a 1400-wide canvas — pinned hard against the left edge, with the eleven issue rows and their outcomes occupying the rest of a much wider view.",
-        evidence: "Generated SVG source (real output, below): start node <rect x=\"50\" width=\"280\" .../>, far from the horizontal center of the 1400px canvas.",
       },
     ],
     producedFiles: [
@@ -622,7 +756,7 @@ def test_memory_md_entries_have_issue_keys():
         label: "The actual refund_mod_QA_results.svg from the seed run",
         file: "refund_mod_QA_results_actual.svg",
         kind: "image",
-        note: "10 of 11 issues wrongly marked 'No' (only Safari reads 'Yes'), and the start node sits hard against the left edge instead of centered.",
+        note: "Shape, labels and palette all follow svg_format.txt — but 10 of 11 issues are wrongly marked 'No' (only Safari reads 'Yes').",
       },
       {
         label: "The actual MEMORY.md from the seed run",
@@ -650,6 +784,7 @@ except ImportError:
 
 # --- directory config ---
 TASK_DIR = Path(__file__).resolve().parent
+SVG_NAME = "refund_mod_QA_results.svg"
 
 
 def _search_bases():
@@ -667,27 +802,16 @@ def _find_workspace_file(name: str):
     return None
 
 
-def _read_svg() -> str:
-    p = _find_workspace_file("refund_mod_QA_results.svg")
-    return p.read_text(encoding="utf-8", errors="replace") if p else ""
+def _find_svg():
+    return _find_workspace_file(SVG_NAME)
 
 
-def _read_memory_md() -> str:
-    p = _find_workspace_file("MEMORY.md")
-    return p.read_text(encoding="utf-8", errors="replace") if p else ""
+def _find_memory_md():
+    return _find_workspace_file("MEMORY.md")
 
 
-def _load_sent_emails():
-    p = _find_workspace_file("sent_emails.json")
-    return json.loads(p.read_text(encoding="utf-8")) if p else []
-
-
-def _load_slack_messages(channel: str):
-    p = _find_workspace_file("slack_messages.json")
-    if not p:
-        return []
-    data = json.loads(p.read_text(encoding="utf-8"))
-    return [m for m in data if m.get("channel") == channel]
+def _find_snapshot():
+    return _find_workspace_file("snapshots.json")
 
 
 # --- tests go here ---`,
@@ -733,7 +857,7 @@ def _load_slack_messages(channel: str):
       ["Team notified correctly", "Slack and the email to Colton both report the corrected 7/4 split."],
     ],
     testsSub:
-      "Reviewer-only structural and state-change checks. Each test stands alone; shared scaffolding is in the Template dropdown.",
+      "6 tests, Σ weight = 14. Reviewer-only checks on state changes and artifact structure — only the elements the prompt and svg_format.txt pin down to exactly one acceptable value. Each test stands alone; shared scaffolding is in the Template dropdown.",
     unitTestGroups: ["SVG", "MEMORY.md", "State change"],
   },
 };
